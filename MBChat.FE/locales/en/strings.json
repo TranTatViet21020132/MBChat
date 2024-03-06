@@ -1,0 +1,10 @@
+{
+    "general.actions.cancel": "Cancel",
+    "general.actions.save": "Save",
+    "general.actions.clear": "Clear filter",
+    "general.actions.apply": "Search",
+    "general.placeholder.search": "Search...",
+    "general.actions.create": "Create",
+    "general.actions.delete": "Delete"
+}
+  

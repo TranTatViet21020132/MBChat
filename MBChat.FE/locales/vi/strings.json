@@ -1,0 +1,27 @@
+{
+    "general.actions.cancel": "Đóng",
+    "general.actions.save": "Lưu",
+    "general.actions.clear": "Bỏ lọc",
+    "general.detail.title": "Sửa thông tin",
+    "general.actions.apply": "Tìm kiếm",
+    "general.actions.resetFilter": "Làm mới",
+    "general.actions.applyFilter": "Lọc dữ liệu",
+    "general.placeholder.search": "Nhập nội dung tìm kiếm",
+    "general.actions.create": "Thêm mới",
+    "general.actions.preview": "Xem",
+    "general.actions.view": "Xem",
+    "general.actions.delete": "Xóa",
+    "general.delete.content": "Bạn có chắc chắn muốn xóa ?",
+    "general.delete.title": "Xác nhận xóa",
+    "general.actions.edit": "Sửa",
+    "general.warning.cancel": "Có thông tin đã thay đôi. Bạn có muốn lưu ko ?",
+    "general.actions.no": "Không",
+    "general.actions.close": "Đóng",
+    "general.actions.previewHistory": "Xem lịch sử",
+    "general.actions.addRow": "Thêm dòng",
+    "general.warnings.delete": "Bạn có chắc chắn muốn xóa",
+    "general.actions.deny": "Không",
+    "general.actions.accept": "Đồng ý",
+    "general.actions.addRowPersonContactMethod": "Thêm phương thức liên hệ"
+  }
+  
