@@ -1,10 +1,9 @@
 {
-    "general.actions.cancel": "Cancel",
-    "general.actions.save": "Save",
-    "general.actions.clear": "Clear filter",
-    "general.actions.apply": "Search",
-    "general.placeholder.search": "Search...",
-    "general.actions.create": "Create",
-    "general.actions.delete": "Delete"
+    "welcome.content.title": "Welcome to MBChat",
+    "welcome.content.readOur": "Read our",
+    "welcome.content.privacyPolicy": "Privacy Policy",
+    "welcome.content.agreeAndContinue": "Tap 'Agree & Continue' to accept the ",
+    "welcome.content.termsOfService": "Terms of Service",
+    "welcome.action.agreeAndContinue": "Agree & Continue"
 }
   

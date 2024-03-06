@@ -31,25 +31,25 @@ const Page = () => {
       style={styles.headline}
       lightColor={COLORS.light.text}
       darkColor={COLORS.dark.text}
-      >Welcome to MBChat</Text>
+      >{i18n.t("welcome.content.title")}</Text>
       <Text 
       style={styles.description}
       lightColor={COLORS.light.description}
       darkColor={COLORS.dark.description}
       >
-        Read our{' '}
+        {i18n.t("welcome.content.readOur")}{' '}
         <Text
         lightColor={COLORS.light.link}
         darkColor={COLORS.dark.link}
         onPress={openLink}>
-          Privacy Policy
+          {i18n.t("welcome.content.privacyPolicy")}
         </Text>
-        . {'Tap "Agree & Continue" to accept the '}
+        . {i18n.t("welcome.content.agreeAndContinue")}
         <Text
         lightColor={COLORS.light.link}
         darkColor={COLORS.dark.link}
         onPress={openLink}>
-          Terms of Service
+          {i18n.t("welcome.content.termsOfService")}
         </Text>
         .
       </Text>
@@ -60,7 +60,7 @@ const Page = () => {
           lightColor={COLORS.light.link}
           darkColor={COLORS.dark.link}
           >
-            Agree & Continue
+            {i18n.t("welcome.action.agreeAndContinue")}
           </Text>
         </Pressable>
       </ExternalLink>
