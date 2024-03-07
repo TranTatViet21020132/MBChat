@@ -3,6 +3,7 @@ import {
   Image,
   Pressable,
   Linking,
+  useColorScheme
 } from 'react-native';
 import { 
   Text, 
@@ -15,13 +16,17 @@ import COLORS from '@/constants/Colors';
 import { useTranslation } from 'react-i18next';
 
 import welcomeImage from '@/assets/images/welcome.png';
+import welcomeImageDark from '@/assets/images/welcomeDark.png';
 
 const Page = () => {
   const { t } = useTranslation();
+  const colorScheme = useColorScheme();
 
   const openLink = () => {
     Linking.openURL("https://galaxies.dev");
   };
+
+  const selectedWelcomeImage = colorScheme === 'dark' ? welcomeImageDark : welcomeImage;
 
   return (
     <View 
@@ -29,7 +34,7 @@ const Page = () => {
     lightColor={COLORS.light.background}
     darkColor={COLORS.dark.background}
     >
-      <Image source={welcomeImage} style={styles.welcome} />
+      <Image source={selectedWelcomeImage} style={styles.welcome} />
       <Text 
       style={styles.headline}
       lightColor={COLORS.light.text}
@@ -109,5 +114,3 @@ const styles = StyleSheet.create({
 });
 
 export default Page;
-
-
