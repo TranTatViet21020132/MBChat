@@ -4,8 +4,9 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import {I18nextProvider} from "react-i18next";
+import i18n from "@/services/i18n.config";
 
-import i18n from "@/utils/i18n";
 import { useColorScheme } from '@/components/useColorScheme';
 
 export {
@@ -44,11 +45,13 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="otp" options={{ headerTitle: i18n.t(''), headerBackVisible: false }} />
-      </Stack>
-    </ThemeProvider>
+    <I18nextProvider i18n={i18n}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="otp" options={{ headerTitle: "Enter your phone number", headerBackVisible: false }} />
+        </Stack>
+      </ThemeProvider>
+    </I18nextProvider>
   );
 }

@@ -9,7 +9,6 @@ import { Text, View } from '@/components/Themed';
 
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
-import i18n from '@/utils/i18n';
 
 import COLORS from '@/constants/Colors';
 
@@ -45,7 +44,7 @@ const Page = () => {
         lightColor={COLORS.light.text}
         darkColor={COLORS.dark.text}
         >
-          {i18n.t('otp.content.verify')}
+          MBChat will need to verify your account. Carrier charges may apply.
         </Text>
 
         <View

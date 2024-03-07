@@ -2,21 +2,23 @@ import {
   StyleSheet, 
   Image,
   Pressable,
-  Linking
+  Linking,
 } from 'react-native';
 import { 
   Text, 
   View,
 } from '@/components/Themed';
-import { ExternalLink } from '@/components/ExternalLink';
 import React from 'react';
+import { Link } from 'expo-router';
 import COLORS from '@/constants/Colors';
 
-import i18n from "@/utils/i18n";
+import { useTranslation } from 'react-i18next';
+
 import welcomeImage from '@/assets/images/welcome.png';
-const welcome_image = Image.resolveAssetSource(welcomeImage).uri;
 
 const Page = () => {
+  const { t } = useTranslation();
+
   const openLink = () => {
     Linking.openURL("https://galaxies.dev");
   };
@@ -27,44 +29,44 @@ const Page = () => {
     lightColor={COLORS.light.background}
     darkColor={COLORS.dark.background}
     >
-      <Image source={{ uri: welcome_image }} style={styles.welcome} />
+      <Image source={welcomeImage} style={styles.welcome} />
       <Text 
       style={styles.headline}
       lightColor={COLORS.light.text}
       darkColor={COLORS.dark.text}
-      >{i18n.t("welcome.content.title")}</Text>
+      >{t("welcomeMessage")}</Text>
       <Text 
       style={styles.description}
       lightColor={COLORS.light.description}
       darkColor={COLORS.dark.description}
       >
-        {i18n.t("welcome.content.readOur")}{' '}
+        Read our{' '}
         <Text
         lightColor={COLORS.light.link}
         darkColor={COLORS.dark.link}
         onPress={openLink}>
-          {i18n.t("welcome.content.privacyPolicy")}
+          Privacy Policy
         </Text>
-        . {i18n.t("welcome.content.agreeAndContinue")}
+        . Tap 'Agree & Continue' to accept the{' '}
         <Text
         lightColor={COLORS.light.link}
         darkColor={COLORS.dark.link}
         onPress={openLink}>
-          {i18n.t("welcome.content.termsOfService")}
+          Terms of Service
         </Text>
         .
       </Text>
-      <ExternalLink href={"/otp"} replace asChild>
+      <Link href={"/otp"} replace asChild>
         <Pressable style={styles.button}>
           <Text
           style={styles.buttonText}
           lightColor={COLORS.light.link}
           darkColor={COLORS.dark.link}
           >
-            {i18n.t("welcome.action.agreeAndContinue")}
+            Agree & Continue
           </Text>
         </Pressable>
-      </ExternalLink>
+      </Link>
     </View>
   );
 };
