@@ -4,6 +4,9 @@
     "welcome.content.privacyPolicy": "Chính sách Riêng tư",
     "welcome.content.agreeAndContinue": "Ấn 'Đồng ý và Tiếp tục' để đồng ý ",
     "welcome.content.termsOfService": "Điều khoản Dịch vụ",
-    "welcome.action.agreeAndContinue": "Đồng ý và Tiếp tục"
+    "welcome.action.agreeAndContinue": "Đồng ý và Tiếp tục",
+
+    "otp.content.title": "Điền số điện thoại của bạn",
+    "otp.content.verify": "MBChat will need to verify your account. Carrier charges may apply."
 }
   

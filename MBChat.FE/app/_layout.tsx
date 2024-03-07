@@ -5,6 +5,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 
+import i18n from "@/utils/i18n";
 import { useColorScheme } from '@/components/useColorScheme';
 
 export {
@@ -46,7 +47,7 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="otp" options={{ headerTitle: 'Enter Your Phone Number', headerBackVisible: false }} />
+        <Stack.Screen name="otp" options={{ headerTitle: i18n.t(''), headerBackVisible: false }} />
       </Stack>
     </ThemeProvider>
   );

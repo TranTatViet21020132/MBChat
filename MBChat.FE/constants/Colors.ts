@@ -19,6 +19,7 @@ export default {
     background: '#fff',
     description: '#6E6E73',
     link: '#1063FD',
+    list: '#fff',
   },
   dark: {
     tint: tintColorDark,
@@ -37,6 +38,7 @@ export default {
     background: '#000',
     description: '#6E6E73',
     link: '#1063FD',
+    list: '#000',
   },
 };
 

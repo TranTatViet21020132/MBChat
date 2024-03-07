@@ -1,7 +1,8 @@
 import { 
   StyleSheet, 
   Image,
-  Pressable
+  Pressable,
+  Linking
 } from 'react-native';
 import { 
   Text, 
@@ -17,7 +18,7 @@ const welcome_image = Image.resolveAssetSource(welcomeImage).uri;
 
 const Page = () => {
   const openLink = () => {
-
+    Linking.openURL("https://galaxies.dev");
   };
 
   return (
