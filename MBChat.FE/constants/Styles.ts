@@ -11,7 +11,12 @@ export function useColor(props: { light?: string; dark?: string }, colorName: Co
   if (colorFromProps) {
     return colorFromProps;
   } else {
-    return Colors[theme][colorName];
+    const color = Colors[theme][colorName];
+    if (typeof color === 'string') {
+      return color;
+    } else {
+      return undefined;
+    }
   }
 }
 
@@ -33,5 +38,4 @@ export const defaultStyles = StyleSheet.create({
     backgroundColor: useColor({}, 'lightGray'),
     marginLeft: 50,
   },
-  
 });

@@ -31,33 +31,33 @@ const Page = () => {
   return (
     <View 
     style={styles.container}
-    lightColor={COLORS.light.background}
-    darkColor={COLORS.dark.background}
+    lightColor={COLORS.light.welcome.background}
+    darkColor={COLORS.dark.welcome.background}
     >
       <Image source={selectedWelcomeImage} style={styles.welcome} />
       <Text 
       style={styles.headline}
-      lightColor={COLORS.light.text}
-      darkColor={COLORS.dark.text}
-      >{t("welcomeMessage")}</Text>
+      lightColor={COLORS.light.welcome.headline}
+      darkColor={COLORS.dark.welcome.headline}
+      >{t("welcome.content.welcomeMessage")}</Text>
       <Text 
       style={styles.description}
-      lightColor={COLORS.light.description}
-      darkColor={COLORS.dark.description}
+      lightColor={COLORS.light.welcome.description}
+      darkColor={COLORS.dark.welcome.description}
       >
-        Read our{' '}
+        {t("welcome.content.readOur")}
         <Text
-        lightColor={COLORS.light.link}
-        darkColor={COLORS.dark.link}
+        lightColor={COLORS.light.welcome.link}
+        darkColor={COLORS.dark.welcome.link}
         onPress={openLink}>
-          Privacy Policy
+          {t("welcome.content.privacyPolicy")}
         </Text>
-        . Tap 'Agree & Continue' to accept the{' '}
+        {t("welcome.content.agreeAndContinue")}
         <Text
-        lightColor={COLORS.light.link}
-        darkColor={COLORS.dark.link}
+        lightColor={COLORS.light.welcome.link}
+        darkColor={COLORS.dark.welcome.link}
         onPress={openLink}>
-          Terms of Service
+          {t("welcome.content.termsOfService")}
         </Text>
         .
       </Text>
@@ -65,10 +65,10 @@ const Page = () => {
         <Pressable style={styles.button}>
           <Text
           style={styles.buttonText}
-          lightColor={COLORS.light.link}
-          darkColor={COLORS.dark.link}
+          lightColor={COLORS.light.welcome.buttonText}
+          darkColor={COLORS.dark.welcome.buttonText}
           >
-            Agree & Continue
+            {t("welcome.action.agreeAndContinue")}
           </Text>
         </Pressable>
       </Link>

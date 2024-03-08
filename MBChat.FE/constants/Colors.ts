@@ -14,13 +14,27 @@ export default {
     lightGreen: '#DBFFCB',
     red: '#EF0827',
     yellow: '#FCC70B',
-
-    text: '#000',
     background: '#fff',
-    description: '#6E6E73',
-    link: '#1063FD',
-    list: '#fff',
+
+    welcome: {
+      headline: '#000',
+      background: '#fff',
+      description: '#6E6E73',
+      link: '#1063FD',
+      buttonText: '#1063FD',
+    },
+
+    otp: {
+      background: '#EFEEF6',
+      description: '#6E6E73',
+      list: '#fff',
+      listItemText: '#1063FD',
+      separator: '#6E6E73',
+      legal: '#000',
+      link: '#1063FD',
+    },
   },
+
   dark: {
     tint: tintColorDark,
     tabIconDefault: '#ccc',
@@ -33,12 +47,25 @@ export default {
     lightGreen: '#DBFFCB',
     red: '#EF0827',
     yellow: '#FCC70B',
-
-    text: '#fff',
     background: '#000',
-    description: '#6E6E73',
-    link: '#1063FD',
-    list: '#000',
+
+    welcome: {
+      headline: '#fff',
+      background: '#000',
+      description: '#6E6E73',
+      link: '#1063FD',
+      buttonText: '#1063FD',
+    },
+
+    otp: {
+      background: '#EFEEF6',
+      description: '#6E6E73',
+      list: '#000',
+      listItemText: '#1063FD',
+      separator: '#6E6E73',
+      legal: '#000',
+      link: '#1063FD',
+    },
   },
 };
 
