@@ -10,9 +10,9 @@
   "otp.content.sendingCode": "Sending Code",
   "otp.content.verify": "MBChat will need to verify your account. Carrier charges may apply.",
   "otp.content.country": "Vietnam",
-  "opt.content.youMust": "You must be ",
+  "otp.content.youMust": "You must be ",
   "otp.content.atLeast": "at least 16 years old ",
-  "otp.content.learnHow": "to register. Learn how WhatsApp works with the ",
+  "otp.content.learnHow": "to register. Learn how MBChat works with the ",
   "otp.content.metaCompanies": "Meta Companies",
   "otp.action.next": "Next",
 
