@@ -1,0 +1,28 @@
+{
+  "welcome.content.welcomeMessage": "Welcome to MBChat",
+  "welcome.content.readOur": "Read our ",
+  "welcome.content.privacyPolicy": "Privacy Policy",
+  "welcome.content.agreeAndContinue": ". Tap 'Agree & Continue' to accept the ",
+  "welcome.content.termsOfService": "Terms of Service",
+  "welcome.action.agreeAndContinue": "Agree & Continue",
+
+  "otp.content.title": "Enter your phone number",
+  "otp.content.sendingCode": "Sending Code",
+  "otp.content.verify": "MBChat will need to verify your account. Carrier charges may apply.",
+  "otp.content.country": "Vietnam",
+  "opt.content.youMust": "You must be ",
+  "otp.content.atLeast": "at least 16 years old ",
+  "otp.content.learnHow": "to register. Learn how WhatsApp works with the ",
+  "otp.content.metaCompanies": "Meta Companies",
+  "otp.action.next": "Next",
+
+  "verify.content.codeSent": "We have sent you an SMS with a code to the number above.",
+  "verify.content.codeEnter": "To complete your phone number verification, please enter the 6-digit activation code.",
+  "verify.action.resendCode": "Didn't receive a verification code?",
+
+  "tab.content.update": "Update",
+  "tab.content.calls": "Calls",
+  "tab.content.communities": "Communities",
+  "tab.content.chats": "Chats",
+  "tab.content.settings": "Settings"
+}

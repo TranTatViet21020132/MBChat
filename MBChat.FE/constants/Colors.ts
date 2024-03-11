@@ -1,26 +1,28 @@
 const tintColorLight = '#2f95dc';
 const tintColorDark = '#fff';
 
-export default {
+const COLORS = {
+  gray: '#6E6E73',
+  lightGray: '#DCDCE2',
+  green: '#4FEE57',
+  lightGreen: '#DBFFCB',
+  red: '#EF0827',
+  yellow: '#FCC70B',
+
   light: {
     tint: tintColorLight,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,
+    background: '#EFEEF6',
+    text: '#6E6E73',
     primary: '#1063FD',
     muted: '#3A5A92',
-    gray: '#6E6E73',
-    lightGray: '#DCDCE2',
-    green: '#4FEE57',
-    lightGreen: '#DBFFCB',
-    red: '#EF0827',
-    yellow: '#FCC70B',
-    background: '#fff',
+    link: '#1063FD',
 
     welcome: {
       headline: '#000',
       background: '#fff',
       description: '#6E6E73',
-      link: '#1063FD',
       buttonText: '#1063FD',
     },
 
@@ -28,44 +30,55 @@ export default {
       background: '#EFEEF6',
       description: '#6E6E73',
       list: '#fff',
+      listItem: '#fff',
       listItemText: '#1063FD',
       separator: '#6E6E73',
       legal: '#000',
-      link: '#1063FD',
+      phoneCode: '#fff',
+      phoneCodeText: '#000',
+      button: '#DCDCE2',
+      input: '#000',
     },
+
+    verify: {
+      legal: '#000', 
+    }
   },
 
   dark: {
     tint: tintColorDark,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
+    background: '#000',
+    text: '#1063FD',
     primary: '#1063FD',
     muted: '#3A5A92',
-    gray: '#6E6E73',
-    lightGray: '#DCDCE2',
-    green: '#4FEE57',
-    lightGreen: '#DBFFCB',
-    red: '#EF0827',
-    yellow: '#FCC70B',
-    background: '#000',
+    link: '#1063FD',
 
     welcome: {
       headline: '#fff',
       background: '#000',
       description: '#6E6E73',
-      link: '#1063FD',
       buttonText: '#1063FD',
     },
 
     otp: {
-      background: '#EFEEF6',
+      background: '#000',
       description: '#6E6E73',
-      list: '#000',
+      list: '#1C1C1E',
+      listItem: '#1C1C1E',
       listItemText: '#1063FD',
       separator: '#6E6E73',
-      legal: '#000',
-      link: '#1063FD',
+      legal: '#6E6E73',
+      phoneCode: '#1C1C1E',
+      phoneCodeText: '#fff',
+      button: '#DCDCE2',
+      input: '#fff',
     },
+
+    verify: {
+      legal: '#6E6E73',
+    }
   },
 };
 
@@ -101,4 +114,4 @@ const SHADOWS = {
   },
 };
 
-export { SIZES, SHADOWS };
+export { COLORS, SIZES, SHADOWS };

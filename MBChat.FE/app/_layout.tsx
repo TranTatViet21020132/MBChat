@@ -52,7 +52,16 @@ function RootLayoutNav() {
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="otp" options={{ headerTitle: t("otp.content.title"), headerBackVisible: false }} />
+          <Stack.Screen name="otp" 
+          options={{ 
+            headerTitle: t("otp.content.title"), 
+            headerBackVisible: false }} />
+          <Stack.Screen name="verify/[phone]" 
+          options={{ 
+            headerBackTitle: 'Edit number' }} />
+          <Stack.Screen name="(tabs)"
+          options={{ 
+            headerShown: false }} />
         </Stack>
       </ThemeProvider>
     </I18nextProvider>

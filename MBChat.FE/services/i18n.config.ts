@@ -23,7 +23,7 @@ const languageDetector = {
 };
 
 i18next
-  .use(initReactI18next) // Apply the react-i18next middleware
+  .use(initReactI18next)
   .init({
     debug: false,
     lng: 'en',

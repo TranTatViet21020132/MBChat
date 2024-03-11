@@ -11,19 +11,19 @@ import {
 } from '@/components/Themed';
 import React from 'react';
 import { Link } from 'expo-router';
-import COLORS from '@/constants/Colors';
+import { COLORS } from '@/constants/Colors';
 
 import { useTranslation } from 'react-i18next';
 
 import welcomeImage from '@/assets/images/welcome.png';
 import welcomeImageDark from '@/assets/images/welcomeDark.png';
 
-const Page = () => {
+const IndexPage = () => {
   const { t } = useTranslation();
   const colorScheme = useColorScheme();
 
   const openLink = () => {
-    Linking.openURL("https://galaxies.dev");
+    Linking.openURL("");
   };
 
   const selectedWelcomeImage = colorScheme === 'dark' ? welcomeImageDark : welcomeImage;
@@ -47,15 +47,15 @@ const Page = () => {
       >
         {t("welcome.content.readOur")}
         <Text
-        lightColor={COLORS.light.welcome.link}
-        darkColor={COLORS.dark.welcome.link}
+        lightColor={COLORS.light.link}
+        darkColor={COLORS.dark.link}
         onPress={openLink}>
           {t("welcome.content.privacyPolicy")}
         </Text>
         {t("welcome.content.agreeAndContinue")}
         <Text
-        lightColor={COLORS.light.welcome.link}
-        darkColor={COLORS.dark.welcome.link}
+        lightColor={COLORS.light.link}
+        darkColor={COLORS.dark.link}
         onPress={openLink}>
           {t("welcome.content.termsOfService")}
         </Text>
@@ -113,4 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Page;
+export default IndexPage;
