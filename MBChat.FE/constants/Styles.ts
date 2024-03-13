@@ -1,8 +1,8 @@
-import Colors from '@/constants/Colors';
+import { COLORS } from '@/constants/Colors';
 import { StyleSheet } from 'react-native';
 import { useColorScheme } from '../components/useColorScheme';
 
-type ColorName = keyof typeof Colors.light & keyof typeof Colors.dark;
+type ColorName = keyof typeof COLORS.light & keyof typeof COLORS.dark;
 
 export function useColor(props: { light?: string; dark?: string }, colorName: ColorName) {
   const theme = useColorScheme() ?? 'light';
@@ -11,7 +11,12 @@ export function useColor(props: { light?: string; dark?: string }, colorName: Co
   if (colorFromProps) {
     return colorFromProps;
   } else {
-    return Colors[theme][colorName];
+    const color = COLORS[theme][colorName];
+    if (typeof color === 'string') {
+      return color;
+    } else {
+      return undefined;
+    }
   }
 }
 
@@ -30,8 +35,7 @@ export const defaultStyles = StyleSheet.create({
   },
   separator: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: useColor({}, 'lightGray'),
+    backgroundColor: COLORS.lightGray,
     marginLeft: 50,
   },
-  
 });

@@ -11,19 +11,19 @@ import {
 } from '@/components/Themed';
 import React from 'react';
 import { Link } from 'expo-router';
-import COLORS from '@/constants/Colors';
+import { COLORS } from '@/constants/Colors';
 
 import { useTranslation } from 'react-i18next';
 
 import welcomeImage from '@/assets/images/welcome.png';
 import welcomeImageDark from '@/assets/images/welcomeDark.png';
 
-const Page = () => {
+const IndexPage = () => {
   const { t } = useTranslation();
   const colorScheme = useColorScheme();
 
   const openLink = () => {
-    Linking.openURL("https://galaxies.dev");
+    Linking.openURL("");
   };
 
   const selectedWelcomeImage = colorScheme === 'dark' ? welcomeImageDark : welcomeImage;
@@ -31,33 +31,33 @@ const Page = () => {
   return (
     <View 
     style={styles.container}
-    lightColor={COLORS.light.background}
-    darkColor={COLORS.dark.background}
+    lightColor={COLORS.light.welcome.background}
+    darkColor={COLORS.dark.welcome.background}
     >
       <Image source={selectedWelcomeImage} style={styles.welcome} />
       <Text 
       style={styles.headline}
-      lightColor={COLORS.light.text}
-      darkColor={COLORS.dark.text}
-      >{t("welcomeMessage")}</Text>
+      lightColor={COLORS.light.welcome.headline}
+      darkColor={COLORS.dark.welcome.headline}
+      >{t("welcome.content.welcomeMessage")}</Text>
       <Text 
       style={styles.description}
-      lightColor={COLORS.light.description}
-      darkColor={COLORS.dark.description}
+      lightColor={COLORS.light.welcome.description}
+      darkColor={COLORS.dark.welcome.description}
       >
-        Read our{' '}
+        {t("welcome.content.readOur")}
         <Text
         lightColor={COLORS.light.link}
         darkColor={COLORS.dark.link}
         onPress={openLink}>
-          Privacy Policy
+          {t("welcome.content.privacyPolicy")}
         </Text>
-        . Tap 'Agree & Continue' to accept the{' '}
+        {t("welcome.content.agreeAndContinue")}
         <Text
         lightColor={COLORS.light.link}
         darkColor={COLORS.dark.link}
         onPress={openLink}>
-          Terms of Service
+          {t("welcome.content.termsOfService")}
         </Text>
         .
       </Text>
@@ -65,10 +65,10 @@ const Page = () => {
         <Pressable style={styles.button}>
           <Text
           style={styles.buttonText}
-          lightColor={COLORS.light.link}
-          darkColor={COLORS.dark.link}
+          lightColor={COLORS.light.welcome.buttonText}
+          darkColor={COLORS.dark.welcome.buttonText}
           >
-            Agree & Continue
+            {t("welcome.action.agreeAndContinue")}
           </Text>
         </Pressable>
       </Link>
@@ -113,4 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Page;
+export default IndexPage;
