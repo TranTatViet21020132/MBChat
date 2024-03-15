@@ -1,9 +1,15 @@
 import { COLORS } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-import { Link, Stack } from 'expo-router';
-import { TouchableOpacity, View, Text, Image } from 'react-native';
+import { Link, Stack, useRouter } from 'expo-router';
+import { Pressable, View } from 'react-native';
 
 const Layout = () => {
+  const router = useRouter();
+
+  const handleOpenModal = () => {
+    router.push("/(modals)/new-chat");
+  };
+
   return (
     <Stack>
       <Stack.Screen
@@ -14,24 +20,22 @@ const Layout = () => {
           headerTransparent: true,
           headerBlurEffect: 'regular',
           headerLeft: () => (
-            <TouchableOpacity>
+            <Pressable>
               <Ionicons
                 name="ellipsis-horizontal-circle-outline"
                 color={COLORS.light.primary}
                 size={30}
               />
-            </TouchableOpacity>
+            </Pressable>
           ),
           headerRight: () => (
             <View style={{ flexDirection: 'row', gap: 30 }}>
-              <TouchableOpacity>
+              <Pressable>
                 <Ionicons name="camera-outline" color={COLORS.light.primary} size={30} />
-              </TouchableOpacity>
-              <Link href="/(modals)/new-chat" asChild>
-                <TouchableOpacity>
-                  <Ionicons name="add-circle" color={COLORS.light.primary} size={30} />
-                </TouchableOpacity>
-              </Link>
+              </Pressable>
+              <Pressable onPress={handleOpenModal}>
+                <Ionicons name="add-circle" color={COLORS.light.primary} size={30} />
+              </Pressable>
             </View>
           ),
           headerStyle: {

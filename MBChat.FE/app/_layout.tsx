@@ -3,7 +3,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Link, Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import {I18nextProvider} from "react-i18next";
 import i18n from "@/services/i18n.config";
@@ -52,10 +52,6 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
   const router = useRouter();
 
-  const handleBack = useCallback(() => {
-    router.back();
-  }, [router]);
-
   return (
     <I18nextProvider i18n={i18n}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -86,8 +82,7 @@ function RootLayoutNav() {
               headerRight: () => (
                 <Pressable
                   style={{ backgroundColor: COLORS.lightGray, borderRadius: 20, padding: 4 }}
-                  onPress={handleBack}
-                  >
+                  onPress={() => router.back()}>
                   <Ionicons name="close" color={COLORS.gray} size={30} />
                 </Pressable>
               ),

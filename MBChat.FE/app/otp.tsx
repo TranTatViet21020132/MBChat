@@ -185,7 +185,9 @@ const OTPPage = () => {
           <Text
           style={[styles.buttonText, 
             phoneNumber !== '' ? styles.enabled : null]}
-          >{t("otp.action.next")}</Text>
+          >
+            {t("otp.action.next")}
+          </Text>
         </Pressable>
       </View>
       </TouchableWithoutFeedback>

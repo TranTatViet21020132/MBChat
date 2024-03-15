@@ -3,7 +3,7 @@ import chats from '@/assets/data/chats.json';
 import ChatRow from '@/components/ChatRow';
 import { defaultStyles } from '@/constants/Styles';
 
-const Page = () => {
+const ChatsPage = () => {
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
@@ -20,4 +20,4 @@ const Page = () => {
     </ScrollView>
   );
 };
-export default Page;
+export default ChatsPage;
