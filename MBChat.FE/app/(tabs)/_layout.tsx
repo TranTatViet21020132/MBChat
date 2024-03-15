@@ -62,6 +62,7 @@ const TabsLayout = () => {
               backgroundColor: COLORS.light.background,
               display: segments[2] === '[id]' ? 'none' : 'flex',
             },
+            headerShown: false,
           }}
         />
 

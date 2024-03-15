@@ -58,7 +58,7 @@ const OTPPage = () => {
     setTimeout(() => {
       setLoading(false);
       router.push(`/verify/${phoneNumber}`);
-    }, 2000);
+    }, 1000);
   }, [phoneNumber, router]);
 
   const trySignIn = useCallback(async () => {
