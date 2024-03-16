@@ -42,7 +42,12 @@ const COLORS = {
 
     verify: {
       legal: '#000', 
-    }
+    },
+
+    settings: {
+      text: '#000',
+      backgroudColor: '#f2f2f2'
+    },
   },
 
   dark: {
@@ -78,6 +83,11 @@ const COLORS = {
 
     verify: {
       legal: '#6E6E73',
+    },
+
+    settings: {
+      text: '#fff',
+      backgroudColor: '#000'
     }
   },
 };

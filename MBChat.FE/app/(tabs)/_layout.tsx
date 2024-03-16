@@ -70,7 +70,10 @@ const TabsLayout = () => {
           name="settings"
           options={{
             title: t("tab.content.settings"),
-            tabBarIcon: ({ size, color }) => <Ionicons name="cog" size={size} color={color} />,
+            tabBarIcon: ({ size, color }) => (
+              <Ionicons name="cog" size={size} color={color} />
+            ),
+            headerShown: false
           }}
         />
       </Tabs>
