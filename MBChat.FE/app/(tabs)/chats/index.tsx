@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, FlatList } from 'react-native';
 import chats from '@/assets/data/chats.json';
-import ChatRow from '@/components/ChatRow';
+import ChatRow from '@/components/chats/ChatRow';
 import { defaultStyles } from '@/constants/Styles';
 
 const ChatsPage = () => {
