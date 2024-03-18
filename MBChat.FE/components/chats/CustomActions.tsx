@@ -3,7 +3,7 @@ import React, { useCallback } from 'react'
 import {
   StyleProp,
   StyleSheet,
-  TouchableOpacity,
+  Pressable,
   View,
   ViewStyle,
 } from 'react-native'
@@ -32,8 +32,6 @@ const CustomActions = ({
 
   const onActionsPress = useCallback(() => {
     const options = [
-      'Choose From Library',
-      'Take Picture',
       'Send Location',
       'Cancel',
     ]
@@ -46,12 +44,6 @@ const CustomActions = ({
       async buttonIndex => {
         switch (buttonIndex) {
           case 0:
-            pickImageAsync(onSend)
-            return
-          case 1:
-            takePictureAsync(onSend)
-            return
-          case 2:
             getLocationAsync(onSend)
             return
         }
@@ -71,12 +63,12 @@ const CustomActions = ({
   }, [])
 
   return (
-    <TouchableOpacity
+    <Pressable
       style={[styles.container, containerStyle]}
       onPress={onActionsPress}
     >
       <>{renderIconComponent()}</>
-    </TouchableOpacity>
+    </Pressable>
   )
 }
 

@@ -1,14 +1,12 @@
-import { MaterialIcons } from '@expo/vector-icons'
+import AccessoryBar from '@/components/chats/AccessoryBar'
 import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import { Alert, ImageBackground, Linking, Platform, StyleSheet, Text, View } from 'react-native'
 import {
   GiftedChat,
   Bubble,
-  InputToolbar,
   Send,
   SystemMessage,
   IMessage,
-  SendProps,
 } from 'react-native-gifted-chat'
 import ChatMessageBox from '@/components/chats/ChatMessageBox';
 import ReplyMessageBar from '@/components/chats/ReplyMessageBar';
@@ -106,7 +104,7 @@ const App = () => {
 
   const onSend = useCallback(
     (messages: any[]) => {
-      const sentMessages = [{ ...messages[0], sent: true, received: true }]
+      const sentMessages = [{ ...messages[0], sent: true, received: true, seen: false }]
       const newMessages = GiftedChat.append(
         state.messages,
         sentMessages,
@@ -158,6 +156,14 @@ const App = () => {
     [onSend],
   )
 
+  const renderToolBar = useCallback(() => {
+    return (
+      <AccessoryBar
+        onSend={onSendFromUser}
+      />
+    )
+  }, [onSendFromUser])
+
   const renderCustomActions = useCallback(
     (props: any) =>
       Platform.OS === 'web' ? null : (
@@ -193,16 +199,6 @@ const App = () => {
         />
       )
   },[]);
-
-  const renderTicks = (currentMessage: any) => {
-    return (
-      <View>
-          {!!currentMessage.sent && !!currentMessage.received (
-             <Text style={{ color: 'lightblue' }}>✓✓</Text>
-           )}
-      </View>
-    )
-  }
 
   useEffect(() => {
     if (replyMessage && swipeableRowRef.current) {
@@ -267,12 +263,8 @@ const App = () => {
               gap: 14,
               paddingHorizontal: 14,
             }}>
-            {text === '' && (
-              <>
-                <Ionicons name="camera-outline" color={COLORS.light.primary} size={28} />
-                <Ionicons name="mic-outline" color={COLORS.light.primary} size={28} />
-              </>
-            )}
+            {text === '' && renderToolBar()}
+            
             {text !== '' && (
               <Send
                 {...props}
@@ -299,7 +291,6 @@ const App = () => {
           right: { color: '#6E6E73' },
         }}
       />
-
     </ImageBackground>
   )
 }
