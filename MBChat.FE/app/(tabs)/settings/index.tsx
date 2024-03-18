@@ -62,8 +62,8 @@ const Header = () => {
         </View>
       </View>
       <TouchableOpacity style={styles.item}>
-          <View style={styles.itemIcon}>
-            <MaterialCommunityIcons name='camera-plus-outline' size={24} color={COLORS.light.primary}/>
+          <View style={{...styles.itemIcon, backgroundColor: '#3d72f6'}}>
+            <MaterialCommunityIcons name='camera-plus-outline' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
             <Text style={{fontSize: 16, color: COLORS.light.primary}}>
@@ -81,8 +81,8 @@ const UserItems = () => {
   return (
     <View style={styles.items}>
       <TouchableOpacity style={styles.item}>
-          <View style={styles.itemIcon}>
-            <Ionicons name='key-outline' size={24} color={COLORS.light.primary}/>
+          <View style={{...styles.itemIcon, backgroundColor: '#0a79ee'}}>
+            <Ionicons name='key-outline' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
             <Text style={{fontSize: 16, color: COLORS.light.text}}>
@@ -92,8 +92,8 @@ const UserItems = () => {
           </View>
       </TouchableOpacity>
       <TouchableOpacity style={styles.item}>
-          <View style={styles.itemIcon}>
-            <MaterialCommunityIcons name='devices' size={24} color={COLORS.light.primary}/>
+          <View style={{...styles.itemIcon, backgroundColor: '#0cb0a5'}}>
+            <MaterialCommunityIcons name='devices' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
             <Text style={{fontSize: 16, color: COLORS.light.text}}>
@@ -103,8 +103,8 @@ const UserItems = () => {
           </View>
       </TouchableOpacity>
       <TouchableOpacity style={styles.item}>
-          <View style={styles.itemIcon}>
-            <Ionicons name='notifications-outline' size={24} color={COLORS.light.primary}/>
+          <View style={{...styles.itemIcon, backgroundColor: '#f23d37'}}>
+            <Ionicons name='notifications-outline' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
             <Text style={{fontSize: 16, color: COLORS.light.text}}>
@@ -114,8 +114,8 @@ const UserItems = () => {
           </View>
       </TouchableOpacity>
       <TouchableOpacity style={styles.item}>
-          <View style={styles.itemIcon}>
-            <Fontisto name='world-o' size={24} color={COLORS.light.primary}/>
+          <View style={{...styles.itemIcon, backgroundColor: '#5765f2'}}>
+            <Fontisto name='world-o' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
             <Text style={{fontSize: 16, color: COLORS.light.text}}>
@@ -133,8 +133,8 @@ const AppItems = () => {
   return (
     <View style={styles.items}>
       <TouchableOpacity style={styles.item}>
-          <View style={styles.itemIcon}>
-            <Ionicons name='lock-closed-outline' size={24} color={COLORS.light.primary}/>
+          <View style={{...styles.itemIcon, backgroundColor: '#40a6e0'}}>
+            <Ionicons name='lock-closed-outline' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
             <Text style={{fontSize: 16, color: COLORS.light.text}}>
@@ -144,8 +144,8 @@ const AppItems = () => {
           </View>
       </TouchableOpacity>
       <TouchableOpacity style={styles.item}>
-          <View style={styles.itemIcon}>
-            <Octicons name='question' size={24} color={COLORS.light.primary}/>
+          <View style={{...styles.itemIcon, backgroundColor: '#28c75c'}}>
+            <Octicons name='question' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
             <Text style={{fontSize: 16, color: COLORS.light.text}}>
@@ -155,8 +155,8 @@ const AppItems = () => {
           </View>
       </TouchableOpacity>
       <TouchableOpacity style={styles.item}>
-          <View style={styles.itemIcon}>
-            <MaterialCommunityIcons name='lightbulb-outline' size={24} color={COLORS.light.primary}/>
+          <View style={{...styles.itemIcon, backgroundColor: '#f0c910'}}>
+            <MaterialCommunityIcons name='lightbulb-outline' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
             <Text style={{fontSize: 16, color: COLORS.light.text}}>
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#fff',
-    height: 140,
+    height: 148,
     borderRadius: 10,
     marginBottom: 28
   },
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   item: {
-    height: 40,
+    height: 48,
     alignItems: 'center',
     flexDirection: 'row',
     borderBottomWidth: 1,
@@ -197,7 +197,9 @@ const styles = StyleSheet.create({
   },
   itemIcon: {
     marginLeft: 20,
-    marginRight: 20
+    marginRight: 20,
+    borderRadius: 5,
+    padding: 2
   },
   itemTitle: {
     flex: 1,
