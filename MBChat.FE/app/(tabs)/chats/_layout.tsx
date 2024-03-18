@@ -71,10 +71,10 @@ const Layout = () => {
           headerRight: () => (
             <View style={{ flexDirection: 'row', gap: 30 }}>
               <Pressable>
-                <Ionicons name="videocam-outline" color={COLORS.light.primary} size={30} />
+                <Ionicons name="videocam-outline" color={COLORS.light.primary} size={28} />
               </Pressable>
               <Pressable>
-                <Ionicons name="call-outline" color={COLORS.light.primary} size={30} />
+                <Ionicons name="call-outline" color={COLORS.light.primary} size={28} />
               </Pressable>
             </View>
           ),

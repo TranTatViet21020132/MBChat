@@ -11,8 +11,6 @@ import {
 import { useActionSheet } from '@expo/react-native-action-sheet'
 import {
   getLocationAsync,
-  pickImageAsync,
-  takePictureAsync,
 } from './mediaUtils'
 import { Ionicons } from '@expo/vector-icons'
 import { COLORS } from '@/constants/Colors'
