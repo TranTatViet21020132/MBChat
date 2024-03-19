@@ -17,13 +17,16 @@ export interface ChatRowProps {
 }
 
 const ChatRow: FC<ChatRowProps> = ({ id, from, date, img, msg, read, unreadCount }) => {
+  const chatData = { id, from, date, img, msg, read, unreadCount };
+  const encodedData = encodeURIComponent(JSON.stringify(chatData));
+
   return (
     <SwipeableRow
       screen={Screen.Chats}
       handleMore={() => console.log('More function called')}
       handleArchive={() => console.log('Archive function called')}
     >
-    <Link href={`/(tabs)/chats/${id}`} asChild>
+    <Link href={`/(tabs)/chats/${encodedData}`} asChild>
       <TouchableHighlight
       activeOpacity={0.8}
       underlayColor={COLORS.lightGray}

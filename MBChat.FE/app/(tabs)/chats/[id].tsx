@@ -13,6 +13,7 @@ import ReplyMessageBar from '@/components/chats/ReplyMessageBar';
 import { COLORS } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
+import { useLocalSearchParams } from 'expo-router';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // import messageData from '@/assets/data/messages.json';
@@ -87,7 +88,11 @@ function reducer(state: IState, action: StateAction) {
   }
 }
 
-const App = () => {
+const SingleChatPage = () => {
+  const data = useLocalSearchParams();
+  const fetchedData: any = Array.isArray(data.id) ? data.id.join(',') : data.id;
+  const parsedData: any = JSON.parse(fetchedData);
+
   const [text, setText] = useState('');
   const insets = useSafeAreaInsets();
 
@@ -308,4 +313,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App
+export default SingleChatPage
