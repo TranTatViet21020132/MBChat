@@ -2,7 +2,7 @@ import SwipeableRow from '@/components/SwipeableRow';
 import { COLORS } from '@/constants/Colors';
 import { format } from 'date-fns';
 import { Link, useRouter } from 'expo-router';
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 import { View, Text, Image, TouchableHighlight } from 'react-native';
 import { Screen } from '@/constants/Screens';
 
@@ -17,11 +17,8 @@ export interface ChatRowProps {
 }
 
 const ChatRow: FC<ChatRowProps> = ({ id, from, date, img, msg, read, unreadCount }) => {
-  const router = useRouter();
-
-  const handleOpenSingleChat = () => {
-    router.push("/(tabs)/chats");
-  };
+  const chatData = { id, from, date, img, msg, read, unreadCount };
+  const encodedData = encodeURIComponent(JSON.stringify(chatData));
 
   return (
     <SwipeableRow
@@ -29,10 +26,10 @@ const ChatRow: FC<ChatRowProps> = ({ id, from, date, img, msg, read, unreadCount
       handleMore={() => console.log('More function called')}
       handleArchive={() => console.log('Archive function called')}
     >
+    <Link href={`/(tabs)/chats/${encodedData}`} asChild>
       <TouchableHighlight
       activeOpacity={0.8}
       underlayColor={COLORS.lightGray}
-      onPress={handleOpenSingleChat}
       >
         <View
           style={{
@@ -54,6 +51,7 @@ const ChatRow: FC<ChatRowProps> = ({ id, from, date, img, msg, read, unreadCount
           </Text>
         </View>
       </TouchableHighlight>
+      </Link>
     </SwipeableRow>
   );
 };

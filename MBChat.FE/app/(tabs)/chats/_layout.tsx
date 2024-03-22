@@ -1,14 +1,10 @@
 import { COLORS } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, Stack, useRouter } from 'expo-router';
-import { Pressable, View } from 'react-native';
+import { Pressable, View, Image, Text } from 'react-native';
 
 const Layout = () => {
   const router = useRouter();
-
-  const handleOpenModal = () => {
-    router.push("/(modals)/new-chat");
-  };
 
   return (
     <Stack>
@@ -19,10 +15,54 @@ const Layout = () => {
           headerLargeTitle: true,
           headerTransparent: true,
           headerBlurEffect: 'regular',
+          headerRight: () => (
+            <View style={{ flexDirection: 'row', gap: 30 }}>
+              <Pressable>
+                <Ionicons name="camera-outline" color={COLORS.light.primary} size={30} />
+              </Pressable>
+              <Link href={"/(modals)/new-chat"} asChild>
+                <Pressable>
+                  <Ionicons name="add-circle" color={COLORS.light.primary} size={30} />
+                </Pressable>
+              </Link>
+            </View>
+          ),
+          headerStyle: {
+            backgroundColor: '#fff',
+          },
+          headerSearchBarOptions: {
+            placeholder: 'Search',
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="[id]"
+        options={{
+          title: '',
+          headerBackTitleVisible: false,
+          headerTitle: () => (
+            <View
+              style={{
+                flexDirection: 'row',
+                width: 220,
+                alignItems: 'center',
+                gap: 10,
+                paddingBottom: 4,
+              }}>
+              <Image
+                source={{
+                  uri: 'https://i.pravatar.cc/150?u=aguilarduke@marketoid.com',
+                }}
+                style={{ width: 40, height: 40, borderRadius: 50 }}
+              />
+              <Text style={{ fontSize: 16, fontWeight: '500' }}>Aguilar</Text>
+            </View>
+          ),
           headerLeft: () => (
-            <Pressable>
+            <Pressable onPress={() => router.back()}>
               <Ionicons
-                name="ellipsis-horizontal-circle-outline"
+                name="chevron-back-outline"
                 color={COLORS.light.primary}
                 size={30}
               />
@@ -31,18 +71,15 @@ const Layout = () => {
           headerRight: () => (
             <View style={{ flexDirection: 'row', gap: 30 }}>
               <Pressable>
-                <Ionicons name="camera-outline" color={COLORS.light.primary} size={30} />
+                <Ionicons name="videocam-outline" color={COLORS.light.primary} size={28} />
               </Pressable>
-              <Pressable onPress={handleOpenModal}>
-                <Ionicons name="add-circle" color={COLORS.light.primary} size={30} />
+              <Pressable>
+                <Ionicons name="call-outline" color={COLORS.light.primary} size={28} />
               </Pressable>
             </View>
           ),
           headerStyle: {
-            backgroundColor: '#fff',
-          },
-          headerSearchBarOptions: {
-            placeholder: 'Search',
+            backgroundColor: COLORS.light.background,
           },
         }}
       />
