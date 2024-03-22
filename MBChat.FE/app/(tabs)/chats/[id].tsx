@@ -89,9 +89,8 @@ function reducer(state: IState, action: StateAction) {
 }
 
 const SingleChatPage = () => {
-  const data = useLocalSearchParams();
-  const fetchedData: any = Array.isArray(data.id) ? data.id.join(',') : data.id;
-  const parsedData: any = JSON.parse(fetchedData);
+  const id = useLocalSearchParams();
+  console.log(id);
 
   const [text, setText] = useState('');
   const insets = useSafeAreaInsets();
