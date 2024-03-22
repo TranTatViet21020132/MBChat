@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import { Link, Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect } from 'react';
+import ChatProvider from '@/context/chatContext'
 
 import {I18nextProvider} from "react-i18next";
 import i18n from "@/services/i18n.config";
@@ -53,47 +54,49 @@ function RootLayoutNav() {
   const router = useRouter();
 
   return (
-    <I18nextProvider i18n={i18n}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="otp" 
-            options={{ 
-              headerTitle: t("otp.content.title"), 
-              headerBackVisible: false
-            }}
-          />
-          <Stack.Screen name="verify/[phone]" 
-            options={{ headerBackTitle: 'Edit number' }}
-          />
-          <Stack.Screen name="(tabs)"
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="(modals)/new-chat"
-            options={{
-              presentation: 'modal',
-              title: 'New Chat',
-              headerTransparent: true,
-              headerBlurEffect: 'regular',
-              headerStyle: {
-                backgroundColor: COLORS.light.background,
-              },
-              headerRight: () => (
-                <Pressable
-                  style={{ backgroundColor: COLORS.lightGray, borderRadius: 20, padding: 4 }}
-                  onPress={() => router.back()}>
-                  <Ionicons name="close" color={COLORS.gray} size={30} />
-                </Pressable>
-              ),
-              headerSearchBarOptions: {
-                placeholder: 'Search name or number',
-                hideWhenScrolling: false,
-              },
-            }}
-          />
-        </Stack>
-      </ThemeProvider>
-    </I18nextProvider>
+    <ChatProvider>
+      <I18nextProvider i18n={i18n}>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="otp" 
+              options={{ 
+                headerTitle: t("otp.content.title"), 
+                headerBackVisible: false
+              }}
+            />
+            <Stack.Screen name="verify/[phone]" 
+              options={{ headerBackTitle: 'Edit number' }}
+            />
+            <Stack.Screen name="(tabs)"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="(modals)/new-chat"
+              options={{
+                presentation: 'modal',
+                title: 'New Chat',
+                headerTransparent: true,
+                headerBlurEffect: 'regular',
+                headerStyle: {
+                  backgroundColor: COLORS.light.background,
+                },
+                headerRight: () => (
+                  <Pressable
+                    style={{ backgroundColor: COLORS.lightGray, borderRadius: 20, padding: 4 }}
+                    onPress={() => router.back()}>
+                    <Ionicons name="close" color={COLORS.gray} size={30} />
+                  </Pressable>
+                ),
+                headerSearchBarOptions: {
+                  placeholder: 'Search name or number',
+                  hideWhenScrolling: false,
+                },
+              }}
+            />
+          </Stack>
+        </ThemeProvider>
+      </I18nextProvider>
+    </ChatProvider>
   );
 }

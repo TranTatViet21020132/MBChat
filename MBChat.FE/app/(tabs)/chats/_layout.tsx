@@ -2,9 +2,19 @@ import { COLORS } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, Stack, useRouter } from 'expo-router';
 import { Pressable, View, Image, Text } from 'react-native';
+import { ChatContext } from '@/context/chatContext';
+import React, { useCallback } from 'react';
 
-const Layout = () => {
+const ChatsLayout = () => {
   const router = useRouter();
+
+  const chatContext = React.useContext(ChatContext);
+  
+  if (!chatContext || !chatContext.setChats) {
+    return null;
+  }
+
+  const { chats } = chatContext;
 
   return (
     <Stack>
@@ -42,22 +52,26 @@ const Layout = () => {
           title: '',
           headerBackTitleVisible: false,
           headerTitle: () => (
-            <View
-              style={{
-                flexDirection: 'row',
-                width: 220,
-                alignItems: 'center',
-                gap: 10,
-                paddingBottom: 4,
-              }}>
-              <Image
-                source={{
-                  uri: 'https://i.pravatar.cc/150?u=aguilarduke@marketoid.com',
-                }}
-                style={{ width: 40, height: 40, borderRadius: 50 }}
-              />
-              <Text style={{ fontSize: 16, fontWeight: '500' }}>Aguilar</Text>
-            </View>
+            <Link href={"/chats/profile"} asChild>
+              <Pressable>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    width: 220,
+                    alignItems: 'center',
+                    gap: 10,
+                    paddingBottom: 4,
+                  }}>
+                  <Image
+                    source={{
+                      uri: chats.img,
+                    }}
+                    style={{ width: 40, height: 40, borderRadius: 50 }}
+                  />
+                  <Text style={{ fontSize: 16, fontWeight: '500' }}>{chats.from}</Text>
+                </View>
+              </Pressable>
+            </Link>
           ),
           headerLeft: () => (
             <Pressable onPress={() => router.back()}>
@@ -83,7 +97,11 @@ const Layout = () => {
           },
         }}
       />
+      <Stack.Screen
+        name="profile"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 };
-export default Layout;
+export default ChatsLayout;
