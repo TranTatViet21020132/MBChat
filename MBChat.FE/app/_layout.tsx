@@ -62,11 +62,21 @@ function RootLayoutNav() {
             <Stack.Screen name="otp" 
               options={{ 
                 headerTitle: t("otp.content.title"), 
-                headerBackVisible: false
+                headerBackVisible: false,
+                headerShadowVisible: false,
+                headerStyle: {
+                  backgroundColor: COLORS.light.background,
+                },
               }}
             />
             <Stack.Screen name="verify/[phone]" 
-              options={{ headerBackTitle: 'Edit number' }}
+              options={{
+                headerBackTitle: 'Edit number',
+                headerShadowVisible: false,
+                headerStyle: {
+                  backgroundColor: COLORS.light.background,
+                },
+              }}
             />
             <Stack.Screen name="(tabs)"
               options={{ headerShown: false }}

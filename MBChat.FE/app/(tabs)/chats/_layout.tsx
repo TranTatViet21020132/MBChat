@@ -51,6 +51,7 @@ const ChatsLayout = () => {
         options={{
           title: '',
           headerBackTitleVisible: false,
+          headerShadowVisible: false,
           headerTitle: () => (
             <Link href={"/chats/profile"} asChild>
               <Pressable>

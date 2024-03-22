@@ -8,7 +8,7 @@ import { Screen } from '@/constants/Screens';
 import React from 'react';
 import { ChatContext } from '@/context/chatContext';
 
-export interface ChatRowProps {
+export type ChatRowProps = {
   id: string;
   from: string;
   date: string;

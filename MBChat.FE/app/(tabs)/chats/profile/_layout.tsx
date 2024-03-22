@@ -13,6 +13,7 @@ const Layout = () => {
         options={{
           title: '',
           headerBackTitleVisible: false,
+          headerShadowVisible: false,
           headerTitle: "Contact Information", 
           headerLeft: () => (
             <Pressable onPress={() => router.back()}>
