@@ -1,27 +1,34 @@
-import { View, Text, StyleSheet, ScrollView, Image, Pressable, TouchableOpacity } from 'react-native'
+import {View, Text, StyleSheet, ScrollView, Image, Pressable, TouchableOpacity } from 'react-native'
+// import { View, Text } from '@/components/Themed'
 import React from 'react'
 import { COLORS } from '@/constants/Colors'
 import { SearchBar } from 'react-native-elements'
 import { useState } from 'react'
 import { MaterialCommunityIcons, Ionicons, Fontisto, Octicons } from '@expo/vector-icons'
+import { useTranslation } from 'react-i18next'
+import { TFunction } from 'i18next'
 
+type Props = {
+  t: TFunction<"translation", undefined>;
+}
 
 const Settings = () => {
   const [searchValue, setSearchValue] = useState('')
 
+  const { t } = useTranslation();
 
   return (
     <ScrollView
       style={styles.container}
     >
-      <Header />
-      <UserItems />
-      <AppItems />
+      <Header t={t}/>
+      <UserItems t={t}/>
+      <AppItems t={t}/>
     </ScrollView>
   )
 }
 
-const Header = () => {
+const Header: React.FC<Props> = ({t}) => {
 
   return (
     <View
@@ -37,9 +44,7 @@ const Header = () => {
             margin: 20,
             borderRadius: 9999,
           }}
-          source={{
-            uri: 'https://reactnative.dev/img/tiny_logo.png'
-          }}
+          source={require('@/assets/images/user-image.jpg')}
         />
         <View
           style={{
@@ -57,12 +62,12 @@ const Header = () => {
             fontSize: 16,
             marginTop: 4
           }}>
-            Heloo?! I'm using....
+            {t('settings.user.welcome')}
           </Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.item}>
-          <View style={{...styles.itemIcon, backgroundColor: '#3d72f6'}}>
+      <Pressable style={styles.item}>
+          <View style={{...styles.itemIcon, backgroundColor: '#3d72f6'}} >
             <MaterialCommunityIcons name='camera-plus-outline' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
@@ -71,100 +76,100 @@ const Header = () => {
             </Text>
             <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
           </View>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   )
 }
 
-const UserItems = () => {
+const UserItems: React.FC<Props> = ({t}) => {
 
   return (
     <View style={styles.items}>
-      <TouchableOpacity style={styles.item}>
+      <Pressable style={styles.item}>
           <View style={{...styles.itemIcon, backgroundColor: '#0a79ee'}}>
             <Ionicons name='key-outline' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.text}}>
-              Account
+            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}>
+              {t('settings.items.account')}
             </Text>
             <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
           </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.item}>
+      </Pressable>
+      <Pressable style={styles.item}>
           <View style={{...styles.itemIcon, backgroundColor: '#0cb0a5'}}>
             <MaterialCommunityIcons name='devices' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.text}}>
-              Devices
+            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}>
+            {t('settings.items.devices')}
             </Text>
             <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
           </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.item}>
+      </Pressable>
+      <Pressable style={styles.item}>
           <View style={{...styles.itemIcon, backgroundColor: '#f23d37'}}>
             <Ionicons name='notifications-outline' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.text}}>
-              Notifications
+            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}>
+            {t('settings.items.notifications')}
             </Text>
             <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
           </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.item}>
+      </Pressable>
+      <Pressable style={styles.item}>
           <View style={{...styles.itemIcon, backgroundColor: '#5765f2'}}>
             <Fontisto name='world-o' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.text}}>
-              Language
+            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}>
+            {t('settings.items.language')}
             </Text>
             <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
           </View>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }
 
-const AppItems = () => {
+const AppItems: React.FC<Props> = ({t}) => {
 
   return (
     <View style={styles.items}>
-      <TouchableOpacity style={styles.item}>
+      <Pressable style={styles.item}>
           <View style={{...styles.itemIcon, backgroundColor: '#40a6e0'}}>
             <Ionicons name='lock-closed-outline' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.text}}>
-              Privacy And Security
+            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}> 
+            {t('settings.items.privacy')}
             </Text>
             <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
           </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.item}>
+      </Pressable>
+      <Pressable style={styles.item}>
           <View style={{...styles.itemIcon, backgroundColor: '#28c75c'}}>
             <Octicons name='question' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.text}}>
-              App FAQ
+            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}>
+            {t('settings.items.faq')}
             </Text>
             <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
           </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.item}>
+      </Pressable>
+      <Pressable style={styles.item}>
           <View style={{...styles.itemIcon, backgroundColor: '#f0c910'}}>
             <MaterialCommunityIcons name='lightbulb-outline' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.text}}>
-              App Features
+            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}>
+            {t('settings.items.features')}
             </Text>
             <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
           </View>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

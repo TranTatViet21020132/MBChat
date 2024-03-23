@@ -16,7 +16,6 @@ const Layout = () => {
             backgroundColor: 'transparent'
           }
         }}
-      
       />
     </Stack>
   )

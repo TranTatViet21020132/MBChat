@@ -24,5 +24,15 @@
   "tab.content.calls": "Calls",
   "tab.content.communities": "Communities",
   "tab.content.chats": "Chats",
-  "tab.content.settings": "Settings"
+  "tab.content.settings": "Settings",
+
+  "settings.user.welcome": "Hello! I'm using ...",
+  "settings.items.photo": "Set Profile Photo",
+  "settings.items.account": "Account",
+  "settings.items.devices": "Devices",
+  "settings.items.notifications": "Notifications",
+  "settings.items.language": "Language",
+  "settings.items.privacy": "Privacy And Security",
+  "settings.items.faq": "App FAQ",
+  "settings.items.features": "App Features"
 }

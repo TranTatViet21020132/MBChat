@@ -18,5 +18,15 @@
 
   "verify.content.codeSent": "We have sent you an SMS with a code to the number above.",
   "verify.content.codeEnter": "To complete your phone number verification, please enter the 6-digit activation code.",
-  "verify.action.resendCode": "Didn't receive a verification code?"
+  "verify.action.resendCode": "Didn't receive a verification code?",
+
+  "setting.user.welcome": "Xin chào! Tôi đang dùng ...",
+  "settings.items.photo": "Set Profile Photo",
+  "settings.items.account": "Account",
+  "settings.items.devices": "Devices",
+  "settings.items.notifications": "Notifications",
+  "settings.items.language": "Language",
+  "settings.items.privacy": "Privacy And Security",
+  "settings.items.faq": "App FAQ",
+  "settings.items.features": "App Features"
 }
