@@ -4,6 +4,7 @@ import React from 'react'
 import { COLORS } from '@/constants/Colors'
 import { SearchBar } from 'react-native-elements'
 import { useState } from 'react'
+import { useRouter } from 'expo-router'
 import { MaterialCommunityIcons, Ionicons, Fontisto, Octicons } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
@@ -13,7 +14,6 @@ type Props = {
 }
 
 const Settings = () => {
-  const [searchValue, setSearchValue] = useState('')
 
   const { t } = useTranslation();
 
@@ -71,7 +71,7 @@ const Header: React.FC<Props> = ({t}) => {
             <MaterialCommunityIcons name='camera-plus-outline' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.primary}}>
+            <Text style={{fontSize: 16, color: COLORS.light.primary}}>,
               Set Profile Photo
             </Text>
             <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
@@ -83,9 +83,13 @@ const Header: React.FC<Props> = ({t}) => {
 
 const UserItems: React.FC<Props> = ({t}) => {
 
+  const router = useRouter();
+
   return (
     <View style={styles.items}>
-      <Pressable style={styles.item}>
+      <Pressable style={styles.item}
+        onPress={() => router.push('/(tabs)/settings/account')}
+      >
           <View style={{...styles.itemIcon, backgroundColor: '#0a79ee'}}>
             <Ionicons name='key-outline' size={24} color={'#fff'}/>
           </View>

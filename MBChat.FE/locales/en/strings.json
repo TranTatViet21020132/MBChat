@@ -34,5 +34,6 @@
   "settings.items.language": "Language",
   "settings.items.privacy": "Privacy And Security",
   "settings.items.faq": "App FAQ",
-  "settings.items.features": "App Features"
+  "settings.items.features": "App Features",
+  "settings.account.setNewPhoto": "Set New Photo"
 }
