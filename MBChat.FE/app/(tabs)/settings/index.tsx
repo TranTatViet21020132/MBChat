@@ -71,8 +71,8 @@ const Header: React.FC<Props> = ({t}) => {
             <MaterialCommunityIcons name='camera-plus-outline' size={24} color={'#fff'}/>
           </View>
           <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.primary}}>,
-              Set Profile Photo
+            <Text style={{fontSize: 16, color: COLORS.light.primary}}>
+              {t('settings.items.photo')}
             </Text>
             <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
           </View>

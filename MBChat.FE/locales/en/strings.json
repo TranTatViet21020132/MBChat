@@ -35,5 +35,10 @@
   "settings.items.privacy": "Privacy And Security",
   "settings.items.faq": "App FAQ",
   "settings.items.features": "App Features",
-  "settings.account.setNewPhoto": "Set New Photo"
+
+  "settings.account.setNewPhoto": "Set New Photo",
+  "settings.account.firstName": "First name",
+  "settings.account.lastName": "Last name",
+  "settings.account.editname": "Enter your name and add an optional profile photo",
+  "settings.account.phoneNumber": "Phone number"
 }
