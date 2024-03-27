@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, ScrollView, Image, Pressable, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Image, Pressable, Alert } from 'react-native'
 // import { View, Text } from '@/components/Themed'
 import React from 'react'
 import { COLORS } from '@/constants/Colors'
@@ -6,6 +6,7 @@ import { SearchBar } from 'react-native-elements'
 import { useState } from 'react'
 import { useRouter } from 'expo-router'
 import { MaterialCommunityIcons, Ionicons, Fontisto, Octicons } from '@expo/vector-icons'
+import * as ImagePicker from 'expo-image-picker'
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
 
@@ -21,14 +22,50 @@ const Settings = () => {
     <ScrollView
       style={styles.container}
     >
-      <Header t={t}/>
-      <UserItems t={t}/>
-      <AppItems t={t}/>
+      <Header t={t} />
+      <UserItems t={t} />
+      <AppItems t={t} />
     </ScrollView>
   )
 }
 
-const Header: React.FC<Props> = ({t}) => {
+const Header: React.FC<Props> = ({ t }) => {
+
+  const [file, setFile] = useState('');
+
+  // Stores any error message 
+  const [error, setError] = useState(null);
+
+  const pickImage = async () => {
+    const { status } = await ImagePicker.
+      requestMediaLibraryPermissionsAsync();
+
+    if (status !== "granted") {
+
+      // If permission is denied, show an alert 
+      Alert.alert(
+        "Permission Denied",
+        `Sorry, we need camera  
+             roll permission to upload images.`
+      );
+    } else {
+
+      // Launch the image library and get 
+      // the selected image 
+      const result =
+        await ImagePicker.launchImageLibraryAsync();
+
+      if (!result.canceled) {
+
+        // If an image is selected (not cancelled),  
+        // update the file state variable 
+        setFile(result.assets[0].uri);
+
+        // Clear any previous errors 
+        setError(null);
+      }
+    }
+  };
 
   return (
     <View
@@ -37,15 +74,29 @@ const Header: React.FC<Props> = ({t}) => {
       <View
         style={styles.avatar}
       >
-        <Image 
-          style={{
-            width: 60,
-            height: 60,
-            margin: 20,
-            borderRadius: 9999,
-          }}
-          source={require('@/assets/images/user-image.jpg')}
-        />
+        {
+          file ? (
+            <Image
+              source={{ uri: file }}
+              style={{
+                width: 60,
+                height: 60,
+                margin: 20,
+                borderRadius: 9999,
+              }}
+            />
+          ) : (
+            <Image
+              source={require('@/assets/images/user-image.jpg')}
+              style={{
+                width: 60,
+                height: 60,
+                margin: 20,
+                borderRadius: 9999,
+              }}
+            />
+          )
+        }
         <View
           style={{
             flex: 1,
@@ -66,22 +117,22 @@ const Header: React.FC<Props> = ({t}) => {
           </Text>
         </View>
       </View>
-      <Pressable style={styles.item}>
-          <View style={{...styles.itemIcon, backgroundColor: '#3d72f6'}} >
-            <MaterialCommunityIcons name='camera-plus-outline' size={24} color={'#fff'}/>
-          </View>
-          <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.primary}}>
-              {t('settings.items.photo')}
-            </Text>
-            <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
-          </View>
+      <Pressable style={styles.item} onPress={pickImage}>
+        <View style={{ ...styles.itemIcon, backgroundColor: '#3d72f6' }} >
+          <MaterialCommunityIcons name='camera-plus-outline' size={24} color={'#fff'} />
+        </View>
+        <View style={styles.itemTitle}>
+          <Text style={{ fontSize: 16, color: COLORS.light.primary }}>
+            {t('settings.items.photo')}
+          </Text>
+          <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
+        </View>
       </Pressable>
     </View>
   )
 }
 
-const UserItems: React.FC<Props> = ({t}) => {
+const UserItems: React.FC<Props> = ({ t }) => {
 
   const router = useRouter();
 
@@ -90,89 +141,89 @@ const UserItems: React.FC<Props> = ({t}) => {
       <Pressable style={styles.item}
         onPress={() => router.push('/(tabs)/settings/account')}
       >
-          <View style={{...styles.itemIcon, backgroundColor: '#0a79ee'}}>
-            <Ionicons name='key-outline' size={24} color={'#fff'}/>
-          </View>
-          <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}>
-              {t('settings.items.account')}
-            </Text>
-            <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
-          </View>
+        <View style={{ ...styles.itemIcon, backgroundColor: '#0a79ee' }}>
+          <Ionicons name='key-outline' size={24} color={'#fff'} />
+        </View>
+        <View style={styles.itemTitle}>
+          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
+            {t('settings.items.account')}
+          </Text>
+          <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
+        </View>
       </Pressable>
       <Pressable style={styles.item}>
-          <View style={{...styles.itemIcon, backgroundColor: '#0cb0a5'}}>
-            <MaterialCommunityIcons name='devices' size={24} color={'#fff'}/>
-          </View>
-          <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}>
+        <View style={{ ...styles.itemIcon, backgroundColor: '#0cb0a5' }}>
+          <MaterialCommunityIcons name='devices' size={24} color={'#fff'} />
+        </View>
+        <View style={styles.itemTitle}>
+          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
             {t('settings.items.devices')}
-            </Text>
-            <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
-          </View>
+          </Text>
+          <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
+        </View>
       </Pressable>
       <Pressable style={styles.item}>
-          <View style={{...styles.itemIcon, backgroundColor: '#f23d37'}}>
-            <Ionicons name='notifications-outline' size={24} color={'#fff'}/>
-          </View>
-          <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}>
+        <View style={{ ...styles.itemIcon, backgroundColor: '#f23d37' }}>
+          <Ionicons name='notifications-outline' size={24} color={'#fff'} />
+        </View>
+        <View style={styles.itemTitle}>
+          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
             {t('settings.items.notifications')}
-            </Text>
-            <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
-          </View>
+          </Text>
+          <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
+        </View>
       </Pressable>
       <Pressable style={styles.item}>
-          <View style={{...styles.itemIcon, backgroundColor: '#5765f2'}}>
-            <Fontisto name='world-o' size={24} color={'#fff'}/>
-          </View>
-          <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}>
+        <View style={{ ...styles.itemIcon, backgroundColor: '#5765f2' }}>
+          <Fontisto name='world-o' size={24} color={'#fff'} />
+        </View>
+        <View style={styles.itemTitle}>
+          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
             {t('settings.items.language')}
-            </Text>
-            <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
-          </View>
+          </Text>
+          <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
+        </View>
       </Pressable>
     </View>
   );
 }
 
-const AppItems: React.FC<Props> = ({t}) => {
+const AppItems: React.FC<Props> = ({ t }) => {
 
   return (
     <View style={styles.items}>
       <Pressable style={styles.item}>
-          <View style={{...styles.itemIcon, backgroundColor: '#40a6e0'}}>
-            <Ionicons name='lock-closed-outline' size={24} color={'#fff'}/>
-          </View>
-          <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}> 
+        <View style={{ ...styles.itemIcon, backgroundColor: '#40a6e0' }}>
+          <Ionicons name='lock-closed-outline' size={24} color={'#fff'} />
+        </View>
+        <View style={styles.itemTitle}>
+          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
             {t('settings.items.privacy')}
-            </Text>
-            <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
-          </View>
+          </Text>
+          <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
+        </View>
       </Pressable>
       <Pressable style={styles.item}>
-          <View style={{...styles.itemIcon, backgroundColor: '#28c75c'}}>
-            <Octicons name='question' size={24} color={'#fff'}/>
-          </View>
-          <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}>
+        <View style={{ ...styles.itemIcon, backgroundColor: '#28c75c' }}>
+          <Octicons name='question' size={24} color={'#fff'} />
+        </View>
+        <View style={styles.itemTitle}>
+          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
             {t('settings.items.faq')}
-            </Text>
-            <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
-          </View>
+          </Text>
+          <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
+        </View>
       </Pressable>
       <Pressable style={styles.item}>
-          <View style={{...styles.itemIcon, backgroundColor: '#f0c910'}}>
-            <MaterialCommunityIcons name='lightbulb-outline' size={24} color={'#fff'}/>
-          </View>
-          <View style={styles.itemTitle}>
-            <Text style={{fontSize: 16, color: COLORS.light.settings.text}}>
+        <View style={{ ...styles.itemIcon, backgroundColor: '#f0c910' }}>
+          <MaterialCommunityIcons name='lightbulb-outline' size={24} color={'#fff'} />
+        </View>
+        <View style={styles.itemTitle}>
+          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
             {t('settings.items.features')}
-            </Text>
-            <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text}/>
-          </View>
+          </Text>
+          <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
+        </View>
       </Pressable>
     </View>
   );
@@ -180,9 +231,9 @@ const AppItems: React.FC<Props> = ({t}) => {
 
 const styles = StyleSheet.create({
   container: {
-   paddingRight: 20,
-   paddingLeft: 20,
-   paddingTop: 20,
+    paddingRight: 20,
+    paddingLeft: 20,
+    paddingTop: 20,
   },
   header: {
     backgroundColor: '#fff',
