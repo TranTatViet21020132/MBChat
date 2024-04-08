@@ -84,9 +84,9 @@ const Account = () => {
         </View>
       </View>
       <Text style={{ color: 'grey', textAlign: 'center', marginBottom: 32 }}>
-        Any details such as age, occupation or city ...
+        {"Any details such as age, occupation or city ..."}
       </Text>
-      <EditPhoneNumer />
+      {/* <EditPhoneNumer /> */}
       <Pressable style={styles.buttonSubmit}>
         Done
       </Pressable>

@@ -1,10 +1,12 @@
 import SwipeableRow from '@/components/SwipeableRow';
 import { COLORS } from '@/constants/Colors';
 import { format } from 'date-fns';
-import { Link, useRouter } from 'expo-router';
+import { Link, router, useRouter } from 'expo-router';
 import { FC, useCallback } from 'react';
 import { View, Text, Image, TouchableHighlight } from 'react-native';
 import { Screen } from '@/constants/Screens';
+import React from 'react';
+import { ChatContext } from '@/context/chatContext';
 
 export interface ChatRowProps {
   id: string;
@@ -17,11 +19,19 @@ export interface ChatRowProps {
 }
 
 const ChatRow: FC<ChatRowProps> = ({ id, from, date, img, msg, read, unreadCount }) => {
-  const router = useRouter();
+  const chatContext = React.useContext(ChatContext);
+  
+  if (!chatContext || !chatContext.setChats) {
+    return null;
+  }
 
-  const handleOpenSingleChat = () => {
-    router.push("/(tabs)/chats");
-  };
+  const { setChats } = chatContext;
+  const chatData = { id, from, date, img, msg, read, unreadCount };
+
+  const handleSingeChatfetch = useCallback(() => {
+    router.push(`/(tabs)/chats/${id}`);
+    setChats(chatData);
+  }, []);
 
   return (
     <SwipeableRow
@@ -32,14 +42,14 @@ const ChatRow: FC<ChatRowProps> = ({ id, from, date, img, msg, read, unreadCount
       <TouchableHighlight
       activeOpacity={0.8}
       underlayColor={COLORS.lightGray}
-      onPress={handleOpenSingleChat}
+      onPress={handleSingeChatfetch}
       >
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             gap: 14,
-            paddingLeft: 20,
+            paddingLeft: 10,
             paddingVertical: 10,
           }}>
           <Image source={{ uri: img }} style={{ width: 50, height: 50, borderRadius: 50 }} />

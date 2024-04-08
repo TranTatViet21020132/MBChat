@@ -82,7 +82,6 @@ export default class SwipeableRow extends Component<SwipeableRowProps> {
           </View>
           )
         break;
-      // Add cases for other screens if needed
 
       default:
         break;

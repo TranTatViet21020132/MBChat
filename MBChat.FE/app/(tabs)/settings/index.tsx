@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, ScrollView, Image, Pressable, Alert } from 'rea
 // import { View, Text } from '@/components/Themed'
 import React from 'react'
 import { COLORS } from '@/constants/Colors'
-import { SearchBar } from 'react-native-elements'
+// import { SearchBar } from 'react-native-elements'
 import { useState } from 'react'
 import { useRouter } from 'expo-router'
 import { MaterialCommunityIcons, Ionicons, Fontisto, Octicons } from '@expo/vector-icons'
