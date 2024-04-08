@@ -1,10 +1,13 @@
 import { StyleSheet, Image, Pressable } from 'react-native'
 import { View, Text } from '@/components/Themed'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { COLORS } from '@/constants/Colors'
 import { ChatContext } from '@/context/chatContext';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
+import { Href } from 'expo-router';
+import { router } from 'expo-router';
+import { ScrollView } from 'react-native-gesture-handler';
  
 type DataProps = {
   id: string;
@@ -27,19 +30,62 @@ type MenuItem = {
   | 'warning-outline';
   iconColor: string;
   titleKey: string;
+  path: string;
 }
 
 const menuItems: MenuItem[] = [
-  { id: '1', iconName: 'document-outline', iconColor: '#0a79ee', titleKey: 'profile.menu.documents' },
-  { id: '2', iconName: 'image-outline', iconColor: '#0cb0a5', titleKey: 'profile.menu.backgrounds' },
-  { id: '3', iconName: 'notifications-outline', iconColor: '#28c75c', titleKey: 'profile.menu.notifications' },
-  { id: '4', iconName: 'search-outline', iconColor: '#5765f2', titleKey: 'profile.menu.search' },
-  { id: '5', iconName: 'people-outline', iconColor: '#40a6e0', titleKey: 'profile.menu.newGroup' }
+  { 
+    id: '1', 
+    iconName: 'document-outline', 
+    iconColor: '#0a79ee', 
+    titleKey: 'profile.menu.documents', 
+    path: '/(tabs)/chats/profile/(tabs)/documents' 
+  },
+  { 
+    id: '2', 
+    iconName: 'image-outline', 
+    iconColor: '#0cb0a5', 
+    titleKey: 'profile.menu.backgrounds', 
+    path: '/(tabs)/chats/profile/(tabs)/backgrounds' 
+  },
+  { 
+    id: '3', 
+    iconName: 'notifications-outline', 
+    iconColor: '#28c75c', 
+    titleKey: 'profile.menu.notifications', 
+    path: '/(tabs)/chats/profile/(tabs)/notifications' 
+  },
+  { 
+    id: '4', 
+    iconName: 'search-outline', 
+    iconColor: '#5765f2', 
+    titleKey: 'profile.menu.search', 
+    path: '/(tabs)/chats/profile/(tabs)/search' 
+  },
+  { 
+    id: '5', 
+    iconName: 'people-outline', 
+    iconColor: '#40a6e0', 
+    titleKey: 'profile.menu.newGroup', 
+    path: '/(tabs)/chats/profile/(tabs)/newGroup' 
+  }
 ]
 
 const supportItems: MenuItem[] = [
-  { id: '1', iconName: 'remove-circle-outline', iconColor: '#f23d37', titleKey: 'profile.menu.block' },
-  { id: '2', iconName: 'warning-outline', iconColor: '#f0c910', titleKey: 'profile.menu.report' },
+  { 
+    id: '1', 
+    iconName: 'remove-circle-outline', 
+    iconColor: '#f23d37', 
+    titleKey: 'profile.menu.block', 
+    path: '/(tabs)/chats/profile/(tabs)/block' 
+  },
+  { 
+    id: '2', 
+    iconName: 'warning-outline', 
+    iconColor: '#f0c910', 
+    titleKey: 'profile.menu.report', 
+    path: '/(tabs)/chats/profile/(tabs)/report' 
+  },
 ]
 
 const ChatProfile = () => {
@@ -53,8 +99,12 @@ const ChatProfile = () => {
 
   const { chats } = chatContext;
 
+  const handleChatPath = useCallback((url: Href<string>) => {
+    router.push(url);
+  }, [router]);
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Header data={chats}/>
 
       <View
@@ -62,7 +112,9 @@ const ChatProfile = () => {
       lightColor='#fff'
       >
       {menuItems.map((menuItem) => (
-        <Pressable key={menuItem.id} style={styles.item}>
+        <Pressable style={styles.item} key={menuItem.id} 
+        onPress={ () => handleChatPath(menuItem.path as Href<string>) 
+        }>
           <View style={{ ...styles.itemIcon, backgroundColor: menuItem.iconColor }}>
             <Ionicons name={menuItem.iconName} size={24} color={'#fff'} />
           </View>
@@ -84,7 +136,9 @@ const ChatProfile = () => {
       lightColor='#fff'
       >
       {supportItems.map((supportItem) => (
-        <Pressable key={supportItem.id} style={styles.item}>
+        <Pressable key={supportItem.id} style={styles.item}
+        onPress={ () => handleChatPath(supportItem.path as Href<string>) }
+        >
           <View style={{ ...styles.itemIcon, backgroundColor: supportItem.iconColor }}>
             <Ionicons name={supportItem.iconName} size={24} color={'#fff'} />
           </View>
@@ -100,7 +154,7 @@ const ChatProfile = () => {
         </Pressable>
       ))}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -162,6 +216,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: COLORS.light.settings.backgroudColor,
+    width: '100%'
   },
   itemIcon: {
     marginLeft: 20,
@@ -172,7 +227,7 @@ const styles = StyleSheet.create({
   itemTitle: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   items: {
     marginBottom: 28,

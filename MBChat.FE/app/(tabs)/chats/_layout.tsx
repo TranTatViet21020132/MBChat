@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Link, Stack, useRouter } from 'expo-router';
 import { Pressable, View, Image, Text } from 'react-native';
 import { ChatContext } from '@/context/chatContext';
-import React, { useCallback } from 'react';
+import React from 'react';
 
 const ChatsLayout = () => {
   const router = useRouter();
