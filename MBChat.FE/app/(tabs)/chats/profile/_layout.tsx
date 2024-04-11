@@ -48,6 +48,25 @@ const Layout = () => {
           },
         }}
       />
+      <Stack.Screen
+        name="(tabs)/backgrounds"
+        options={{
+          title: '',
+          headerBackTitleVisible: false, 
+          headerLeft: () => (
+            <Pressable onPress={() => router.back()}>
+              <Ionicons
+                name="chevron-back-outline"
+                color={COLORS.light.primary}
+                size={30}
+              />
+            </Pressable>
+          ),
+          headerStyle: {
+            backgroundColor: COLORS.light.background,
+          },
+        }}
+      />
     </Stack>
   );
 };

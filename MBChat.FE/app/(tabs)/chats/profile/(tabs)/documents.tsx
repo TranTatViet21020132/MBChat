@@ -13,7 +13,6 @@ import NoDataPage from '@/components/NoData';
 import { useCallback, useState } from 'react';
 import { ChatContext } from '@/context/chatContext';
 import { SegmentedControl } from '@/components/SegmentedControl';
-import calls from '@/assets/data/calls.json';
 import { defaultStyles } from '@/constants/Styles';
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
