@@ -5,7 +5,7 @@ import { Link, Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect } from 'react';
 import ChatProvider from '@/context/chatContext'
-
+import WebsocketProvider from '@/context/WebsocketContext';
 import {I18nextProvider} from "react-i18next";
 import i18n from "@/services/i18n.config";
 import { useTranslation } from 'react-i18next';
@@ -55,6 +55,7 @@ function RootLayoutNav() {
 
   return (
     <ChatProvider>
+      <WebsocketProvider>
       <I18nextProvider i18n={i18n}>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <Stack>
@@ -107,6 +108,7 @@ function RootLayoutNav() {
           </Stack>
         </ThemeProvider>
       </I18nextProvider>
+      </WebsocketProvider>
     </ChatProvider>
   );
 }
