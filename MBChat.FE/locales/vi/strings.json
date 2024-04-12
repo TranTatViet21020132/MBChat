@@ -34,5 +34,7 @@
   "settings.account.firstName": "First name",
   "settings.account.lastName": "Last name",
   "settings.account.editname": "Enter your name and add an optional profile photo",
-  "settings.account.phoneNumber": "Phone number"
+  "settings.account.phoneNumber": "Phone number",
+  "settings.account.bio": "Bio",
+  "settings.account.desBio": "Any details such as age, occupation or city ..."
 }

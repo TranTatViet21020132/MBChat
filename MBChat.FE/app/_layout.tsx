@@ -4,7 +4,7 @@ import { useFonts } from 'expo-font';
 import { Link, Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect } from 'react';
-import ChatProvider from '@/context/chatContext'
+import {ChatProvider} from '@/context/chatContext'
 
 import {I18nextProvider} from "react-i18next";
 import i18n from "@/services/i18n.config";

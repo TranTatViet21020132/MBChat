@@ -8,6 +8,7 @@ const COLORS = {
   lightGreen: '#DBFFCB',
   red: '#EF0827',
   yellow: '#FCC70B',
+  blue: '#1063FD',
 
   light: {
     tint: tintColorLight,
@@ -46,7 +47,8 @@ const COLORS = {
 
     settings: {
       text: '#000',
-      backgroudColor: '#f2f2f2'
+      backgroudColor: '#f2f2f2',
+      backgroundInput: '#fff'
     },
   },
 
@@ -87,7 +89,8 @@ const COLORS = {
 
     settings: {
       text: '#fff',
-      backgroudColor: '#000'
+      backgroudColor: '#000',
+      backgroundInput: '#1C1C1E'
     }
   },
 };
