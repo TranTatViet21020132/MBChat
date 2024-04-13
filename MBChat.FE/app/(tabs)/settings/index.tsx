@@ -1,14 +1,14 @@
-import { View, Text, StyleSheet, ScrollView, Image, Pressable, Alert } from 'react-native'
-// import { View, Text } from '@/components/Themed'
+import { StyleSheet, ScrollView, Image, Pressable, Alert } from 'react-native'
+import { View, Text, TouchableOpacity } from '@/components/Themed'
 import React from 'react'
 import { COLORS } from '@/constants/Colors'
-// import { SearchBar } from 'react-native-elements'
 import { useState } from 'react'
 import { useRouter } from 'expo-router'
 import { MaterialCommunityIcons, Ionicons, Fontisto, Octicons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
+import { useColorScheme } from '@/components/useColorScheme'
 
 type Props = {
   t: TFunction<"translation", undefined>;
@@ -17,6 +17,7 @@ type Props = {
 const Settings = () => {
 
   const { t } = useTranslation();
+  const colorScheme = useColorScheme();
 
   return (
     <ScrollView
@@ -67,12 +68,18 @@ const Header: React.FC<Props> = ({ t }) => {
     }
   };
 
+  const colorScheme = useColorScheme();
+
   return (
     <View
       style={styles.header}
+      lightColor={COLORS.light.settings.backgroundInput}
+      darkColor={COLORS.dark.settings.backgroundInput}
     >
       <View
-        style={styles.avatar}
+        style={colorScheme === 'light' ? styles.avatarLight : styles.avatarDark}
+        lightColor={COLORS.light.settings.backgroundInput}
+        darkColor={COLORS.dark.settings.backgroundInput}
       >
         {
           file ? (
@@ -101,33 +108,49 @@ const Header: React.FC<Props> = ({ t }) => {
           style={{
             flex: 1,
           }}
+          lightColor={COLORS.light.settings.backgroundInput}
+          darkColor={COLORS.dark.settings.backgroundInput}
         >
           <Text style={{
             fontSize: 20,
             marginTop: 20,
             fontWeight: '600'
-          }}>
+          }}
+            lightColor={COLORS.light.settings.text}
+            darkColor={COLORS.dark.settings.text}
+          >
             Cucululu
           </Text>
           <Text style={{
             fontSize: 16,
             marginTop: 4
-          }}>
+          }}
+            lightColor={COLORS.light.settings.text}
+            darkColor={COLORS.dark.settings.text}
+          >
             {t('settings.user.welcome')}
           </Text>
         </View>
       </View>
-      <Pressable style={styles.item} onPress={pickImage}>
+      <TouchableOpacity style={colorScheme === 'light' ? styles.itemLight : styles.itemDark}
+        activeOpacity={0.8}
+        lightColor={COLORS.light.settings.backgroundInput}
+        darkColor={COLORS.dark.settings.backgroundInput}
+        onPress={pickImage}
+      >
         <View style={{ ...styles.itemIcon, backgroundColor: '#3d72f6' }} >
           <MaterialCommunityIcons name='camera-plus-outline' size={24} color={'#fff'} />
         </View>
-        <View style={styles.itemTitle}>
+        <View style={styles.itemTitle}
+          lightColor={COLORS.light.settings.backgroundInput}
+          darkColor={COLORS.dark.settings.backgroundInput}
+        >
           <Text style={{ fontSize: 16, color: COLORS.light.primary }}>
             {t('settings.items.photo')}
           </Text>
           <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
         </View>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   )
 }
@@ -136,95 +159,174 @@ const UserItems: React.FC<Props> = ({ t }) => {
 
   const router = useRouter();
 
+  const colorScheme = useColorScheme();
+
   return (
-    <View style={styles.items}>
-      <Pressable style={styles.item}
+    <View style={styles.items}
+      lightColor={COLORS.light.settings.backgroundInput}
+      darkColor={COLORS.dark.settings.backgroundInput}
+    >
+      <TouchableOpacity style={colorScheme === 'light' ? styles.itemLight : styles.itemDark}
+        activeOpacity={0.8}
+        lightColor={COLORS.light.settings.backgroundInput}
+        darkColor={COLORS.dark.settings.backgroundInput}
         onPress={() => router.push('/(tabs)/settings/account')}
       >
         <View style={{ ...styles.itemIcon, backgroundColor: '#0a79ee' }}>
           <Ionicons name='key-outline' size={24} color={'#fff'} />
         </View>
-        <View style={styles.itemTitle}>
-          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
+        <View style={styles.itemTitle}
+          lightColor={COLORS.light.settings.backgroundInput}
+          darkColor={COLORS.dark.settings.backgroundInput}
+        >
+          <Text style={{ fontSize: 16 }}
+            lightColor={COLORS.light.settings.text}
+            darkColor={COLORS.dark.settings.text}
+          >
             {t('settings.items.account')}
           </Text>
           <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
         </View>
-      </Pressable>
-      <Pressable style={styles.item}>
+      </TouchableOpacity>
+      <TouchableOpacity style={colorScheme === 'light' ? styles.itemLight : styles.itemDark}
+        activeOpacity={0.8}
+        lightColor={COLORS.light.settings.backgroundInput}
+        darkColor={COLORS.dark.settings.backgroundInput}
+      >
         <View style={{ ...styles.itemIcon, backgroundColor: '#0cb0a5' }}>
           <MaterialCommunityIcons name='devices' size={24} color={'#fff'} />
         </View>
-        <View style={styles.itemTitle}>
-          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
+        <View style={styles.itemTitle}
+          lightColor={COLORS.light.settings.backgroundInput}
+          darkColor={COLORS.dark.settings.backgroundInput}
+        >
+          <Text style={{ fontSize: 16 }}
+            lightColor={COLORS.light.settings.text}
+            darkColor={COLORS.dark.settings.text}
+          >
             {t('settings.items.devices')}
           </Text>
           <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
         </View>
-      </Pressable>
-      <Pressable style={styles.item}>
+      </TouchableOpacity>
+      <TouchableOpacity style={colorScheme === 'light' ? styles.itemLight : styles.itemDark}
+        activeOpacity={0.8}
+        lightColor={COLORS.light.settings.backgroundInput}
+        darkColor={COLORS.dark.settings.backgroundInput}
+      >
         <View style={{ ...styles.itemIcon, backgroundColor: '#f23d37' }}>
           <Ionicons name='notifications-outline' size={24} color={'#fff'} />
         </View>
-        <View style={styles.itemTitle}>
-          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
+        <View style={styles.itemTitle}
+          lightColor={COLORS.light.settings.backgroundInput}
+          darkColor={COLORS.dark.settings.backgroundInput}
+        >
+          <Text style={{ fontSize: 16}}
+            lightColor={COLORS.light.settings.text}
+            darkColor={COLORS.dark.settings.text}
+          >
             {t('settings.items.notifications')}
           </Text>
           <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
         </View>
-      </Pressable>
-      <Pressable style={styles.item}>
+      </TouchableOpacity>
+      <TouchableOpacity style={colorScheme === 'light' ? styles.itemLight : styles.itemDark}
+        activeOpacity={0.8}
+        lightColor={COLORS.light.settings.backgroundInput}
+        darkColor={COLORS.dark.settings.backgroundInput}
+      >
         <View style={{ ...styles.itemIcon, backgroundColor: '#5765f2' }}>
           <Fontisto name='world-o' size={24} color={'#fff'} />
         </View>
-        <View style={styles.itemTitle}>
-          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
+        <View style={styles.itemTitle}
+          lightColor={COLORS.light.settings.backgroundInput}
+          darkColor={COLORS.dark.settings.backgroundInput}
+        >
+          <Text style={{ fontSize: 16}}
+            lightColor={COLORS.light.settings.text}
+            darkColor={COLORS.dark.settings.text}
+          >
             {t('settings.items.language')}
           </Text>
           <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
         </View>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const AppItems: React.FC<Props> = ({ t }) => {
 
+  const colorScheme = useColorScheme();
+
   return (
-    <View style={styles.items}>
-      <Pressable style={styles.item}>
+    <View style={styles.items}
+      lightColor={COLORS.light.settings.backgroundInput}
+      darkColor={COLORS.dark.settings.backgroundInput}
+    >
+      <TouchableOpacity style={colorScheme === 'light' ? styles.itemLight : styles.itemDark}
+        activeOpacity={0.8}
+        lightColor={COLORS.light.settings.backgroundInput}
+        darkColor={COLORS.dark.settings.backgroundInput}
+      >
         <View style={{ ...styles.itemIcon, backgroundColor: '#40a6e0' }}>
           <Ionicons name='lock-closed-outline' size={24} color={'#fff'} />
         </View>
-        <View style={styles.itemTitle}>
-          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
+        <View style={styles.itemTitle}
+          lightColor={COLORS.light.settings.backgroundInput}
+          darkColor={COLORS.dark.settings.backgroundInput}
+        >
+          <Text style={{ fontSize: 16}}
+            lightColor={COLORS.light.settings.text}
+            darkColor={COLORS.dark.settings.text}
+          >
             {t('settings.items.privacy')}
           </Text>
           <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
         </View>
-      </Pressable>
-      <Pressable style={styles.item}>
+      </TouchableOpacity>
+      <TouchableOpacity style={colorScheme === 'light' ? styles.itemLight : styles.itemDark}
+        activeOpacity={0.8}
+        lightColor={COLORS.light.settings.backgroundInput}
+        darkColor={COLORS.dark.settings.backgroundInput}
+      >
         <View style={{ ...styles.itemIcon, backgroundColor: '#28c75c' }}>
           <Octicons name='question' size={24} color={'#fff'} />
         </View>
-        <View style={styles.itemTitle}>
-          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
+        <View style={styles.itemTitle}
+          lightColor={COLORS.light.settings.backgroundInput}
+          darkColor={COLORS.dark.settings.backgroundInput}
+        >
+          <Text style={{ fontSize: 16}}
+            lightColor={COLORS.light.settings.text}
+            darkColor={COLORS.dark.settings.text}
+          >
             {t('settings.items.faq')}
           </Text>
           <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
         </View>
-      </Pressable>
-      <Pressable style={styles.item}>
+      </TouchableOpacity>
+      <TouchableOpacity style={colorScheme === 'light' ? styles.itemLight : styles.itemDark}
+        activeOpacity={0.8}
+        lightColor={COLORS.light.settings.backgroundInput}
+        darkColor={COLORS.dark.settings.backgroundInput}
+      >
         <View style={{ ...styles.itemIcon, backgroundColor: '#f0c910' }}>
           <MaterialCommunityIcons name='lightbulb-outline' size={24} color={'#fff'} />
         </View>
-        <View style={styles.itemTitle}>
-          <Text style={{ fontSize: 16, color: COLORS.light.settings.text }}>
+        <View style={styles.itemTitle}
+          lightColor={COLORS.light.settings.backgroundInput}
+          darkColor={COLORS.dark.settings.backgroundInput}
+        >
+          <Text style={{ fontSize: 16}}
+            lightColor={COLORS.light.settings.text}
+            darkColor={COLORS.dark.settings.text}
+          >
             {t('settings.items.features')}
           </Text>
           <MaterialCommunityIcons name='chevron-right' size={24} color={COLORS.light.text} />
         </View>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -236,24 +338,39 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   header: {
-    backgroundColor: '#fff',
     height: 148,
     borderRadius: 10,
     marginBottom: 28
   },
-  avatar: {
-    // height: 100,
+  avatarLight: {
     flex: 1,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.light.settings.backgroudColor,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    borderRadius: 10
   },
-  item: {
+  avatarDark: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.dark.settings.backgroudColor,
+    flexDirection: 'row',
+    borderRadius: 10
+  },
+  itemLight: {
     height: 48,
     alignItems: 'center',
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: COLORS.light.settings.backgroudColor,
+    borderRadius: 10,
+  },
+  itemDark: {
+    height: 48,
+    alignItems: 'center',
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.dark.settings.backgroudColor,
+    borderRadius: 10,
   },
   itemIcon: {
     marginLeft: 20,
@@ -269,7 +386,6 @@ const styles = StyleSheet.create({
   items: {
     marginBottom: 28,
     borderRadius: 10,
-    backgroundColor: '#fff'
   }
 })
 
