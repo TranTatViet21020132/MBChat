@@ -14,10 +14,10 @@ import { COLORS } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
 import { useLocalSearchParams } from 'expo-router';
-
+import { WebsocketContext } from '@/context/WebsocketContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // import messageData from '@/assets/data/messages.json';
-
+import { ChatListContext } from '@/context/chatListContext';
 import CustomActions from '@/components/chats/CustomActions'
 import CustomView from '@/components/chats/CustomView'
 import earlierMessages from '@/assets/data/earlierMessages'
@@ -48,6 +48,7 @@ enum ActionKind {
   LOAD_EARLIER_START = 'LOAD_EARLIER_START',
   SET_IS_TYPING = 'SET_IS_TYPING',
   // LOAD_EARLIER_END = 'LOAD_EARLIER_END',
+  LOAD_MESSAGES = 'load_messages'
 }
 
 // An interface for our actions
@@ -85,13 +86,49 @@ function reducer(state: IState, action: StateAction) {
         isTyping: action.payload,
       }
     }
+    case ActionKind.LOAD_MESSAGES:
+      return {
+        ...state,
+        messages: action.payload
+      } 
   }
+}
+
+function waitForSocketConnection(websocket: WebSocket, id: number) {
+  setTimeout(function () {
+      if (websocket) {
+          if (websocket.readyState === 1) {
+              const formData = {
+                  action: "get_message_list",
+                  targetId: id,
+                  target: "channel"
+              };
+              const formSubmit = JSON.stringify(formData);
+              websocket.send(formSubmit);
+              
+          } else {
+              waitForSocketConnection(websocket, id);
+          }
+      }
+  }, 5);
+}
+
+function isOpenWebsocket(WebSocket: { readyState: any; OPEN: any }) {
+  return WebSocket.readyState === WebSocket.OPEN;
 }
 
 const SingleChatPage = () => {
   const id = useLocalSearchParams();
   
   console.log(id);
+  const websocketContext = React.useContext(WebsocketContext);
+  const chatListContext = React.useContext(ChatListContext);
+  if (!chatListContext || !chatListContext.setChatList || !websocketContext) {
+    return null;
+  }
+
+  const {chatHistory} = chatListContext; 
+  const {websocket} = websocketContext;
 
   const [text, setText] = useState('');
   const insets = useSafeAreaInsets();
@@ -100,7 +137,7 @@ const SingleChatPage = () => {
   const swipeableRowRef = useRef<Swipeable | null>(null);
 
   const [state, dispatch] = useReducer(reducer, {
-    messages: messagesData,
+    messages: String(id["id"]) in chatHistory ? chatHistory[String(id["id"])] : [],
     step: 0,
     loadEarlier: true,
     isLoadingEarlier: false,
@@ -109,14 +146,27 @@ const SingleChatPage = () => {
 
   const onSend = useCallback(
     (messages: any[]) => {
-      const sentMessages = [{ ...messages[0], sent: true, received: true, seen: false }]
-      const newMessages = GiftedChat.append(
-        state.messages,
-        sentMessages,
-        Platform.OS !== 'web',
-      )
+      if (websocket && isOpenWebsocket(websocket)) {
+        const formData = {
+          action: "send_message",
+          targetId: Number(id["id"]),
+          target: "channel",
+          "data": {
+            "content": messages[0]["text"]
+          }
+        };
+        const formSubmit = JSON.stringify(formData);
+        websocket.send(formSubmit);
+      }
+      // console.log(messages[0])
+      // const sentMessages = [{ ...messages[0], sent: true, received: true, seen: false }]
+      // const newMessages = GiftedChat.append(
+      //   state.messages,
+      //   sentMessages,
+      //   Platform.OS !== 'web',
+      // )
 
-      dispatch({ type: ActionKind.SEND_MESSAGE, payload: newMessages })
+      // dispatch({ type: ActionKind.SEND_MESSAGE, payload: newMessages })
     },
     [dispatch, state.messages],
   )
@@ -210,7 +260,13 @@ const SingleChatPage = () => {
       swipeableRowRef.current.close();
       swipeableRowRef.current = null;
     }
-  }, [replyMessage]);
+    if (! (String(id["id"]) in chatHistory) && websocketContext?.websocket) {
+      waitForSocketConnection(websocketContext.websocket, Number(id["id"]));
+    } else if (state.messages.length < chatHistory[String(id["id"])].length) {
+      dispatch({type: ActionKind.LOAD_MESSAGES, payload: chatHistory[String(id["id"])]});
+    }
+    
+  }, [replyMessage, chatListContext.chatHistory]);
 
   return (
     <ImageBackground
