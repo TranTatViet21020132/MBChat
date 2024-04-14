@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
+import { ImageRequireSource, ImageURISource } from 'react-native';
 
 export type ChatContextType = {
   chats: ChatData;
   setChats: React.Dispatch<React.SetStateAction<ChatData>>;
-  bgUrl: string;
-  setBgUrl: React.Dispatch<React.SetStateAction<string>>;
+  bgUrl: ImageURISource;
+  setBgUrl: React.Dispatch<React.SetStateAction<ImageURISource>>;
 };
 
 export interface ChatData {
@@ -32,7 +33,7 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     }
   );
 
-  const [bgUrl, setBgUrl] = React.useState<string>("@/assets/images/pattern.png");
+  const [bgUrl, setBgUrl] = React.useState<ImageURISource>(require("@/assets/images/backgrounds/Default.png"));
 
   return (
     <ChatContext.Provider value={{ chats, setChats, bgUrl, setBgUrl }}>

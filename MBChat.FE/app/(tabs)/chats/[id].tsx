@@ -1,6 +1,6 @@
 import AccessoryBar from '@/components/chats/AccessoryBar'
 import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react'
-import { Alert, ImageBackground, Linking, Platform, StyleSheet, Text, View } from 'react-native'
+import { Alert, ImageBackground, Platform, StyleSheet, View } from 'react-native'
 import {
   GiftedChat,
   Bubble,
@@ -14,6 +14,7 @@ import { COLORS } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { Swipeable } from 'react-native-gesture-handler';
 import { useLocalSearchParams } from 'expo-router';
+import { ChatContext } from '@/context/chatContext';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // import messageData from '@/assets/data/messages.json';
@@ -89,6 +90,14 @@ function reducer(state: IState, action: StateAction) {
 }
 
 const SingleChatPage = () => {
+  const chatContext = React.useContext(ChatContext);
+  
+  if (!chatContext || !chatContext.setChats) {
+    return null;
+  }
+
+  const { bgUrl } = chatContext;
+
   const id = useLocalSearchParams();
   console.log(id);
 
@@ -213,7 +222,7 @@ const SingleChatPage = () => {
 
   return (
     <ImageBackground
-    source={require('@/assets/images/pattern.png')}
+    source={bgUrl}
     style={{
       flex: 1,
       backgroundColor: COLORS.light.background,
