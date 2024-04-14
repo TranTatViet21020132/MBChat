@@ -20,7 +20,6 @@ export type ChatRowProps = {
 
 const ChatRow: FC<ChatRowProps> = ({ id, from, date, img, msg, read, unreadCount }) => {
   const chatContext = React.useContext(ChatContext);
-  
   if (!chatContext || !chatContext.setChats) {
     return null;
   }

@@ -13,7 +13,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-
+import { WebsocketContext } from '@/context/WebsocketContext';
 import {
   CodeField,
   Cursor,
@@ -29,7 +29,7 @@ const VerifyPage = () => {
   const [code, setCode] = useState('');
 
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
-
+  const websocketContext = React.useContext(WebsocketContext);
   const ref = useBlurOnFulfill({ value: code, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value: code,
@@ -39,7 +39,11 @@ const VerifyPage = () => {
   useEffect(() => {
     if (code.length === 6) {
       console.log('verify', code);
-      router.replace('/verify/login');
+      router.replace('/(tabs)/chats');
+      if (websocketContext && !websocketContext.websocket) {
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1NDIxMzQxLCJpYXQiOjE3MTI4MjkzNDEsImp0aSI6IjUyNDUyYWY2M2MwMTQ5YmRhMDUyNTdmYmFhYWZkNzAzIiwidXNlcl9pZCI6MX0.IAJslYGShNPpKHL7MnChTD16hsIwa2ZbzLbA8fDQmKw";
+        websocketContext.setWebsocket(new WebSocket(`ws://112.137.129.161:8001/ws/chat/?token=${token}`));
+      }
     }
       //TO-DO: implement verify logics
       // if (signin === 'true') {
