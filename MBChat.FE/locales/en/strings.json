@@ -32,5 +32,22 @@
   "profile.menu.search": "Search",
   "profile.menu.newGroup": "Create new group",
   "profile.menu.block": "Block",
-  "profile.menu.report": "Report"
+  "profile.menu.report": "Report",
+  "settings.user.welcome": "Hello! I'm using ...",
+  "settings.items.photo": "Set Profile Photo",
+  "settings.items.account": "Account",
+  "settings.items.devices": "Devices",
+  "settings.items.notifications": "Notifications",
+  "settings.items.language": "Language",
+  "settings.items.privacy": "Privacy And Security",
+  "settings.items.faq": "App FAQ",
+  "settings.items.features": "App Features",
+
+  "settings.account.setNewPhoto": "Set New Photo",
+  "settings.account.firstName": "First name",
+  "settings.account.lastName": "Last name",
+  "settings.account.editname": "Enter your name and add an optional profile photo",
+  "settings.account.phoneNumber": "Phone number",
+  "settings.account.bio": "Bio",
+  "settings.account.desBio": "Any details such as age, occupation or city ..."
 }

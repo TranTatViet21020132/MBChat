@@ -1,11 +1,13 @@
-import React, { ReactNode } from 'react';
-import { ImageRequireSource, ImageURISource } from 'react-native';
+import { ImageURISource } from 'react-native';
+import React from 'react';
 
 export type ChatContextType = {
   chats: ChatData;
   setChats: React.Dispatch<React.SetStateAction<ChatData>>;
   bgUrl: ImageURISource;
   setBgUrl: React.Dispatch<React.SetStateAction<ImageURISource>>;
+  chatTheme: string;
+  setChatTheme: React.Dispatch<React.SetStateAction<string>>
 };
 
 export interface ChatData {
@@ -20,7 +22,7 @@ export interface ChatData {
 
 export const ChatContext = React.createContext<ChatContextType | null>(null);
 
-const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [chats, setChats] = React.useState<ChatData>(
     {
       id: "",
@@ -35,11 +37,15 @@ const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   const [bgUrl, setBgUrl] = React.useState<ImageURISource>(require("@/assets/images/backgrounds/Default.png"));
 
+  const [chatTheme, setChatTheme] = React.useState('light');
+
   return (
-    <ChatContext.Provider value={{ chats, setChats, bgUrl, setBgUrl }}>
+    <ChatContext.Provider value={{ chats, setChats, bgUrl, setBgUrl, chatTheme, setChatTheme }}>
       {children}
     </ChatContext.Provider>
   );
 };
 
-export default ChatProvider;
+export const useChat = () => {
+  return React.useContext(ChatContext);
+}
