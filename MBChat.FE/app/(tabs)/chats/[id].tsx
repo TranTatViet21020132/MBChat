@@ -90,6 +90,7 @@ function reducer(state: IState, action: StateAction) {
 
 const SingleChatPage = () => {
   const id = useLocalSearchParams();
+  
   console.log(id);
 
   const [text, setText] = useState('');
