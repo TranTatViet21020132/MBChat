@@ -39,7 +39,7 @@ const VerifyPage = () => {
   useEffect(() => {
     if (code.length === 6) {
       console.log('verify', code);
-      router.replace('/(tabs)/chats');
+      router.replace('/verify/login');
     }
       //TO-DO: implement verify logics
       // if (signin === 'true') {

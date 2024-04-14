@@ -1,18 +1,41 @@
 import React from 'react'
-import {ScrollView, KeyboardAvoidingView, StyleSheet, Pressable, Platform } from 'react-native'
+import {ScrollView, KeyboardAvoidingView, StyleSheet, Pressable, Platform, Keyboard } from 'react-native'
 import { View, Text, TextInput } from '@/components/Themed'
 import { COLORS, SIZES } from '@/constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 
 const signup = () => {
+  const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
+
   const [showPassword, setShowPassword] = React.useState(false);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   }
 
-  const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
+  const [data, setData] = React.useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    username: '',
+    password: '',
+  })
+
+  const [loading, setLoading] = React.useState(false);
+
+  const sendOTP = React.useCallback(async () => {
+    Keyboard.dismiss();
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      router.push(`/verify/${data.email}`);
+    }, 1);
+  }, [data.email, router]);
+
+  const handleChangeInput = () => {
+
+  }
 
   return (
     <KeyboardAvoidingView
@@ -80,6 +103,8 @@ const signup = () => {
             darkColor={COLORS.dark.settings.text}
             placeholder={'Email'}
             placeholderTextColor={'grey'}
+            value={data.email}
+            onChangeText={text => setData({...data, email: text})}
           />
         </View>
 
@@ -128,7 +153,9 @@ const signup = () => {
         </View>
 
         <View style={styles.containerButton}>
-          <Pressable style={styles.buttonSubmit}>
+          <Pressable style={styles.buttonSubmit}
+            onPress={sendOTP}
+          >
             <Text style={{
               fontSize: 16,
               fontWeight: '600',
