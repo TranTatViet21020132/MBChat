@@ -5,8 +5,9 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  ScrollView
 } from 'react-native'
-import { Text, View, ScrollView, TextInput } from '@/components/Themed';
+import { Text, View, TextInput } from '@/components/Themed';
 import { useState }from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import { useTranslation } from 'react-i18next'

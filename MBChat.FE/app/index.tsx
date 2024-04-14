@@ -61,7 +61,7 @@ const IndexPage = () => {
         </Text>
         .
       </Text>
-      <Link href={"/otp"} replace asChild>
+      <Link href={"/verify/signup"} replace asChild>
         <Pressable style={styles.button}>
           <Text
           style={styles.buttonText}

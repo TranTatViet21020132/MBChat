@@ -65,6 +65,18 @@ function RootLayoutNav() {
                 headerBackVisible: false
               }}
             />
+            <Stack.Screen name="verify/signup" 
+              options={{ 
+                headerTitle: 'Sign up', 
+                headerShown: false
+              }}
+            />
+            <Stack.Screen name="verify/login" 
+              options={{ 
+                headerTitle: 'Login', 
+                headerShown: false
+              }}
+            />
             <Stack.Screen name="verify/[phone]" 
               options={{ headerBackTitle: 'Edit number' }}
             />

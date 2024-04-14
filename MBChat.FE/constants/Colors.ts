@@ -1,3 +1,5 @@
+import signup from "@/app/verify/signup";
+
 const tintColorLight = '#2f95dc';
 const tintColorDark = '#fff';
 
@@ -41,6 +43,12 @@ const COLORS = {
       input: '#000',
     },
 
+    signup: {
+      text: '#000',
+      backgroudColor: '#f2f2f2',
+      backgroundInput: '#fff'
+    },
+
     verify: {
       legal: '#000', 
     },
@@ -81,6 +89,12 @@ const COLORS = {
       phoneCodeText: '#fff',
       button: '#DCDCE2',
       input: '#fff',
+    },
+
+    signup: {
+      text: '#fff',
+      backgroudColor: '#000',
+      backgroundInput: '#1C1C1E'
     },
 
     verify: {
