@@ -1,20 +1,57 @@
+import React from 'react';
 import { COLORS } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs, useSegments } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useColorScheme } from '@/components/useColorScheme';
 
+import { WebsocketContext } from '@/context/WebsocketContext';
 import { useTranslation } from 'react-i18next';
+import { UserContext } from '@/context/userContext';
+
+function waitForSocketConnection(websocket: WebSocket) {
+  setTimeout(function () {
+      if (websocket) {
+          if (websocket.readyState === 1) {
+              const formData = {
+                  action: "get_profile"
+              };
+              const formSubmit = JSON.stringify(formData);
+              websocket.send(formSubmit);
+              
+          } else {
+              waitForSocketConnection(websocket);
+          }
+      }
+  }, 5);
+}
 
 const TabsLayout = () => {
+  const websocketContext = React.useContext(WebsocketContext);
+  const userContext = React.useContext(UserContext);
+
+  if (!userContext) {
+    return null;
+  }
+  const {userInfomation} = userContext;
+
+  React.useEffect(() => {
+    if (!userInfomation.verified && websocketContext?.websocket) {
+      waitForSocketConnection(websocketContext.websocket);
+    }
+  }, [])
+
   const { t } = useTranslation();
   const segments = useSegments();
+  const colorScheme = useColorScheme();
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Tabs
-        screenOptions={{
+        screenOptions={colorScheme === 'light' ? 
+        {
           tabBarStyle: { backgroundColor: COLORS.light.background },
           tabBarActiveTintColor: COLORS.light.primary,
           tabBarInactiveBackgroundColor: COLORS.light.background,
@@ -23,7 +60,17 @@ const TabsLayout = () => {
             backgroundColor: COLORS.light.background,
           },
           headerShadowVisible: false,
-        }}>
+        } : {
+          tabBarStyle: { backgroundColor: COLORS.dark.background },
+          tabBarActiveTintColor: COLORS.dark.primary,
+          tabBarInactiveBackgroundColor: COLORS.dark.background,
+          tabBarActiveBackgroundColor: COLORS.dark.background,
+          headerStyle: {
+            backgroundColor: COLORS.dark.background,
+          },
+          headerShadowVisible: false,
+        }
+        }>
         <Tabs.Screen
           name="updates"
           options={{

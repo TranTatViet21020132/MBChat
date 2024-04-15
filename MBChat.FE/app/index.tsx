@@ -28,6 +28,8 @@ const IndexPage = () => {
 
   const selectedWelcomeImage = colorScheme === 'dark' ? welcomeImageDark : welcomeImage;
 
+
+
   return (
     <View 
     style={styles.container}
@@ -61,7 +63,7 @@ const IndexPage = () => {
         </Text>
         .
       </Text>
-      <Link href={"/otp"} replace asChild>
+      <Link href={"/verify/signup"} replace asChild>
         <Pressable style={styles.button}>
           <Text
           style={styles.buttonText}

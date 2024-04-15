@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Link, Stack, useRouter } from 'expo-router';
 import { Pressable, View, Image, Text } from 'react-native';
 import { ChatContext } from '@/context/chatContext';
-import React, { useCallback } from 'react';
+import React from 'react';
 
 const ChatsLayout = () => {
   const router = useRouter();
@@ -27,9 +27,9 @@ const ChatsLayout = () => {
           headerBlurEffect: 'regular',
           headerRight: () => (
             <View style={{ flexDirection: 'row', gap: 30 }}>
-              <Pressable>
+              {/* <Pressable>
                 <Ionicons name="camera-outline" color={COLORS.light.primary} size={30} />
-              </Pressable>
+              </Pressable> */}
               <Link href={"/(modals)/new-chat"} asChild>
                 <Pressable>
                   <Ionicons name="add-circle" color={COLORS.light.primary} size={30} />
@@ -51,6 +51,7 @@ const ChatsLayout = () => {
         options={{
           title: '',
           headerBackTitleVisible: false,
+          headerShadowVisible: false,
           headerTitle: () => (
             <Link href={"/chats/profile"} asChild>
               <Pressable>

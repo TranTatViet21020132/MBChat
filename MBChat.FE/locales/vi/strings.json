@@ -18,5 +18,36 @@
 
   "verify.content.codeSent": "We have sent you an SMS with a code to the number above.",
   "verify.content.codeEnter": "To complete your phone number verification, please enter the 6-digit activation code.",
-  "verify.action.resendCode": "Didn't receive a verification code?"
+  "verify.action.resendCode": "Didn't receive a verification code?",
+
+  "tab.content.update": "Cập nhật",
+  "tab.content.calls": "Cuộc gọi",
+  "tab.content.communities": "Cộng đồng",
+  "tab.content.chats": "Đoạn chat",
+  "tab.content.settings": "Cài đặt",
+
+  "profile.menu.documents": "Tài liệu, ảnh, links",
+  "profile.menu.backgrounds": "Hình nền",
+  "profile.menu.notifications": "Thông báo",
+  "profile.menu.search": "Tìm kiếm",
+  "profile.menu.newGroup": "Tạo nhóm mới",
+  "profile.menu.block": "Chặn",
+  "profile.menu.report": "Báo cáo",
+  "setting.user.welcome": "Xin chào! Tôi đang dùng ...",
+  "settings.items.photo": "Set Profile Photo",
+  "settings.items.account": "Account",
+  "settings.items.devices": "Devices",
+  "settings.items.notifications": "Notifications",
+  "settings.items.language": "Language",
+  "settings.items.privacy": "Privacy And Security",
+  "settings.items.faq": "App FAQ",
+  "settings.items.features": "App Features",
+
+  "settings.account.setNewPhoto": "Set New Photo",
+  "settings.account.firstName": "First name",
+  "settings.account.lastName": "Last name",
+  "settings.account.editname": "Enter your name and add an optional profile photo",
+  "settings.account.phoneNumber": "Phone number",
+  "settings.account.bio": "Bio",
+  "settings.account.desBio": "Any details such as age, occupation or city ..."
 }

@@ -5,7 +5,6 @@ import { Pressable, View } from 'react-native'
 
 const Layout = () => {
   const router = useRouter()
-
   return (
     <Stack>
       <Stack.Screen 
@@ -16,7 +15,15 @@ const Layout = () => {
             backgroundColor: 'transparent'
           }
         }}
-      
+      />
+      <Stack.Screen 
+        name='account' 
+        options={{
+          title: 'Edit account',
+          headerStyle: {
+            backgroundColor: 'transparent'
+          }
+        }}
       />
     </Stack>
   )
