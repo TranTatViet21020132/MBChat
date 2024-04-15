@@ -8,17 +8,14 @@ const colors = [
   {
     colorCode: '#E5DDD5',
     colorRequire: require("@/assets/images/backgrounds/Default.png"),
-    path: "/(tabs)/chats/profile/(tabs)/backgrounds/color"
   },
   {
     colorCode: '#E5E6EB',
     colorRequire: require("@/assets/images/backgrounds/BrightCool.png"),
-    path: "/(tabs)/chats/profile/(tabs)/backgrounds/color"
   },
   {
     colorCode: '#E7D8C1',
     colorRequire: require("@/assets/images/backgrounds/DramaticWarm.png"),
-    path: "/(tabs)/chats/profile/(tabs)/backgrounds/color"
   }
 ];
 
@@ -43,7 +40,7 @@ const SingleChatPage = () => {
           <Pressable
             key={index}
             style={[styles.colorItem, { backgroundColor: color.colorCode }]}
-            onPress={() => handleColorSelect(color, color.path as Href<string>)}
+            onPress={() => handleColorSelect(color, "/(tabs)/chats/profile/(tabs)/backgrounds/color")}
           />
         ))}
       </View>
