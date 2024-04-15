@@ -27,9 +27,9 @@ const ChatsLayout = () => {
           headerBlurEffect: 'regular',
           headerRight: () => (
             <View style={{ flexDirection: 'row', gap: 30 }}>
-              <Pressable>
+              {/* <Pressable>
                 <Ionicons name="camera-outline" color={COLORS.light.primary} size={30} />
-              </Pressable>
+              </Pressable> */}
               <Link href={"/(modals)/new-chat"} asChild>
                 <Pressable>
                   <Ionicons name="add-circle" color={COLORS.light.primary} size={30} />
