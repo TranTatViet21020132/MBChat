@@ -11,6 +11,8 @@ const COLORS = {
   red: '#EF0827',
   yellow: '#FCC70B',
   blue: '#1063FD',
+  transparent: 'transparent',
+  white: '#fff',
 
   light: {
     tint: tintColorLight,

@@ -67,11 +67,19 @@ const login = () => {
           />
         </View>
 
-        <View style={styles.containerforgotPassword}>
-          <Text>Forgot password?</Text>
+        <View style={styles.containerforgotPassword}
+          lightColor={COLORS.transparent}
+          darkColor={COLORS.transparent}
+        >
+          <Text style={{color: COLORS.light.primary}}>
+            Forgot password?
+          </Text>
         </View>
 
-        <View style={styles.containerButton}>
+        <View style={styles.containerButton}
+          lightColor={COLORS.transparent}
+          darkColor={COLORS.transparent}
+        >
           <Pressable style={styles.buttonSubmit} 
             onPress={handleLogin}
           >
@@ -85,18 +93,26 @@ const login = () => {
           </Pressable>
         </View>
 
-        <View style={styles.containerBoundary}>
+        <View style={styles.containerBoundary}
+          lightColor={COLORS.transparent}
+          darkColor={COLORS.transparent}
+        >
           <View style={{ height: 1, backgroundColor: '#aaa', width: '30%' }}></View>
           <Text style={{ color: '#aaa' }}>Or</Text>
           <View style={{ height: 1, backgroundColor: '#aaa', width: '30%' }}></View>
         </View>
 
-        <View style={styles.bottom}>
+        <View style={styles.bottom}
+          lightColor={COLORS.transparent}
+          darkColor={COLORS.transparent}
+        >
           <Text style={{ color: '#aaa' }}>
             Don't have an account?
           </Text>
           <Link href={'/verify/signup'} style={{ paddingLeft: 10 }}>
-            <Text>
+            <Text
+              style={{color: COLORS.light.primary}}
+            >
               Sign up
             </Text>
           </Link>
