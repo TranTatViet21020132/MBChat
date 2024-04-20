@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 import { useColorScheme } from "@/components/useColorScheme";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
+import Toast from "react-native-toast-message";
 import { COLORS } from "@/constants/Colors";
 import ChatListProvider from "@/context/chatListContext";
 
@@ -126,6 +126,7 @@ function RootLayoutNav() {
                               }}
                             />
                           </Stack>
+                          <Toast />
                         </ThemeProvider>
                       </I18nextProvider>
                     </WebsocketProvider>

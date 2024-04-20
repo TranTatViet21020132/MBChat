@@ -4,7 +4,8 @@ import { View, Text, TextInput } from '@/components/Themed'
 import { COLORS, SIZES } from '@/constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import { Link, router } from 'expo-router'
-
+import UserApi from '@/api/UserApi';
+import Toast from 'react-native-toast-message'
 const signup = () => {
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
 
@@ -20,22 +21,54 @@ const signup = () => {
     email: '',
     username: '',
     password: '',
+    confirmPassword: ''
   })
 
   const [loading, setLoading] = React.useState(false);
 
-  const sendOTP = React.useCallback(async () => {
+  // const sendOTP = React.useCallback(async () => {
+  //   Keyboard.dismiss();
+  //   setLoading(true);
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //     router.push(`/verify/${data.email}`);
+  //   }, 1);
+  // }, [data.email, router]);
+
+  const sendOTP = async () => {
+    if (data.password !== data.confirmPassword) {
+      Toast.show({
+        type: "error",
+        text1: "Signup message",
+        text2: "Password doesn't match"
+      })
+      return;
+    }
     Keyboard.dismiss();
     setLoading(true);
-    setTimeout(() => {
+    const filteredData = await Object.entries(data)
+      .filter(([key, value]) => key !== "confirmPassword")
+      .reduce((obj: any, [key, value]) => {
+        obj[key] = value;
+        return obj;
+      }, {});
+    const response = await UserApi.signup(filteredData);
+    if (response.status === 200) {
       setLoading(false);
       router.push(`/verify/${data.email}`);
-    }, 1);
-  }, [data.email, router]);
-
-  const handleChangeInput = () => {
-
-  }
+      Toast.show({
+        type: "success",
+        text1: "Signup message",
+        text2: response.data.message
+      })
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Signup message",
+        text2: response.data.message
+      })
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -61,6 +94,8 @@ const signup = () => {
             darkColor={COLORS.dark.settings.text}
             placeholder={'First name'}
             placeholderTextColor={'grey'}
+            value={data.first_name}
+            onChangeText={text => setData({...data, first_name: text})}
           />
         </View>
 
@@ -75,6 +110,8 @@ const signup = () => {
             darkColor={COLORS.dark.settings.text}
             placeholder={'Last name'}
             placeholderTextColor={'grey'}
+            value={data.last_name}
+            onChangeText={text => setData({...data, last_name: text})}
           />
         </View>
 
@@ -89,6 +126,8 @@ const signup = () => {
             darkColor={COLORS.dark.settings.text}
             placeholder={'Username'}
             placeholderTextColor={'grey'}
+            value={data.username}
+            onChangeText={text => setData({...data, username: text})}
           />
         </View>
 
@@ -120,6 +159,8 @@ const signup = () => {
             placeholder={'Password'}
             placeholderTextColor={'grey'}
             secureTextEntry={!showPassword}
+            value={data.password}
+            onChangeText={text => setData({...data, password: text})}
           />
 
           <Ionicons
@@ -142,6 +183,11 @@ const signup = () => {
             placeholder={'Confirm password'}
             placeholderTextColor={'grey'}
             secureTextEntry={!showPassword}
+            value={data.confirmPassword}
+            onChangeText={text => {
+              setData({...data, confirmPassword: text})
+            }}
+            
           />
 
           <Ionicons

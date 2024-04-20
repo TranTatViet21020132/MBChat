@@ -13,13 +13,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { WebsocketContext } from '@/context/WebsocketContext';
 import {
   CodeField,
   Cursor,
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import UserApi from '@/api/UserApi';
+import Toast from 'react-native-toast-message';
 const CELL_COUNT = 6;
 
 const VerifyPage = () => {
@@ -27,31 +28,40 @@ const VerifyPage = () => {
 
   const { phone, signin } = useLocalSearchParams<{ phone: string; signin: string }>();
   const [code, setCode] = useState('');
-
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
-  const websocketContext = React.useContext(WebsocketContext);
   const ref = useBlurOnFulfill({ value: code, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value: code,
     setValue: setCode,
   });
 
+  const sendVerificationCode = async () => {
+    
+    const response = await UserApi.verifyUser({
+      "verification_code": code,
+      "email": phone
+    })
+    if (response.status === 200) {
+      router.replace('/verify/login');
+      Toast.show({
+        "type": "success",
+        "text1": "Verification Message",
+        "text2": response.data.message
+      })
+    } else {
+      Toast.show({
+        "type": "error",
+        "text1": "Verification Message",
+        "text2": response.data.message
+      })
+      setCode('')
+    }
+  }
+
   useEffect(() => {
     if (code.length === 6) {
-      console.log('verify', code);
-      router.replace('/(tabs)/chats');
-      if (websocketContext && !websocketContext.websocket) {
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1NDIxMzQxLCJpYXQiOjE3MTI4MjkzNDEsImp0aSI6IjUyNDUyYWY2M2MwMTQ5YmRhMDUyNTdmYmFhYWZkNzAzIiwidXNlcl9pZCI6MX0.IAJslYGShNPpKHL7MnChTD16hsIwa2ZbzLbA8fDQmKw";
-        websocketContext.setWebsocket(new WebSocket(`ws://112.137.129.161:8001/ws/chat/?token=${token}`));
-      }
+      sendVerificationCode();
     }
-      //TO-DO: implement verify logics
-      // if (signin === 'true') {
-      //   console.log('signin');
-      //   veryifySignIn();
-      // } else {
-      //   verifyCode();
-      // }
   }, [code]);
 
   const verifyCode = useCallback(async () => {
