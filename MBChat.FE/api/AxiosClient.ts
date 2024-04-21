@@ -9,7 +9,7 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(async (config) => {
     const token = await SecureStore.getItemAsync('accessToken');
     if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers.Authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE1NDA5Njg5LCJpYXQiOjE3MTI4MTc2ODksImp0aSI6IjM2YTA5NjBjMDczMTQ0ZTQ5Y2E1ZGRlNzA0ZTZhMjkyIiwidXNlcl9pZCI6MX0.kdegUOb65kLoiX5dwyD4zYRBszbzGfHuGb_t3obpIXI`;
     }
     config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/json';
 
@@ -19,6 +19,7 @@ axiosClient.interceptors.response.use((response) => {
     return response;
 }, (error) => {
     // Handle errors
+    console.log("error response", error)
     return error.response;
 });
 export default axiosClient;

@@ -57,15 +57,15 @@ const WebsocketProvider: React.FC<{children: React.ReactNode}> = ({children}) =>
                             }
                         })
                         chatListContext?.setChatList([
-                            {
-                                "id": "16d121b0-bad3-475a-a1d3-57060a25e3ch",
-                                "from": "Baxter",
-                                "date": "Wed May 20 1998 08:53:35 GMT+0200 (Central European Summer Time)",
-                                "img": "https://i.pravatar.cc/150?u=baxterduke@marketoid.com",
-                                "msg": "Commodo tempor consequat elit in sit sint cillum magna laborum laborum veniam ea exercitation quis.",
-                                "read": false,
-                                "unreadCount": 2
-                              },
+                            // {
+                            //     "id": "16d121b0-bad3-475a-a1d3-57060a25e3ch",
+                            //     "from": "Baxter",
+                            //     "date": "Wed May 20 1998 08:53:35 GMT+0200 (Central European Summer Time)",
+                            //     "img": "https://i.pravatar.cc/150?u=baxterduke@marketoid.com",
+                            //     "msg": "Commodo tempor consequat elit in sit sint cillum magna laborum laborum veniam ea exercitation quis.",
+                            //     "read": false,
+                            //     "unreadCount": 2
+                            //   },
                               ...data
                         ]);
                         break;
@@ -93,7 +93,7 @@ const WebsocketProvider: React.FC<{children: React.ReactNode}> = ({children}) =>
                     case Action.GET_MESSAGE_LIST:
                         data = response.data;
                         let chat_history_object_array = response.data.map((message: any, idx: number) => {
-                            return {
+                            let data = {
                                 "_id": idx + 1,
                                 "text": message.content,
                                 "createdAt": message.create_at,
@@ -102,6 +102,18 @@ const WebsocketProvider: React.FC<{children: React.ReactNode}> = ({children}) =>
                                     "name": message.member.user.fullname
                                 }
                             }
+                            if (message.location) {
+                                const locationArr = message.location.split(" ");
+                                // @ts-ignore
+                                data["location"] = {
+                                    latitude: parseFloat(locationArr[0]),
+                                    longitude: parseFloat(locationArr[1])
+                                }
+                            } else if (message.image) {
+                                // @ts-ignore
+                                data["image"] = message.image
+                            }
+                            return data
                         });
                         new_chat_history = {...chatListContext?.chatHistory}
                         new_chat_history[response.targetId] = chat_history_object_array
@@ -124,6 +136,17 @@ const WebsocketProvider: React.FC<{children: React.ReactNode}> = ({children}) =>
                                 "_id": userContext?.userInfomation.id === data.member.user.id ? 1 : 2,
                                 "name": data.member.user.fullname
                             }
+                        }
+                        if (data.location) {
+                            const locationArr = data.location.split(" ");
+                            // @ts-ignore
+                            chat_history_object["location"] = {
+                                latitude: parseFloat(locationArr[0]),
+                                longitude: parseFloat(locationArr[1])
+                            }
+                        } else if (data.image) {
+                            // @ts-ignore
+                            chat_history_object["image"] = data.image;
                         }
 
                         new_chat_history = {...chatListContext?.chatHistory}
