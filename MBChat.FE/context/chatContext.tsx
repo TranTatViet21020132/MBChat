@@ -1,8 +1,11 @@
-import React, { useContext } from 'react';
+import { ImageURISource } from 'react-native';
+import React from 'react';
 
 export type ChatContextType = {
   chats: ChatData;
   setChats: React.Dispatch<React.SetStateAction<ChatData>>;
+  bgUrl: ImageURISource;
+  setBgUrl: React.Dispatch<React.SetStateAction<ImageURISource>>;
   chatTheme: string;
   setChatTheme: React.Dispatch<React.SetStateAction<string>>
 };
@@ -32,10 +35,12 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   );
 
+  const [bgUrl, setBgUrl] = React.useState<ImageURISource>(require("@/assets/images/backgrounds/Default.png"));
+
   const [chatTheme, setChatTheme] = React.useState('light');
 
   return (
-    <ChatContext.Provider value={{ chats, setChats, chatTheme, setChatTheme }}>
+    <ChatContext.Provider value={{ chats, setChats, bgUrl, setBgUrl, chatTheme, setChatTheme }}>
       {children}
     </ChatContext.Provider>
   );

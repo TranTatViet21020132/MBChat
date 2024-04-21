@@ -8,7 +8,7 @@ import { Screen } from '@/constants/Screens';
 import React from 'react';
 import { ChatContext } from '@/context/chatContext';
 
-export interface ChatRowProps {
+export type ChatRowProps = {
   id: string;
   from: string;
   date: string;
@@ -20,7 +20,6 @@ export interface ChatRowProps {
 
 const ChatRow: FC<ChatRowProps> = ({ id, from, date, img, msg, read, unreadCount }) => {
   const chatContext = React.useContext(ChatContext);
-  
   if (!chatContext || !chatContext.setChats) {
     return null;
   }

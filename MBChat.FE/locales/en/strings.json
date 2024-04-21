@@ -26,6 +26,13 @@
   "tab.content.chats": "Chats",
   "tab.content.settings": "Settings",
 
+  "profile.menu.documents": "Documents",
+  "profile.menu.backgrounds": "Backgrounds",
+  "profile.menu.notifications": "Notifications",
+  "profile.menu.search": "Search",
+  "profile.menu.newGroup": "Create new group",
+  "profile.menu.block": "Block",
+  "profile.menu.report": "Report",
   "settings.user.welcome": "Hello! I'm using ...",
   "settings.items.photo": "Set Profile Photo",
   "settings.items.account": "Account",

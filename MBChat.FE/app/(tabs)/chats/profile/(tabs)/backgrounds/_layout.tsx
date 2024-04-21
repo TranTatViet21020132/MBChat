@@ -9,12 +9,32 @@ const Layout = () => {
   return (
     <Stack>
       <Stack.Screen
-        name="[id]"
+        name="index"
+        options={{
+          title: 'Choose a color',
+          headerBackTitleVisible: false, 
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <Pressable onPress={() => router.back()}>
+              <Ionicons
+                name="chevron-back-outline"
+                color={COLORS.light.primary}
+                size={30}
+              />
+            </Pressable>
+          ),
+          headerStyle: {
+            backgroundColor: COLORS.light.background,
+          },
+        }}
+      />
+      <Stack.Screen
+        name="color"
         options={{
           title: '',
           headerBackTitleVisible: false,
           headerShadowVisible: false,
-          headerTitle: "Contact Information", 
+          headerTitle: "Xem trước", 
           headerLeft: () => (
             <Pressable onPress={() => router.back()}>
               <Ionicons
@@ -28,29 +48,6 @@ const Layout = () => {
             backgroundColor: COLORS.light.background,
           },
         }}
-      />
-      <Stack.Screen
-        name="(tabs)/documents"
-        options={{
-          title: '',
-          headerBackTitleVisible: false, 
-          headerLeft: () => (
-            <Pressable onPress={() => router.back()}>
-              <Ionicons
-                name="chevron-back-outline"
-                color={COLORS.light.primary}
-                size={30}
-              />
-            </Pressable>
-          ),
-          headerStyle: {
-            backgroundColor: COLORS.light.background,
-          },
-        }}
-      />
-      <Stack.Screen
-        name="(tabs)/backgrounds"
-        options={{ headerShown: false }}
       />
     </Stack>
   );
