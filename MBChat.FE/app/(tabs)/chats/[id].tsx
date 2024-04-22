@@ -185,7 +185,15 @@ const SingleChatPage = () => {
         const formSubmit = JSON.stringify(formData);
         websocket.send(formSubmit);
       }
-      
+       // console.log(messages[0])
+      // const sentMessages = [{ ...messages[0], sent: true, received: true, seen: false }]
+      // const newMessages = GiftedChat.append(
+      //   state.messages,
+      //   sentMessages,
+      //   Platform.OS !== 'web',
+      // )
+
+      // dispatch({ type: ActionKind.SEND_MESSAGE, payload: newMessages })
     },
     [dispatch, state.messages],
   )
