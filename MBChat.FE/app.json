@@ -34,7 +34,12 @@
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.WAKE_LOCK"
       ],
-      "package": "com.phamtungthuy.mbchat"
+      "package": "com.phamtungthuy.mbchat",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCYQVy4e-4clodc_fcNXmshwRcdYBxwiEE"
+        }
+      }
     },
     "web": {
       "bundler": "metro",
