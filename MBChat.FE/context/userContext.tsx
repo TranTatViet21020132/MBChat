@@ -11,6 +11,8 @@ export interface UserInformationData {
     fullname: string;
     avatarUrl: string;
     verified: boolean;
+    offerDescription?: RTCSessionDescriptionInit | null;
+    offerAnswer?: RTCSessionDescriptionInit | null;
 }
 
 export const UserContext = React.createContext<UserContextType | null>(null);
