@@ -13,6 +13,7 @@ export interface UserInformationData {
     verified: boolean;
     offerDescription?: RTCSessionDescriptionInit | null;
     offerAnswer?: RTCSessionDescriptionInit | null;
+    icecandidate?: RTCIceCandidate | null;
 }
 
 export const UserContext = React.createContext<UserContextType | null>(null);
@@ -24,7 +25,10 @@ const UserProvider: React.FC<{ children: React.ReactNode}> = ({ children }) => {
             "username": "",
             "fullname": "",
             "avatarUrl": "",
-            verified: false
+            verified: false,
+            offerDescription: null,
+            offerAnswer: null,
+            icecandidate: null
         }
     )
     

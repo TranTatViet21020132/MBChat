@@ -17,7 +17,8 @@ enum Action {
     GET_MESSAGE_LIST = "get_message_list",
     SEND_MESSAGE = "send_message",
     VIDEO_CALL = "video_call",
-    OFFER_ANSWER = 'offer_answer'
+    OFFER_ANSWER = 'offer_answer',
+    ICECANDIDATE = 'icecandidate'
 }
 
 const WebsocketProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -180,17 +181,44 @@ const WebsocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
                         break;
                     case Action.VIDEO_CALL:
+                        if (userContext) {
+                            userContext.userInfomation = {
+                                ...userContext.userInfomation,
+                                offerDescription: response.data
+                            }
+
+                        }
                         userContext?.setUserInformation({
                             ...userContext.userInfomation,
                             offerDescription: response.data
                         });
                         break;
                     case Action.OFFER_ANSWER:
+                        if (userContext) {
+                            userContext.userInfomation = {
+                                ...userContext.userInfomation,
+                                offerAnswer: response.data
+                            }
+
+                        }
                         userContext?.setUserInformation({
                             ...userContext.userInfomation,
                             offerAnswer: response.data
                         });
                         break; 
+                    case Action.ICECANDIDATE:
+                        if (userContext) {
+                            userContext.userInfomation = {
+                                ...userContext.userInfomation,
+                                icecandidate: response.data
+                            }
+
+                        }
+                        userContext?.setUserInformation({
+                            ...userContext.userInfomation,
+                            icecandidate: response.data
+                        });
+                        break
                 }
             }
         };
