@@ -2,10 +2,12 @@ import React from "react";
 import { ChatListContext } from "./chatListContext";
 import { UserContext } from "./userContext";
 import { ChatHistoryData } from "./chatListContext";
+import { CallContext } from "./CallContext";
 export type WebsocketContextType = {
     websocket: WebSocket | null;
     setWebsocket: React.Dispatch<React.SetStateAction<WebSocket | null>>;
 };
+import { useRouter } from "expo-router";
 
 export const WebsocketContext =
     React.createContext<WebsocketContextType | null>(null);
@@ -18,7 +20,8 @@ enum Action {
     SEND_MESSAGE = "send_message",
     VIDEO_CALL = "video_call",
     OFFER_ANSWER = 'offer_answer',
-    ICECANDIDATE = 'icecandidate'
+    ICECANDIDATE = 'icecandidate',
+    OFFER_DESCRIPTION = 'offer_description'
 }
 
 const WebsocketProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -27,8 +30,9 @@ const WebsocketProvider: React.FC<{ children: React.ReactNode }> = ({
     const [websocket, setWebsocket] = React.useState<WebSocket | null>(null);
     const chatListContext = React.useContext(ChatListContext);
     const userContext = React.useContext(UserContext);
+    const callContext = React.useContext(CallContext);
     let new_chat_history;
-
+    const router = useRouter();
     const updateChatHistory = React.useCallback(
         (targetId: string, newMessages: any[]) => {
             // Handle potential missing chatListContext
@@ -181,43 +185,67 @@ const WebsocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
                         break;
                     case Action.VIDEO_CALL:
-                        if (userContext) {
-                            userContext.userInfomation = {
-                                ...userContext.userInfomation,
-                                offerDescription: response.data
+                        if (callContext) {
+                            callContext.callInformation = {
+                                ...callContext.callInformation,
+                                gettingCall: true,
+                                from_user: response.data.from_user,
+                                from_channel: response.data.from_channel,
+                                icecandidate: {
+                                    from_user: 0,
+                                    data: []
+                                },
+                                offerDescription: null,
+                                offerAnswer: null
                             }
-
                         }
-                        userContext?.setUserInformation({
-                            ...userContext.userInfomation,
+                        callContext?.setCallInformation({
+                            ...callContext.callInformation
+                        });
+                        router.navigate("/(tabs)/calls")
+                        break;
+                    case Action.OFFER_DESCRIPTION:
+                        if (callContext) {
+                            callContext.callInformation = {
+                                ...callContext.callInformation,
+                                offerDescription: response.data
+                    
+                            }
+                        }
+                        callContext?.setCallInformation({
+                            ...callContext.callInformation,
                             offerDescription: response.data
                         });
                         break;
                     case Action.OFFER_ANSWER:
-                        if (userContext) {
-                            userContext.userInfomation = {
-                                ...userContext.userInfomation,
+                        if (callContext) {
+                            callContext.callInformation = {
+                                ...callContext.callInformation,
                                 offerAnswer: response.data
                             }
 
                         }
-                        userContext?.setUserInformation({
-                            ...userContext.userInfomation,
+                        callContext?.setCallInformation({
+                            ...callContext.callInformation,
                             offerAnswer: response.data
                         });
                         break; 
                     case Action.ICECANDIDATE:
-                        if (userContext) {
-                            userContext.userInfomation = {
-                                ...userContext.userInfomation,
-                                icecandidate: response.data
+                        if (callContext && userContext?.userInfomation.id != response.data.from_user) {
+                            callContext.callInformation = {
+                                ...callContext.callInformation,
+                                icecandidate: {
+                                    from_user: response.data.from_user,
+                                    data: [
+                                        ...callContext.callInformation.icecandidate.data,
+                                        response.data.data
+                                    ]
+                                }
                             }
-
+                            callContext?.setCallInformation({
+                                ...callContext.callInformation
+                            });
                         }
-                        userContext?.setUserInformation({
-                            ...userContext.userInfomation,
-                            icecandidate: response.data
-                        });
                         break
                 }
             }

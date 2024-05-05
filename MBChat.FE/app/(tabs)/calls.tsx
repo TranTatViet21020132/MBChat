@@ -9,11 +9,18 @@ import {RTCIceCandidate} from "react-native-webrtc";
 import Utils from "@/components/VideoCall/Utils";
 import { WebsocketContext } from "@/context/WebsocketContext";
 import { UserContext } from "@/context/userContext";
+import { ChatContext } from "@/context/chatContext";
+import { useRouter } from "expo-router";
+import { CallContext } from "@/context/CallContext";
 const configuration = {
     iceServers: [{ urls: ["stun:stun.l.google.com:19302", "stun:stun2.l.google.com:19302"] }],
 };
-let remoteCandidates = [];
+let remoteCandidates: RTCIceCandidate[] = [];
+let count: number = 0;
+let added: number = 0;
 const Calls = () => {
+    const router = useRouter();
+
     const [localStream, setLocalStream] = useState<MediaStream | null>();
     const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
     const [gettingCall, setGettingCall] = useState(false);
@@ -21,58 +28,68 @@ const Calls = () => {
     const connecting = useRef(false);
     const websocketContext = React.useContext(WebsocketContext);
     const userContext = React.useContext(UserContext);
-    
-    
+    const chatContext = React.useContext(ChatContext);
+    const callContext = React.useContext(CallContext);
 
-    function handleRemoteCandidate( iceCandidate: any ) {
+    function handleRemoteCandidate( iceCandidate: RTCIceCandidate ) {
       
       iceCandidate = new RTCIceCandidate( iceCandidate );
-      
+      if (!pc.current) return;
       // pc.current.addIceCandidate(iceCandidate);
       if ( !pc.current.remoteDescription) {
         if (remoteCandidates.some(candidate => candidate.candidate === iceCandidate.candidate)) {
           return;
         }
-        console.log(userContext?.userInfomation.id, remoteCandidates.length, iceCandidate)
         remoteCandidates.push(iceCandidate);
         // return remoteCandidates.push( iceCandidate );
         return;
       };
-      console.log(userContext?.userInfomation.id, "Added")
       return pc.current.addIceCandidate( iceCandidate );
     };
 
     function processCandidates() {
-      console.log("In process", userContext?.userInfomation.id, remoteCandidates.length)
-      if ( remoteCandidates.length < 1) { return; };
-      console.log("Process to added")
-      
-      remoteCandidates.map( candidate => pc.current.addIceCandidate( candidate ) );
+      if (!pc.current || !callContext) return;
+      if (callContext.callInformation.icecandidate.data.length < 1) { return; };
+      let from = added - 1;
+      if (from < 0) from = 0
+      added = callContext.callInformation.icecandidate.data.length;
+      console.log("Process to added:", "User", userContext?.userInfomation.id, callContext.callInformation.icecandidate.data.length);
+      callContext.callInformation.icecandidate.data.slice(from).map( candidate => {
+        if (pc.current) {
+          pc.current.addIceCandidate( candidate )
+        }
+      } );
       remoteCandidates = [];
     };
 
     const handleAnswerOffer = async () => {
-      if (!pc.current) return;
-      pc.current.setRemoteDescription(new RTCSessionDescription(userContext.userInfomation.offerAnswer))
+      if (!pc.current || !callContext?.callInformation.offerAnswer) return;
+      
+      pc.current.setRemoteDescription(new RTCSessionDescription(callContext?.callInformation.offerAnswer))
       await processCandidates();
     }
     
     useEffect(() => {
-      if (userContext?.userInfomation.offerDescription && !connecting.current) {
+      if (!pc.current && callContext?.callInformation.from_user == userContext?.userInfomation.id && callContext?.callInformation.gettingCall) {
+        console.log("yes")
+        create();
+      }
+
+      if (callContext?.callInformation.from_user != userContext?.userInfomation.id && callContext?.callInformation.offerDescription && !connecting.current) {
+        
         setGettingCall(true);
+        
       }
-      if (pc.current && !pc.current?.remoteDescription && userContext?.userInfomation.offerAnswer ) {
+      if (callContext?.callInformation.from_user == userContext?.userInfomation.id && pc.current && !pc.current?.remoteDescription && callContext?.callInformation.offerAnswer ) {
+        
         handleAnswerOffer();
+         
       }
-      if (pc.current && userContext?.userInfomation.icecandidate) {
-        handleRemoteCandidate(userContext.userInfomation.icecandidate);
-        userContext.setUserInformation({
-          ...userContext.userInfomation,
-          icecandidate: null
-        })
+      if (callContext && added > 0 && callContext.callInformation.icecandidate.data.length > added) {
+        processCandidates();
       }
       
-    }, [userContext?.userInfomation])
+    }, [callContext?.callInformation])
 
     const setupWebrtc = async () => {
         pc.current = new RTCPeerConnection(configuration);
@@ -81,20 +98,41 @@ const Calls = () => {
             console.log(pc.current?.connectionState);
             switch (pc.current?.connectionState) {
                 case "closed":
+                    count = 0;
+                    added = 0;
+                    callContext?.setCallInformation({
+                      from_user: 0,
+                      from_channel: 0,
+                      offerDescription: null,
+                      offerAnswer: null,
+                      icecandidate: {
+                        from_user: 0,
+                        data: []
+                      },
+                      gettingCall: false
+                    })
+                    console.log("close")
+                    pc.current = undefined;
+                    setRemoteStream(null);
                     break;
             }
         });
 
         pc.current.addEventListener("icecandidate", (event: any) => {
-            if (!event.candidate) {
+            if (!event.candidate || !callContext) {
                 return;
             }
             // handleRemoteCandidate(event.candidate)
+            count += 1;
+            console.log("User", userContext?.userInfomation.id, count)
             const form_data = {
               "action": "icecandidate",
-              "target": "user",
-              "targetId": userContext?.userInfomation.id === 1 ? 3 : 1,
-              "data": event.candidate
+              "target": "channel",
+              "targetId": callContext.callInformation.from_channel,
+              "data": {
+                "from_user": userContext?.userInfomation.id,
+                "data": event.candidate
+              }
             }
             if (websocketContext?.websocket) {
               websocketContext.websocket.send(JSON.stringify(form_data));
@@ -135,15 +173,14 @@ const Calls = () => {
 
         pc.current.addEventListener("track", async (event) => {
 
-          
-          if (!remoteStream) {
-            const remoteMediaStream = new MediaStream();
-            await event.streams[0].getTracks().forEach((track) => {
-              remoteMediaStream.addTrack(track);
-            })
-            setRemoteStream(remoteMediaStream);
+            if (!remoteStream) {
+              const remoteMediaStream = new MediaStream();
+              await event.streams[0].getTracks().forEach((track) => {
+                remoteMediaStream.addTrack(track);
+              })
+              setRemoteStream(remoteMediaStream);
+            }
 
-          }
         });
 
         const stream = await Utils.getStream();
@@ -173,11 +210,11 @@ const Calls = () => {
           const offerDescription = await pc.current.createOffer( sessionConstraints );
           await pc.current.setLocalDescription( offerDescription );
           
-          if (websocketContext?.websocket) {
+          if (websocketContext?.websocket && callContext) {
             const formData = {
-              action: "video_call",
-              target: "user",
-              "targetId": userContext?.userInfomation.id === 1 ? 3 : 1,
+              action: "offer_description",
+              target: "channel",
+              "targetId": callContext.callInformation.from_channel,
               "data": offerDescription
             }
             websocketContext.websocket.send(JSON.stringify(formData));
@@ -196,11 +233,11 @@ const Calls = () => {
       connecting.current = true;
       setGettingCall(false);
 
-      if (userContext?.userInfomation.offerDescription) {
+      if (callContext?.callInformation.offerDescription) {
         await setupWebrtc();
 
-        if (pc.current) {
-          await pc.current.setRemoteDescription(new RTCSessionDescription(userContext?.userInfomation.offerDescription))
+        if (pc.current && callContext.callInformation.offerDescription) {
+          await pc.current.setRemoteDescription(new RTCSessionDescription(callContext.callInformation.offerDescription))
           const answerDescription = await pc.current.createAnswer();
           await pc.current.setLocalDescription( answerDescription );
           processCandidates();
@@ -208,8 +245,8 @@ const Calls = () => {
             console.log("sendt")
             const formData = {
               "action": "offer_answer",
-              target: "user",
-              targetId: userContext?.userInfomation.id === 1 ? 3 : 1,
+              target: "channel",
+              targetId: callContext.callInformation.from_channel,
               "data": answerDescription
             }
             websocketContext.websocket.send(JSON.stringify(formData));
@@ -256,7 +293,21 @@ const Calls = () => {
             <Button
                 iconName="video"
                 backgroundColor="grey"
-                onPress={create}
+                onPress={() => {
+                  // create();
+                  if (websocketContext?.websocket) {
+                    const formData = {
+                      "action": "video_call",
+                      target: "channel",
+                      targetId: 1,
+                      data: {
+                        from_user: userContext?.userInfomation.id,
+                        from_channel: chatContext?.chats.id
+                      }
+                    }
+                    websocketContext?.websocket.send(JSON.stringify(formData));
+                  }
+                }}
                 style={{}}
             />
         </View>

@@ -292,6 +292,12 @@ const SingleChatPage = () => {
     } else if (state.messages.length < chatHistory[String(id["id"])].length) {
       dispatch({type: ActionKind.LOAD_MESSAGES, payload: chatHistory[String(id["id"])]});
     }
+    if (String(id["id"]) != chatContext.chats.id) {
+      chatContext.setChats({
+        ...chatContext.chats,
+        id: String(id["id"])
+      })
+    }
     
   }, [replyMessage, chatListContext.chatHistory]);
 
