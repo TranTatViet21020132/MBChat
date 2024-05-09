@@ -198,7 +198,10 @@ const signup = () => {
           />
         </View>
 
-        <View style={styles.containerButton}>
+        <View style={styles.containerButton}
+          lightColor={COLORS.transparent}
+          darkColor={COLORS.transparent}
+        >
           <Pressable style={styles.buttonSubmit}
             onPress={sendOTP}
           >
@@ -212,18 +215,24 @@ const signup = () => {
           </Pressable>
         </View>
 
-        <View style={styles.containerBoundary}>
+        <View style={styles.containerBoundary}
+          lightColor={COLORS.transparent}
+          darkColor={COLORS.transparent}
+        >
           <View style={{ height: 1, backgroundColor: '#aaa', width: '30%' }}></View>
           <Text style={{ color: '#aaa' }}>Or</Text>
           <View style={{ height: 1, backgroundColor: '#aaa', width: '30%' }}></View>
         </View>
 
-        <View style={styles.bottom}>
+        <View style={styles.bottom}
+          lightColor={COLORS.transparent}
+          darkColor={COLORS.transparent}
+        >
           <Text style={{ color: '#aaa' }}>
             Already have an account?
           </Text>
           <Link href={'/verify/login'} style={{ paddingLeft: 10 }}>
-            <Text>
+            <Text style={{color: COLORS.light.primary}}>
               Login
             </Text>
           </Link>

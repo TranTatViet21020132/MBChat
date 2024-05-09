@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from '@/components/Themed'
 import React from 'react'
 import { COLORS } from '@/constants/Colors'
 import { useState } from 'react'
-import { useRouter } from 'expo-router'
+import { router, Link } from 'expo-router'
 import { MaterialCommunityIcons, Ionicons, Fontisto, Octicons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import { useTranslation } from 'react-i18next'
@@ -19,6 +19,10 @@ const Settings = () => {
   const { t } = useTranslation();
   const colorScheme = useColorScheme();
 
+  const handleLogout = () => {
+    router.push('/verify/login')
+  }
+
   return (
     <ScrollView
       style={styles.container}
@@ -26,6 +30,18 @@ const Settings = () => {
       <Header t={t} />
       <UserItems t={t} />
       <AppItems t={t} />
+
+      
+      <TouchableOpacity style={styles.buttonLogout}
+        activeOpacity={0.8}
+        onPress={handleLogout}
+      >
+        <Text style={{color: COLORS.white,
+          fontWeight: '600'
+        }}>
+          Log out
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   )
 }
@@ -156,8 +172,6 @@ const Header: React.FC<Props> = ({ t }) => {
 }
 
 const UserItems: React.FC<Props> = ({ t }) => {
-
-  const router = useRouter();
 
   const colorScheme = useColorScheme();
 
@@ -386,6 +400,15 @@ const styles = StyleSheet.create({
   items: {
     marginBottom: 28,
     borderRadius: 10,
+  },
+  buttonLogout: {
+    height: 40,
+    backgroundColor: COLORS.light.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    borderRadius: 10,
+    marginBottom: 40
   }
 })
 
