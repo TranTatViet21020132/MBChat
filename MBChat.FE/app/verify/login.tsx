@@ -1,22 +1,47 @@
 import React from 'react'
-import { ScrollView, StyleSheet, Pressable, KeyboardAvoidingView, Platform } from 'react-native'
+import { ScrollView, StyleSheet, Pressable, KeyboardAvoidingView, Platform, NativeSyntheticEvent, TextInputChangeEventData } from 'react-native'
 import { View, Text, TextInput } from '@/components/Themed'
 import { COLORS, SIZES } from '@/constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import { Link, router } from 'expo-router'
-
+import { WebsocketContext } from '@/context/WebsocketContext';
+import UserApi from '@/api/UserApi'
+import * as SecureStore from 'expo-secure-store';
+import Toast from 'react-native-toast-message'
 const login = () => {
   const [showPassword, setShowPassword] = React.useState(false);
-
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   }
 
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
+  const websocketContext = React.useContext(WebsocketContext);
 
   const handleLogin = async () => {
-    router.replace('/(tabs)/chats');
+    const response = await UserApi.signin({
+      "username": username,
+      "password": password
+    })
+    if (response.status === 200) {
+      const data = response.data.data;
+      const accessToken = data["access"];
+      if (websocketContext && !websocketContext.websocket) {
+        websocketContext.setWebsocket(new WebSocket(`ws://112.137.129.161:8001/ws/chat/?token=${accessToken}`));
+      }
+      await SecureStore.setItemAsync('accessToken', accessToken);
+      router.replace('/(tabs)/chats');
+
+    } else {
+      Toast.show({
+        "type": "error",
+        "text1": "Login message",
+        "text2": response.data.message
+      })
+    }
   }
+
  
   return (
     <KeyboardAvoidingView
@@ -37,6 +62,10 @@ const login = () => {
           darkColor={COLORS.dark.settings.backgroundInput}
         >
           <TextInput
+            value={username}
+            onChangeText={(text: string) => {
+              setUsername(text)
+            }}
             style={styles.inputText}
             lightColor={COLORS.light.settings.text}
             darkColor={COLORS.dark.settings.text}
@@ -51,6 +80,10 @@ const login = () => {
           darkColor={COLORS.dark.settings.backgroundInput}
         >
           <TextInput
+            value={password}
+            onChangeText={(text: string) => {
+              setPassword(text)
+            }}
             style={styles.inputText}
             lightColor={COLORS.light.settings.text}
             darkColor={COLORS.dark.settings.text}
@@ -67,11 +100,19 @@ const login = () => {
           />
         </View>
 
-        <View style={styles.containerforgotPassword}>
-          <Text>Forgot password?</Text>
+        <View style={styles.containerforgotPassword}
+          lightColor={COLORS.transparent}
+          darkColor={COLORS.transparent}
+        >
+          <Text style={{color: COLORS.light.primary}}>
+            Forgot password?
+          </Text>
         </View>
 
-        <View style={styles.containerButton}>
+        <View style={styles.containerButton}
+          lightColor={COLORS.transparent}
+          darkColor={COLORS.transparent}
+        >
           <Pressable style={styles.buttonSubmit} 
             onPress={handleLogin}
           >
@@ -85,18 +126,26 @@ const login = () => {
           </Pressable>
         </View>
 
-        <View style={styles.containerBoundary}>
+        <View style={styles.containerBoundary}
+          lightColor={COLORS.transparent}
+          darkColor={COLORS.transparent}
+        >
           <View style={{ height: 1, backgroundColor: '#aaa', width: '30%' }}></View>
           <Text style={{ color: '#aaa' }}>Or</Text>
           <View style={{ height: 1, backgroundColor: '#aaa', width: '30%' }}></View>
         </View>
 
-        <View style={styles.bottom}>
+        <View style={styles.bottom}
+          lightColor={COLORS.transparent}
+          darkColor={COLORS.transparent}
+        >
           <Text style={{ color: '#aaa' }}>
             Don't have an account?
           </Text>
           <Link href={'/verify/signup'} style={{ paddingLeft: 10 }}>
-            <Text>
+            <Text
+              style={{color: COLORS.light.primary}}
+            >
               Sign up
             </Text>
           </Link>

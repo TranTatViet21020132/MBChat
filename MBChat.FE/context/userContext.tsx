@@ -22,7 +22,7 @@ const UserProvider: React.FC<{ children: React.ReactNode}> = ({ children }) => {
             "username": "",
             "fullname": "",
             "avatarUrl": "",
-            verified: false
+            verified: false,
         }
     )
     

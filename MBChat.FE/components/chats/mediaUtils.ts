@@ -50,7 +50,6 @@ export async function pickImageAsync(
       aspect: [4, 3],
       quality: 1,
     })
-
     if (!result.canceled) {
       onSend([{ image: result.assets[0].uri }])
       return result.assets[0].uri

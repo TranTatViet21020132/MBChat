@@ -24,7 +24,8 @@ import CustomActions from '@/components/chats/CustomActions'
 import CustomView from '@/components/chats/CustomView'
 import earlierMessages from '@/assets/data/earlierMessages'
 import messagesData from '@/assets/data/messages'
-
+import MessageApi from '@/api/MessageApi';
+import mime from "mime";
 const user = {
   _id: 1,
   name: 'Developer',
@@ -155,20 +156,36 @@ const SingleChatPage = () => {
   })
 
   const onSend = useCallback(
-    (messages: any[]) => {
-      if (websocket && isOpenWebsocket(websocket)) {
+    async (messages: any[]) => {
+      if (messages[0]["image"]) {
+        const newImageUri =  "file:///" + messages[0]["image"].split("file:/").join("");
+        const formData = new FormData();
+        formData.append('file', {
+        uri : newImageUri,
+        type: mime.getType(newImageUri),
+        name: newImageUri.split("/").pop()
+        });
+        formData.append('channel', String(id["id"]));
+        const response = await MessageApi.uploadImage(formData);
+        
+      } else if (websocket && isOpenWebsocket(websocket)) {
+        let data = {
+          "content": messages[0]["text"] ? messages[0]["text"] : ""
+        }
+        if (messages[0]["location"]) {
+          //@ts-ignore
+          data["location"] = `${messages[0]["location"]["latitude"]} ${messages[0]["location"]["longitude"]}`;
+        }
         const formData = {
           action: "send_message",
           targetId: Number(id["id"]),
           target: "channel",
-          "data": {
-            "content": messages[0]["text"]
-          }
+          "data": data
         };
         const formSubmit = JSON.stringify(formData);
         websocket.send(formSubmit);
       }
-      // console.log(messages[0])
+       // console.log(messages[0])
       // const sentMessages = [{ ...messages[0], sent: true, received: true, seen: false }]
       // const newMessages = GiftedChat.append(
       //   state.messages,
@@ -274,6 +291,12 @@ const SingleChatPage = () => {
       waitForSocketConnection(websocketContext.websocket, Number(id["id"]));
     } else if (state.messages.length < chatHistory[String(id["id"])].length) {
       dispatch({type: ActionKind.LOAD_MESSAGES, payload: chatHistory[String(id["id"])]});
+    }
+    if (String(id["id"]) != chatContext.chats.id) {
+      chatContext.setChats({
+        ...chatContext.chats,
+        id: String(id["id"])
+      })
     }
     
   }, [replyMessage, chatListContext.chatHistory]);

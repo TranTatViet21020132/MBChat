@@ -18,9 +18,10 @@ import { useTranslation } from "react-i18next";
 import { useColorScheme } from "@/components/useColorScheme";
 import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
+import Toast from "react-native-toast-message";
 import { COLORS } from "@/constants/Colors";
 import ChatListProvider from "@/context/chatListContext";
+import CallProvider from "@/context/CallContext";
 
 export {
     // Catch any errors thrown by the Layout component.
@@ -63,6 +64,7 @@ function RootLayoutNav() {
         <ChatProvider>
             <ChatListProvider>
                 <UserProvider>
+                    <CallProvider>
                     <WebsocketProvider>
                       <I18nextProvider i18n={i18n}>
                         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -126,9 +128,11 @@ function RootLayoutNav() {
                               }}
                             />
                           </Stack>
+                          <Toast />
                         </ThemeProvider>
                       </I18nextProvider>
                     </WebsocketProvider>
+                    </CallProvider>
                 </UserProvider>
             </ChatListProvider>
         </ChatProvider>

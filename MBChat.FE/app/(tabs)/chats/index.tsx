@@ -38,7 +38,7 @@ const ChatsPage = () => {
   return (
     <ScrollView
       contentInsetAdjustmentBehavior="automatic"
-      contentContainerStyle={{ paddingBottom: 0, flex: 1, backgroundColor: '#fff' }}>
+      contentContainerStyle={{ marginTop: 80, paddingBottom: 0, flex: 1, backgroundColor: '#fff' }}>
       <FlatList
         data={chatList}
         renderItem={({ item }) => <ChatRow {...item} />}
