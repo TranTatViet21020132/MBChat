@@ -6,9 +6,13 @@ import { Ionicons } from '@expo/vector-icons'
 import { Link, router } from 'expo-router'
 import { WebsocketContext } from '@/context/WebsocketContext';
 import UserApi from '@/api/UserApi'
+import { useTranslation } from 'react-i18next'
 import * as SecureStore from 'expo-secure-store';
 import Toast from 'react-native-toast-message'
+
+
 const login = () => {
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = React.useState(false);
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -54,7 +58,7 @@ const login = () => {
           lightColor={COLORS.light.text}
           darkColor={COLORS.light.text}
         >
-          Log in to continue
+          {t('login.content.title')}
         </Text>
         <View
           style={styles.input}
@@ -69,7 +73,7 @@ const login = () => {
             style={styles.inputText}
             lightColor={COLORS.light.settings.text}
             darkColor={COLORS.dark.settings.text}
-            placeholder={'Username or email'}
+            placeholder={t('login.data.username')}
             placeholderTextColor={'grey'}
           />
         </View>
@@ -87,7 +91,7 @@ const login = () => {
             style={styles.inputText}
             lightColor={COLORS.light.settings.text}
             darkColor={COLORS.dark.settings.text}
-            placeholder={'Password'}
+            placeholder={t('login.data.password')}
             placeholderTextColor={'grey'}
             secureTextEntry={!showPassword}
           />
@@ -105,7 +109,7 @@ const login = () => {
           darkColor={COLORS.transparent}
         >
           <Text style={{color: COLORS.light.primary}}>
-            Forgot password?
+            {t('login.content.forgotPassword')}
           </Text>
         </View>
 
@@ -121,7 +125,7 @@ const login = () => {
               fontWeight: '600',
               color: '#fff'
             }}>
-              Log in
+              {t('login.title')}
             </Text>
           </Pressable>
         </View>
@@ -140,13 +144,13 @@ const login = () => {
           darkColor={COLORS.transparent}
         >
           <Text style={{ color: '#aaa' }}>
-            Don't have an account?
+            {t('login.content.account')}
           </Text>
           <Link href={'/verify/signup'} style={{ paddingLeft: 10 }}>
             <Text
               style={{color: COLORS.light.primary}}
             >
-              Sign up
+              {t('signup.title')}
             </Text>
           </Link>
         </View>

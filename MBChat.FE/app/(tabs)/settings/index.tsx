@@ -9,6 +9,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
 import { useColorScheme } from '@/components/useColorScheme'
+import * as SecureStore from 'expo-secure-store';
 
 type Props = {
   t: TFunction<"translation", undefined>;
@@ -19,7 +20,9 @@ const Settings = () => {
   const { t } = useTranslation();
   const colorScheme = useColorScheme();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await SecureStore.deleteItemAsync('accessToken');
+
     router.push('/verify/login')
   }
 

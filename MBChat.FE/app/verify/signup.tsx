@@ -6,6 +6,8 @@ import { Ionicons } from '@expo/vector-icons'
 import { Link, router } from 'expo-router'
 import UserApi from '@/api/UserApi';
 import Toast from 'react-native-toast-message'
+import { useTranslation } from 'react-i18next'
+
 const signup = () => {
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
 
@@ -25,6 +27,8 @@ const signup = () => {
   })
 
   const [loading, setLoading] = React.useState(false);
+  const { t } = useTranslation();
+
 
   // const sendOTP = React.useCallback(async () => {
   //   Keyboard.dismiss();
@@ -81,7 +85,7 @@ const signup = () => {
           lightColor={COLORS.light.text}
           darkColor={COLORS.light.text}
         >
-          Create a new account
+         {t('signup.content.title')}
         </Text>
         <View
           style={styles.input}
@@ -92,7 +96,7 @@ const signup = () => {
             style={styles.inputText}
             lightColor={COLORS.light.settings.text}
             darkColor={COLORS.dark.settings.text}
-            placeholder={'First name'}
+            placeholder={t('signup.data.firstName')}
             placeholderTextColor={'grey'}
             value={data.first_name}
             onChangeText={text => setData({...data, first_name: text})}
@@ -108,7 +112,7 @@ const signup = () => {
             style={styles.inputText}
             lightColor={COLORS.light.settings.text}
             darkColor={COLORS.dark.settings.text}
-            placeholder={'Last name'}
+            placeholder={t('signup.data.lastName')}
             placeholderTextColor={'grey'}
             value={data.last_name}
             onChangeText={text => setData({...data, last_name: text})}
@@ -124,7 +128,7 @@ const signup = () => {
             style={styles.inputText}
             lightColor={COLORS.light.settings.text}
             darkColor={COLORS.dark.settings.text}
-            placeholder={'Username'}
+            placeholder={t('signup.data.username')}
             placeholderTextColor={'grey'}
             value={data.username}
             onChangeText={text => setData({...data, username: text})}
@@ -140,7 +144,7 @@ const signup = () => {
             style={styles.inputText}
             lightColor={COLORS.light.settings.text}
             darkColor={COLORS.dark.settings.text}
-            placeholder={'Email'}
+            placeholder={t('signup.data.email')}
             placeholderTextColor={'grey'}
             value={data.email}
             onChangeText={text => setData({...data, email: text})}
@@ -156,7 +160,7 @@ const signup = () => {
             style={styles.inputText}
             lightColor={COLORS.light.settings.text}
             darkColor={COLORS.dark.settings.text}
-            placeholder={'Password'}
+            placeholder={t('signup.data.password')}
             placeholderTextColor={'grey'}
             secureTextEntry={!showPassword}
             value={data.password}
@@ -180,7 +184,7 @@ const signup = () => {
             style={styles.inputText}
             lightColor={COLORS.light.settings.text}
             darkColor={COLORS.dark.settings.text}
-            placeholder={'Confirm password'}
+            placeholder={t('signup.data.confirmPassword')}
             placeholderTextColor={'grey'}
             secureTextEntry={!showPassword}
             value={data.confirmPassword}
@@ -210,7 +214,7 @@ const signup = () => {
               fontWeight: '600',
               color: '#fff'
             }}>
-              Sign up
+              {t('signup.title')}
             </Text>
           </Pressable>
         </View>
@@ -229,11 +233,13 @@ const signup = () => {
           darkColor={COLORS.transparent}
         >
           <Text style={{ color: '#aaa' }}>
-            Already have an account?
+            {t('signup.content.account')}
           </Text>
-          <Link href={'/verify/login'} style={{ paddingLeft: 10 }}>
+          <Link href={'/verify/login'}
+           style={{ paddingLeft: 10 }}
+           >
             <Text style={{color: COLORS.light.primary}}>
-              Login
+            {t('login.title')}
             </Text>
           </Link>
         </View>

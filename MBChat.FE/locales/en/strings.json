@@ -6,6 +6,26 @@
   "welcome.content.termsOfService": "Terms of Service",
   "welcome.action.agreeAndContinue": "Agree & Continue",
 
+
+  "signup.title": "Sign up",
+  "signup.content.title": "Create a new account",
+  "signup.content.or": "Or",
+  "signup.content.account": "Alreay have an account?",
+  "signup.content.login": "Log in",
+  "signup.data.firstName": "First name",
+  "signup.data.lastName": "Last name",
+  "signup.data.username": "Username",
+  "signup.data.email": "Email",
+  "signup.data.password": "Password",
+  "signup.data.confirmPassword": "Confirm password",
+
+  "login.title": "Log in",
+  "login.content.title": "Log in to continue",
+  "login.content.account": "Don't have an account",
+  "login.content.forgotPassword": "Forgot password",
+  "login.data.username": "Username",
+  "login.data.password": "Password",
+
   "otp.content.title": "Enter your phone number",
   "otp.content.sendingCode": "Sending Code",
   "otp.content.verify": "MBChat will need to verify your account. Carrier charges may apply.",
