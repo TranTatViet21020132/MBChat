@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "419627637911",
+    "project_id": "mbchat-1c587",
+    "storage_bucket": "mbchat-1c587.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:419627637911:android:3639895866ece235f95dd2",
+        "android_client_info": {
+          "package_name": "com.phamtungthuy.mbchat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCU7ObvzDo-G6GAR9HIAikQQ31BLAwWXM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -7,7 +7,7 @@ import {
 import { useFonts } from "expo-font";
 import { Link, Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useEffect } from "react";
+import React, { Fragment, useCallback, useEffect } from "react";
 import {ChatProvider} from "@/context/chatContext";
 import WebsocketProvider from "@/context/WebsocketContext";
 import UserProvider from "@/context/userContext";
@@ -16,13 +16,15 @@ import i18n from "@/services/i18n.config";
 import { useTranslation } from "react-i18next";
 
 import { useColorScheme } from "@/components/useColorScheme";
-import { Pressable } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import { COLORS } from "@/constants/Colors";
 import ChatListProvider from "@/context/chatListContext";
 import CallProvider from "@/context/CallContext";
-
+import { AppRegistry } from "react-native";
+import { usePushNotifications } from '@/services/notifications/usePushNotifications';
+import * as SecureStore from 'expo-secure-store';
 export {
     // Catch any errors thrown by the Layout component.
     ErrorBoundary,
@@ -32,6 +34,10 @@ export {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+    const {expoPushToken, notification} = usePushNotifications();
+    const data = JSON.stringify(notification, undefined, 2);
+    
+
     const [loaded, error] = useFonts({
         SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
         ...FontAwesome.font,
@@ -59,7 +65,7 @@ function RootLayoutNav() {
     const { t } = useTranslation();
     const colorScheme = useColorScheme();
     const router = useRouter();
-
+    
     return (
         <ChatProvider>
             <ChatListProvider>
@@ -138,3 +144,12 @@ function RootLayoutNav() {
         </ChatProvider>
     );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center"
+  }
+})

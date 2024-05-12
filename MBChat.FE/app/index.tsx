@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import welcomeImage from '@/assets/images/welcome.png';
 import welcomeImageDark from '@/assets/images/welcomeDark.png';
 
+
 const IndexPage = () => {
   const { t } = useTranslation();
   const colorScheme = useColorScheme();
@@ -63,7 +64,7 @@ const IndexPage = () => {
         </Text>
         .
       </Text>
-      <Link href={"/verify/signup"} replace asChild>
+      <Link href={"/verify/login"} replace asChild>
         <Pressable style={styles.button}>
           <Text
           style={styles.buttonText}
