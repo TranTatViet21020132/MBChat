@@ -205,30 +205,30 @@ const WebsocketProvider: React.FC<{ children: React.ReactNode }> = ({
                         router.navigate("/(tabs)/calls")
                         break;
                     case Action.OFFER_DESCRIPTION:
-                        if (callContext) {
+                        if (callContext && response.data.from_user !== userContext?.userInfomation.id) {
                             callContext.callInformation = {
                                 ...callContext.callInformation,
-                                offerDescription: response.data
+                                offerDescription: response.data.data
                     
                             }
+                            callContext?.setCallInformation({
+                                ...callContext.callInformation,
+                                offerDescription: response.data.data
+                            });
                         }
-                        callContext?.setCallInformation({
-                            ...callContext.callInformation,
-                            offerDescription: response.data
-                        });
                         break;
                     case Action.OFFER_ANSWER:
-                        if (callContext) {
+                        if (callContext && response.data.from_user !== userContext?.userInfomation.id) {
                             callContext.callInformation = {
                                 ...callContext.callInformation,
-                                offerAnswer: response.data
+                                offerAnswer: response.data.data
                             }
+                            callContext?.setCallInformation({
+                                ...callContext.callInformation,
+                                offerAnswer: response.data.data
+                            });
 
                         }
-                        callContext?.setCallInformation({
-                            ...callContext.callInformation,
-                            offerAnswer: response.data
-                        });
                         break; 
                     case Action.ICECANDIDATE:
                         if (callContext && userContext?.userInfomation.id != response.data.from_user) {
