@@ -2,15 +2,50 @@ import { useState, useEffect, useRef } from "react";
 
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-
 import Constants from "expo-constants";
-
+import messaging from '@react-native-firebase/messaging';
 import { Platform } from "react-native";
+import { router } from "expo-router";
+import RNCallKeep from 'react-native-callkeep';
+import { PermissionsAndroid } from "react-native";
+const options = {
+  ios: {
+    appName: 'My app name',
+  },
+  android: {
+    alertTitle: 'Permissions required',
+    alertDescription: 'This application needs to access your phone accounts',
+    cancelButton: 'Cancel',
+    okButton: 'ok',
+    imageName: 'phone_account_icon',
+    additionalPermissions: [],
+    // Required to get audio in background when using Android 11
+    foregroundService: {
+      channelId: 'com.company.my',
+      channelName: 'Foreground service for my app',
+      notificationTitle: 'My app is running on background',
+      notificationIcon: 'Path to the resource icon of the notification',
+    }, 
+  }
+};
 
+RNCallKeep.setup(options).then(accepted => {});
 export interface PushNotificationState {
     notification?: Notifications.Notification;
     expoPushToken?: Notifications.ExpoPushToken;
 }
+
+messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+    // const { title, body } = remoteMessage.notification;
+    Notifications.scheduleNotificationAsync({
+        content: {
+          title: 'Incoming Call',
+          body: 'You have an incoming call.',
+          categoryIdentifier: 'call',
+        },
+        trigger: { seconds: 1 },
+      });
+});
 
 export const usePushNotifications = (): PushNotificationState => {
     Notifications.setNotificationHandler({
@@ -73,8 +108,31 @@ export const usePushNotifications = (): PushNotificationState => {
         });
 
         responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-            console.log(response);
+            console.log("response", response);
+            const actionIdentifier = response.actionIdentifier;
+            // if (actionIdentifier === 'call') {
+            //     // Navigate to call screen
+            //     navigateToCallScreen();
+            //   }
         });
+
+        const categoryIdentifier = 'call';
+        Notifications.setNotificationCategoryAsync(categoryIdentifier, [
+            {
+            identifier: 'call',
+            buttonTitle: '📞 Call',
+            options: {
+                opensAppToForeground: true,
+            },
+            },
+            {
+            identifier: 'cancel',
+            buttonTitle: '❌ Cancel',
+            options: {
+                opensAppToForeground: false,
+            },
+            },
+        ]);
 
         return () => {
             Notifications.removeNotificationSubscription(notificationListener.current!)

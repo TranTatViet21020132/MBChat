@@ -4,7 +4,7 @@
     "slug": "mbchat",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/mbchat_icon.png",
+    "icon": "./assets/images/mbchat_icon_2.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -22,7 +22,7 @@
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/mbchat_icon.png",
+        "foregroundImage": "./assets/images/mbchat_icon_2.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
@@ -51,7 +51,8 @@
       "expo-router",
       "expo-localization",
       "expo-secure-store",
-      "@config-plugins/react-native-webrtc"
+      "@config-plugins/react-native-webrtc",
+      "@config-plugins/react-native-callkeep"
     ],
     "experiments": {
       "typedRoutes": true,
