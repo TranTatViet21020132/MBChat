@@ -1,5 +1,37 @@
 export default [
   {
+    _id: 41,
+    text: 'This is a quick reply. Do you love Gifted Chat? (radio) KEEP IT',
+    createdAt: new Date(),
+    user: {
+      _id: 2,
+      name: 'Tung',
+    },
+  },
+  {
+    _id: 40,
+    text: 'tung',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Paris_-_Eiffelturm_und_Marsfeld2.jpg/280px-Paris_-_Eiffelturm_und_Marsfeld2.jpg',
+    repliedMessage: {
+      _id: 41,
+      text: 'This is a quick reply. Do you love Gifted Chat? (radio) KEEP IT',
+      createdAt: new Date(),
+      user: {
+        _id: 1,
+        name: 'Developer',
+      },
+    },
+    createdAt: new Date(),
+    user: {
+      _id: 1,
+      name: 'Developer',
+    },
+    sent: true,
+    received: true,
+    pending: true
+  },
+  {
     _id: 9,
     text: '#awesome 3',
     createdAt: new Date(),

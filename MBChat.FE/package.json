@@ -19,7 +19,7 @@
     "axios": "^1.6.8",
     "date-fns": "^3.5.0",
     "expo": "~50.0.8",
-    "expo-dev-client": "~3.3.11",
+    "expo-dev-client": "^4.0.13",
     "expo-font": "~11.10.3",
     "expo-haptics": "~12.8.1",
     "expo-image-picker": "~14.7.1",
@@ -52,7 +52,8 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-web": "~0.19.6",
     "react-native-webrtc": "^118.0.7",
-    "react-navigation": "^5.0.0"
+    "react-navigation": "^5.0.0",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -20,26 +20,28 @@ const login = () => {
   const websocketContext = React.useContext(WebsocketContext);
 
   const handleLogin = async () => {
-    const response = await UserApi.signin({
-      "username": username,
-      "password": password
-    })
-    if (response.status === 200) {
-      const data = response.data.data;
-      const accessToken = data["access"];
-      if (websocketContext && !websocketContext.websocket) {
-        websocketContext.setWebsocket(new WebSocket(`ws://112.137.129.161:8001/ws/chat/?token=${accessToken}`));
-      }
-      await SecureStore.setItemAsync('accessToken', accessToken);
-      router.replace('/(tabs)/chats');
+  //   const response = await UserApi.signin({
+  //     "username": username,
+  //     "password": password
+  //   })
+  //   if (response.status === 200) {
+  //     const data = response.data.data;
+  //     const accessToken = data["access"];
+  //     if (websocketContext && !websocketContext.websocket) {
+  //       websocketContext.setWebsocket(new WebSocket(`ws://112.137.129.161:8001/ws/chat/?token=${accessToken}`));
+  //     }
+  //     await SecureStore.setItemAsync('accessToken', accessToken);
+  //     router.replace('/(tabs)/chats');
 
-    } else {
-      Toast.show({
-        "type": "error",
-        "text1": "Login message",
-        "text2": response.data.message
-      })
-    }
+  //   } else {
+  //     Toast.show({
+  //       "type": "error",
+  //       "text1": "Login message",
+  //       "text2": response.data.message
+  //     })
+  //   }
+
+    router.replace('/(tabs)/chats');
   }
 
  

@@ -28,8 +28,6 @@ const IndexPage = () => {
 
   const selectedWelcomeImage = colorScheme === 'dark' ? welcomeImageDark : welcomeImage;
 
-
-
   return (
     <View 
     style={styles.container}
