@@ -110,7 +110,7 @@ const WebsocketProvider: React.FC<{ children: React.ReactNode }> = ({
                         let chat_history_object_array = response.data.map(
                             (message: any, idx: number) => {
                                 let data = {
-                                    _id: idx + 1,
+                                    _id: message.id,
                                     text: message.content,
                                     createdAt: message.create_at,
                                     user: {
@@ -120,8 +120,12 @@ const WebsocketProvider: React.FC<{ children: React.ReactNode }> = ({
                                                 ? 1
                                                 : 2,
                                         name: message.member.user.fullname,
-                                    },
+                                    }
                                 };
+                                if (message.reply) {
+                                    // @ts-ignore
+                                    data["repliedMessage"] = message.reply;
+                                }
                                 if (message.location) {
                                     const locationArr =
                                         message.location.split(" ");
@@ -148,7 +152,7 @@ const WebsocketProvider: React.FC<{ children: React.ReactNode }> = ({
                         break;
                     case Action.SEND_MESSAGE:
                         data = response.data;
-
+                        console.log(data);
                         let chat_history_object = {
                             _id: data.id,
                             text: data.content,
@@ -162,6 +166,10 @@ const WebsocketProvider: React.FC<{ children: React.ReactNode }> = ({
                                 name: data.member.user.fullname,
                             },
                         };
+                        if (data.reply) {
+                            // @ts-ignore
+                            chat_history_object["repliedMessage"] = data.reply
+                        }
                         if (data.location) {
                             const locationArr = data.location.split(" ");
                             // @ts-ignore

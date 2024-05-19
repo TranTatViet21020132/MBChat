@@ -156,7 +156,8 @@ const SingleChatPage = () => {
   })
 
   const onSend = useCallback(
-    async (messages: any[]) => {
+    async (messages: any[], replyMessage: any) => {
+      
       if (messages[0]["image"]) {
         const newImageUri =  "file:///" + messages[0]["image"].split("file:/").join("");
         const formData = new FormData();
@@ -176,6 +177,12 @@ const SingleChatPage = () => {
           //@ts-ignore
           data["location"] = `${messages[0]["location"]["latitude"]} ${messages[0]["location"]["longitude"]}`;
         }
+        if (replyMessage) {
+          //@ts-ignore
+          data["reply"] = replyMessage["_id"]
+          setReplyMessage(null);
+        }
+        console.log(data);
         const formData = {
           action: "send_message",
           targetId: Number(id["id"]),
@@ -233,7 +240,7 @@ const SingleChatPage = () => {
         _id: Math.round(Math.random() * 1000000),
       }))
 
-      onSend(messagesToUpload)
+      onSend(messagesToUpload, replyMessage)
     },
     [onSend],
   )
@@ -311,7 +318,7 @@ const SingleChatPage = () => {
     }}>
       <GiftedChat
         messages={state.messages}
-        onSend={onSend}
+        onSend={(message) => onSend(message, replyMessage)}
         onInputTextChanged={setText}
         user={user}
         loadEarlier={state.loadEarlier}
@@ -375,7 +382,9 @@ const SingleChatPage = () => {
         renderChatFooter={() => (
           <ReplyMessageBar clearReply={() => setReplyMessage(null)} message={replyMessage} />
         )}
-        onLongPress={(context, message) => setReplyMessage(message)}
+        onLongPress={(context, message) => {
+          setReplyMessage(message)
+        }}
         renderMessage={renderMessage}
         isTyping={state.isTyping}
         inverted={Platform.OS !== 'web'}
