@@ -4,13 +4,15 @@ import { View, Text, TextInput } from '@/components/Themed'
 import { COLORS, SIZES } from '@/constants/Colors'
 import { Ionicons } from '@expo/vector-icons'
 import { Link, router } from 'expo-router'
-import { WebsocketContext } from '@/context/WebsocketContext';
 import UserApi from '@/api/UserApi'
 import * as SecureStore from 'expo-secure-store';
 import Toast from 'react-native-toast-message'
 import { BASE_DOMAIN } from '@/constants/ApiUrl';
 import { usePushNotifications } from '@/services/notifications/usePushNotifications';
-
+import { AppDispatch } from '@/store/store';
+import { useDispatch } from 'react-redux';
+import { RootState } from '@/store/store';
+import { connectWebsocket } from '@/store/websocket/websocketSlice'
 const login = () => {
   const {expoPushToken, notification} = usePushNotifications();
   const data = JSON.stringify(notification, undefined, 2);
@@ -20,29 +22,8 @@ const login = () => {
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   }
-
+  const dispatch = useDispatch<AppDispatch>();
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
-  const websocketContext = React.useContext(WebsocketContext);
-
-  function waitForSocketConnection(websocket: WebSocket) {
-    setTimeout(function () {
-      if (websocket) {
-          if (websocket.readyState === 1) {
-              const formData = {
-                action: "update_expo_token",
-                data: {
-                  expo_token: expoPushToken?.data 
-                }
-              };
-              const formSubmit = JSON.stringify(formData);
-              websocket.send(formSubmit);
-              
-          } else {
-              waitForSocketConnection(websocket);
-          }
-      }
-  }, 5);
-  }
 
   const handleLogin = async () => {
     const token = await SecureStore.getItemAsync('accessToken');
@@ -56,13 +37,8 @@ const login = () => {
     if (response.status === 200) {
       const data = response.data.data;
       const accessToken = data["access"];
-      if (websocketContext && !websocketContext.websocket) {
-        const websocket = new WebSocket(`ws://${BASE_DOMAIN}/ws/chat/?token=${accessToken}`);
-
-        waitForSocketConnection(websocket);
-        websocketContext.setWebsocket(websocket);
-      }
       await SecureStore.setItemAsync('accessToken', accessToken);
+      dispatch(connectWebsocket());
       router.replace('/(tabs)/chats');
 
     } else {
@@ -77,9 +53,7 @@ const login = () => {
   useEffect(() => {
     const accessToken = SecureStore.getItem('accessToken');
     if (accessToken) {
-      if (websocketContext && !websocketContext.websocket) {
-        websocketContext.setWebsocket(new WebSocket(`ws://${BASE_DOMAIN}/ws/chat/?token=${accessToken}`))
-      }
+      dispatch(connectWebsocket());
       router.replace('/(tabs)/chats');
     }
   }, [])

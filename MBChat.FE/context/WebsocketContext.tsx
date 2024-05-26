@@ -150,48 +150,47 @@ const WebsocketProvider: React.FC<{ children: React.ReactNode }> = ({
                         chatListContext?.setChatHistory(new_chat_history);
 
                         break;
-                    case Action.SEND_MESSAGE:
-                        data = response.data;
-                        console.log(data);
-                        let chat_history_object = {
-                            _id: data.id,
-                            text: data.content,
-                            createdAt: new Date(),
-                            user: {
-                                _id:
-                                    userContext?.userInfomation.id ===
-                                    data.member.user.id
-                                        ? 1
-                                        : 2,
-                                name: data.member.user.fullname,
-                            },
-                        };
-                        if (data.reply) {
-                            // @ts-ignore
-                            chat_history_object["repliedMessage"] = data.reply
-                        }
-                        if (data.location) {
-                            const locationArr = data.location.split(" ");
-                            // @ts-ignore
-                            chat_history_object["location"] = {
-                                latitude: parseFloat(locationArr[0]),
-                                longitude: parseFloat(locationArr[1]),
-                            };
-                        } else if (data.image) {
-                            // @ts-ignore
-                            chat_history_object["image"] = data.image;
-                        }
+                    // case Action.SEND_MESSAGE:
+                    //     data = response.data;
+                    //     let chat_history_object = {
+                    //         _id: data.id,
+                    //         text: data.content,
+                    //         createdAt: new Date(),
+                    //         user: {
+                    //             _id:
+                    //                 userContext?.userInfomation.id ===
+                    //                 data.member.user.id
+                    //                     ? 1
+                    //                     : 2,
+                    //             name: data.member.user.fullname,
+                    //         },
+                    //     };
+                    //     if (data.reply) {
+                    //         // @ts-ignore
+                    //         chat_history_object["repliedMessage"] = data.reply
+                    //     }
+                    //     if (data.location) {
+                    //         const locationArr = data.location.split(" ");
+                    //         // @ts-ignore
+                    //         chat_history_object["location"] = {
+                    //             latitude: parseFloat(locationArr[0]),
+                    //             longitude: parseFloat(locationArr[1]),
+                    //         };
+                    //     } else if (data.image) {
+                    //         // @ts-ignore
+                    //         chat_history_object["image"] = data.image;
+                    //     }
 
-                        new_chat_history = { ...chatListContext?.chatHistory };
-                        new_chat_history[response.targetId].unshift(
-                            chat_history_object
-                        );
-                        if (chatListContext) {
-                            chatListContext.chatHistory = new_chat_history;
-                        }
-                        chatListContext?.setChatHistory(new_chat_history);
+                    //     new_chat_history = { ...chatListContext?.chatHistory };
+                    //     new_chat_history[response.targetId].unshift(
+                    //         chat_history_object
+                    //     );
+                    //     if (chatListContext) {
+                    //         chatListContext.chatHistory = new_chat_history;
+                    //     }
+                    //     chatListContext?.setChatHistory(new_chat_history);
 
-                        break;
+                    //     break;
                     case Action.VIDEO_CALL:
                         if (callContext) {
                             callContext.callInformation = {
@@ -211,6 +210,7 @@ const WebsocketProvider: React.FC<{ children: React.ReactNode }> = ({
                             ...callContext.callInformation
                         });
                         router.navigate("/(tabs)/calls")
+                        
                         break;
                     case Action.OFFER_DESCRIPTION:
                         if (callContext && response.data.from_user !== userContext?.userInfomation.id) {

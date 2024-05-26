@@ -7,9 +7,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useColorScheme } from '@/components/useColorScheme';
 
-import { WebsocketContext } from '@/context/WebsocketContext';
 import { useTranslation } from 'react-i18next';
-import { UserContext } from '@/context/userContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 function waitForSocketConnection(websocket: WebSocket) {
   setTimeout(function () {
@@ -29,19 +29,15 @@ function waitForSocketConnection(websocket: WebSocket) {
 }
 
 const TabsLayout = () => {
-  const websocketContext = React.useContext(WebsocketContext);
-  const userContext = React.useContext(UserContext);
+  const socket = useSelector((state: RootState) => state.websocket.socket);
+  const userInfomation = useSelector((state: RootState) => state.user);
 
-  if (!userContext) {
-    return null;
-  }
-  const {userInfomation} = userContext;
 
   React.useEffect(() => {
-    if (!userInfomation.verified && websocketContext?.websocket) {
-      waitForSocketConnection(websocketContext.websocket);
+    if (!userInfomation.verified && socket) {
+      waitForSocketConnection(socket);
     }
-  }, [])
+  }, [socket])
 
   const { t } = useTranslation();
   const segments = useSegments();

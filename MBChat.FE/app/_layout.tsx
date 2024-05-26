@@ -29,7 +29,8 @@ export {
     // Catch any errors thrown by the Layout component.
     ErrorBoundary,
 } from "expo-router";
-
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -67,11 +68,9 @@ function RootLayoutNav() {
     const router = useRouter();
     
     return (
+        <Provider store={store}>
         <ChatProvider>
-            <ChatListProvider>
-                <UserProvider>
-                    <CallProvider>
-                    <WebsocketProvider>
+
                       <I18nextProvider i18n={i18n}>
                         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
                           <Stack>
@@ -137,11 +136,9 @@ function RootLayoutNav() {
                           <Toast />
                         </ThemeProvider>
                       </I18nextProvider>
-                    </WebsocketProvider>
-                    </CallProvider>
-                </UserProvider>
-            </ChatListProvider>
+
         </ChatProvider>
+        </Provider>
     );
 }
 

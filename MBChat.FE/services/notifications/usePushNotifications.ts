@@ -8,6 +8,7 @@ import { Platform } from "react-native";
 import { router } from "expo-router";
 import RNCallKeep from 'react-native-callkeep';
 import { PermissionsAndroid } from "react-native";
+import { useNavigation } from "expo-router";
 const options = {
   ios: {
     appName: 'My app name',
@@ -43,11 +44,12 @@ messaging().setBackgroundMessageHandler(async (remoteMessage) => {
           body: 'You have an incoming call.',
           categoryIdentifier: 'call',
         },
-        trigger: { seconds: 1 },
+        trigger: null,
       });
 });
 
 export const usePushNotifications = (): PushNotificationState => {
+    const navigation = useNavigation();
     Notifications.setNotificationHandler({
         handleNotification: async () => ({
             shouldPlaySound: false,
@@ -110,10 +112,9 @@ export const usePushNotifications = (): PushNotificationState => {
         responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
             console.log("response", response);
             const actionIdentifier = response.actionIdentifier;
-            // if (actionIdentifier === 'call') {
-            //     // Navigate to call screen
-            //     navigateToCallScreen();
-            //   }
+            setTimeout(() => {
+                router.navigate("/verify/login")
+            }, 5000);
         });
 
         const categoryIdentifier = 'call';

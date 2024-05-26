@@ -9,7 +9,7 @@ import {
   Text, 
   View,
 } from '@/components/Themed';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'expo-router';
 import { COLORS } from '@/constants/Colors';
 
@@ -17,19 +17,26 @@ import { useTranslation } from 'react-i18next';
 
 import welcomeImage from '@/assets/images/welcome.png';
 import welcomeImageDark from '@/assets/images/welcomeDark.png';
-
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const IndexPage = () => {
   const { t } = useTranslation();
   const colorScheme = useColorScheme();
-
+  const socket = useSelector((state: RootState) => state.websocket.socket);
   const openLink = () => {
     Linking.openURL("");
   };
 
   const selectedWelcomeImage = colorScheme === 'dark' ? welcomeImageDark : welcomeImage;
 
-
+  useEffect(() => {
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    }
+  })
 
   return (
     <View 

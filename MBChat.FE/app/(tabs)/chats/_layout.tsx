@@ -3,16 +3,16 @@ import { Ionicons } from '@expo/vector-icons';
 import { Link, Stack, useRouter } from 'expo-router';
 import { Pressable, View, Image, Text } from 'react-native';
 import { ChatContext } from '@/context/chatContext';
-import React from 'react';
-import { UserContext } from '@/context/userContext';
-import { WebsocketContext } from '@/context/WebsocketContext';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const ChatsLayout = () => {
   const router = useRouter();
-
+  const socket = useSelector((state: RootState) => state.websocket.socket);
+  const userInformation = useSelector((state: RootState) => state.user);
   const chatContext = React.useContext(ChatContext);
-  const websocketContext = React.useContext(WebsocketContext);
-  const userContext = React.useContext(UserContext);
+
   if (!chatContext || !chatContext.setChats) {
     return null;
   }
@@ -80,36 +80,31 @@ const ChatsLayout = () => {
               </Pressable>
             </Link>
           ),
-          headerLeft: () => (
-            <Pressable onPress={() => router.back()}>
-              <Ionicons
-                name="chevron-back-outline"
-                color={COLORS.light.primary}
-                size={30}
-              />
-            </Pressable>
-          ),
+
           headerRight: () => (
             <View style={{ flexDirection: 'row', gap: 30 }}>
               <Pressable>
                 <Ionicons onPress={() => {
-                    if (websocketContext?.websocket) {
+                    if (socket) {
                       const formData = {
                         action: "video_call",
                         target: "channel",
                         targetId: chatContext.chats.id,
                         data: {
-                          from_user: userContext?.userInfomation.id,
+                          from_user: userInformation.id,
                           from_channel: chatContext.chats.id
                         }
                       }
-                      websocketContext.websocket.send(JSON.stringify(formData));
-                      
+                      socket.send(JSON.stringify(formData));
+                      router.push("/(tabs)/calls")
                     }
                 }}name="videocam-outline" color={COLORS.light.primary} size={28} />
               </Pressable>
               <Pressable>
-                <Ionicons name="call-outline" color={COLORS.light.primary} size={28} />
+                <Ionicons 
+                  onPress={() => {
+                  }}
+                name="call-outline" color={COLORS.light.primary} size={28} />
               </Pressable>
             </View>
           ),
