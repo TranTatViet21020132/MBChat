@@ -1,4 +1,4 @@
-import { addChatHistory, addMessage, setChats } from "../chat/chatSlice";
+import { addChatHistory, addMessage, setChats, setCommunities } from "../chat/chatSlice";
 import { setUserProfile } from "../user/userSlice";
 import { addIceCandidate, addRemoteToPeerConnection, createCall, processIceCandidates, setCurrentChannel, setGettingCall, setIceCompleted, setRemoteOfferDescription } from "../webrtc/webrtcSlice";
 enum Action {
@@ -21,24 +21,40 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
         const response = JSON.parse(event.data);
         const userInformation = getState().user;
         let data;
+        console.log(response.action);
         if (response.status === 200 || !response.status) {
             switch (response.action) {
                 case Action.GET_CHAT_LIST:
-                    console.log("get chat list")
                     data = response.data.map((item: any) => {
                         return {
                             id: item.id,
                             from: item.title,
-                            date: "Wed May 20 1998 08:53:35 GMT+0200 (Central European Summer Time)",
+                            date: item.last_updated,
                             img: item.avatar_url,
-                            msg: "empty",
-                            read: false,
+                            msg: item.last_message,
+                            read: true,
                             unreadCount: 2,
+                            type: "chats",
+                            channelTitle: item.channel_title
                         };
                     });
                     dispatch(setChats(data));
                     break;
                 case Action.GET_COMMUNITY_LIST:
+                    data = response.data.map((item: any) => {
+                        return {
+                            id: item.id,
+                            from: item.title,
+                            date: item.last_updated,
+                            img: item.avatar_url,
+                            msg: item.last_message,
+                            read: true,
+                            unreadCount: 2,
+                            type: "communities",
+                            channelTitle: item.channel_title
+                        };
+                    });
+                    dispatch(setCommunities(data));
                     break;
                 case Action.GET_PROFILE:
                     data = response.data;

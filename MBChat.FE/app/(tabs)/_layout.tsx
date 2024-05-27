@@ -92,6 +92,11 @@ const TabsLayout = () => {
             tabBarIcon: ({ size, color }) => (
               <MaterialIcons name="people" size={size} color={color} />
             ),
+            tabBarStyle: {
+              backgroundColor: COLORS.light.background,
+              display: segments[2] === '[id]' ? 'none' : 'flex'
+            },
+            headerShown: false
           }}
         />
         <Tabs.Screen

@@ -8,6 +8,8 @@ interface chatObject {
     msg: string;
     read: boolean;
     unreadCount: number;
+    type: "chats" | "communities",
+    channelTitle: Array<string>;
 }
 
 interface chatMessageObject {
@@ -23,12 +25,14 @@ interface chatMessageObject {
 
 interface chatState {
     chatList: Array<chatObject>,
-    chatHistory: Record<string, Array<chatMessageObject>>
+    chatHistory: Record<string, Array<chatMessageObject>>,
+    communityList: Array<chatObject>
 }
 
 const initialState: chatState = {
     chatList: [],
-    chatHistory: {}
+    chatHistory: {},
+    communityList: []
 }
 
 const chatSlice = createSlice({
@@ -44,10 +48,16 @@ const chatSlice = createSlice({
         },
         addMessage: (state, action: PayloadAction<{targetId: string, chatMessageObject: chatMessageObject }>) => {
             state.chatHistory[action.payload.targetId].unshift(action.payload.chatMessageObject);
+        },
+        setCommunities: (state, action: PayloadAction<Array<chatObject>>) => {
+            let data =action.payload;
+            state.communityList = data;
         }
     }
 })
 
-export const { setChats, addChatHistory, addMessage } = chatSlice.actions;
+export const { setChats, addChatHistory, addMessage,
+    setCommunities
+ } = chatSlice.actions;
 
 export default chatSlice.reducer;

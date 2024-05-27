@@ -11,8 +11,11 @@ const Layout = () => {
         name='index' 
         options={{
           title: 'Settings',
+          headerLargeTitle: true,
+          headerBlurEffect: 'regular',
+          headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: 'transparent'
+            backgroundColor: '#fff'
           }
         }}
       />
@@ -20,8 +23,11 @@ const Layout = () => {
         name='account' 
         options={{
           title: 'Edit account',
+          headerLargeTitle: true,
+          headerBlurEffect: 'regular',
+          headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: 'transparent'
+            backgroundColor: '#fff'
           }
         }}
       />

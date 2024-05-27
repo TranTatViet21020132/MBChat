@@ -27,10 +27,10 @@ const ChatsLayout = () => {
       <Stack.Screen
         name="index"
         options={{
-          title: 'Chats',
+          title: 'Communities',
           headerLargeTitle: true,
-          headerBlurEffect: 'regular',
           headerShadowVisible: false,
+          headerBlurEffect: 'regular',
           headerRight: () => (
             <View style={{ flexDirection: 'row', gap: 30 }}>
               {/* <Pressable>
@@ -51,7 +51,6 @@ const ChatsLayout = () => {
           },
         }}
       />
-
       <Stack.Screen
         name="[id]"
         options={{
@@ -113,10 +112,7 @@ const ChatsLayout = () => {
           },
         }}
       />
-      <Stack.Screen
-        name="profile"
-        options={{ headerShown: false }}
-      />
+      
     </Stack>
   );
 };
