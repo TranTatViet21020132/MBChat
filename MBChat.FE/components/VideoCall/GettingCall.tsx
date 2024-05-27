@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import Button from "./Button";
-
+import { Avatar } from "react-native-elements";
 interface Props {
     hangup: () => void;
     join: () => void;
@@ -10,7 +10,12 @@ interface Props {
 export default function GettingCall(props: Props) {
     return (
         <View style={styles.container}>
-            <Image source={require('../../assets/images/user-image.jpg')}/>
+            <Avatar 
+            source={{ uri: "https://randomuser.me/api/portraits/men/36.jpg" }}
+            containerStyle={{
+                ...styles.image
+            }}
+            />
             <View style={styles.bContainer}>
                 <Button 
                 iconName="phone"
@@ -36,7 +41,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     image: {
-        position: 'absolute'
+        position: 'absolute',
+        width: '100%',
+        height: '100%'
     },
     bContainer: {
         flexDirection: 'row',

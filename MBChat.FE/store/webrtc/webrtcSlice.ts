@@ -253,12 +253,16 @@ export const processIceCandidates = createAsyncThunk(
     "webrtc/processIceCandidates",
     async (_, {getState, dispatch}: any) => {
         const peerConnection = await getState().webrtc.peerConnection;
+        const iceCompleted = await getState().webrtc.iceCompleted
         if (peerConnection) {
             const iceCandidates = await getState().webrtc.iceCandidates;
             await iceCandidates.map((candidate: any) => {
                 peerConnection.addIceCandidate(candidate);
             })
             dispatch(resetIceCandidates())
+            // if (iceCompleted) {
+            //     dispatch(setIceCompleted(false));
+            // }
             return peerConnection;
         }
         return null;
