@@ -65,21 +65,6 @@ const webrtcSlice = createSlice({
         },
         setIceCompleted: (state, action: PayloadAction<boolean>) => {
             state.iceCompleted = action.payload
-        },
-        hangup: (state) => {
-            if (state.localStream) {
-                state.localStream.getTracks().forEach((track) => track.stop());
-                state.localStream.release();
-            }
-            state.remoteStreams = [];
-            state.remoteOfferDescription = null;
-            state.localStream = null;
-            state.iceCandidates = [];
-            state.iceCompleted = false;
-            count = 0;
-            if (state.peerConnection) {
-                state.peerConnection.close();
-            }
         }
     },
     extraReducers: (builder) => {
@@ -106,6 +91,9 @@ const webrtcSlice = createSlice({
                 state.peerConnection = action.payload;
                 console.log("add ice candidates to peer connection");
             }
+        })
+        builder.addCase(hangup.fulfilled, (state, action) => {
+            return initialState;
         })
     }
 })
@@ -244,8 +232,11 @@ export const addRemoteToPeerConnection = createAsyncThunk(
     "webrtc/addRemoteToPeerConnection",
     async (remoteDescription: RTCSessionDescription, {getState, dispatch}: any) => {
         const peerConnection = await getState().webrtc.peerConnection;
-        await peerConnection.setRemoteDescription(remoteDescription);
-        return peerConnection;
+        if (peerConnection) {
+            await peerConnection.setRemoteDescription(remoteDescription);
+            return peerConnection;
+        }
+        return null;
     }
 )
 
@@ -269,8 +260,23 @@ export const processIceCandidates = createAsyncThunk(
     }
 )
 
+export const hangup = createAsyncThunk(
+    "webrtc/hangup",
+    async (_, {getState, dispatch}: any) => {
+            const webrtc = await getState().webrtc;
+            if (webrtc.localStream) {
+                await webrtc.localStream.getTracks().forEach((track: any) => track.stop());
+                await webrtc.localStream.release();
+            }
+            count = 0;
+            if (webrtc.peerConnection) {
+                await webrtc.peerConnection.close();
+            }
+    }
+)
+
 export const { addIceCandidate, addRemoteStream, setRemoteOfferDescription,
-    setLocalStream, hangup, setGettingCall,
+    setLocalStream, setGettingCall,
     setCurrentChannel, setIceCompleted, resetIceCandidates } = webrtcSlice.actions;
 
 export default webrtcSlice.reducer;

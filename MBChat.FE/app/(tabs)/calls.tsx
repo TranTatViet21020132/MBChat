@@ -46,8 +46,8 @@ const Calls = () => {
         }
     }, [webrtc])
     if (webrtc.gettingCall) {
-        return <GettingCall hangup={() => {
-            dispatch(hangup());
+        return <GettingCall hangup={ async () => {
+            await dispatch(hangup());
         }} join={async () => {
             await dispatch(joinCall());
         }} />;
@@ -58,7 +58,7 @@ const Calls = () => {
                 <Video
                     hangup={() => {dispatch(hangup())}}
                     localStream={webrtc.localStream}
-                    remoteStream={webrtc.remoteStreams.length > 0 ? webrtc.remoteStreams[0] : null}
+                    remoteStreams={webrtc.remoteStreams}
                 />
             );
         }

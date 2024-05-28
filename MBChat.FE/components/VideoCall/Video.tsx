@@ -5,7 +5,7 @@ import Button from "./Button";
 interface Props {
     hangup: () => void;
     localStream?: MediaStream | null;
-    remoteStream?: MediaStream | null;
+    remoteStreams?: Array<MediaStream>;
 }
 
 function ButtonContainer(props: Props) {
@@ -22,7 +22,7 @@ function ButtonContainer(props: Props) {
 }
 
 export default function Video(props: Props) {
-    if (props.localStream && !props.remoteStream) {
+    if (props.localStream && props.remoteStreams?.length == 0) {
         return (
             <View style={styles.container}>
                 <RTCView
@@ -34,18 +34,32 @@ export default function Video(props: Props) {
             </View>
         );
     }
-    if (props.localStream && props.remoteStream) {
+    if (props.localStream && props.remoteStreams && props.remoteStreams?.length > 0) {
         return (
             <View style={styles.container}>
-                <RTCView
+                {props.remoteStreams?.map((remoteStream, idx) => {
+                    return <RTCView 
+                        streamURL={remoteStream.toURL()}
+                        key={idx}
+                        objectFit={"cover"}
+                        style={{position: 'absolute',
+                        width: 100,
+                        height: 150,
+                        top: 0,
+                        left: 110 * idx,
+                        elevation: 10
+                        }}
+                    />
+                })}
+                {/* <RTCView
                     streamURL={props.remoteStream.toURL()}
                     objectFit={"cover"}
                     style={styles.video}
-                />
+                /> */}
                 <RTCView
                     streamURL={props.localStream.toURL()}
                     objectFit={"cover"}
-                    style={styles.videoLocal}
+                    style={styles.video}
                 />
                 <ButtonContainer hangup={props.hangup} />
             </View>

@@ -20,6 +20,7 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
     return async (event: MessageEvent) => {
         const response = JSON.parse(event.data);
         const userInformation = getState().user;
+        const peerConnection = getState().webrtc.peerConnection;
         let data;
         console.log(response.action);
         if (response.status === 200 || !response.status) {
@@ -154,13 +155,18 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                     data = response.data
                     if (userInformation.id != data.from_user) {
                         await dispatch(setRemoteOfferDescription(data.data));
-                        await dispatch(addRemoteToPeerConnection(data.data));
+                        if (peerConnection) {
+                            await dispatch(addRemoteToPeerConnection(data.data));
+                        }
                     }
                     break;
                 case Action.OFFER_DESCRIPTION:
                     data = response.data
                     if (userInformation.id != data.from_user) {
                         await dispatch(setRemoteOfferDescription(data.data));
+                        if (peerConnection) {
+                            await dispatch(addRemoteToPeerConnection(data.data));
+                        }
                     }
                     break;
                 case Action.ICECANDIDATE:
