@@ -8,7 +8,9 @@ import { Screen } from '@/constants/Screens';
 import React from 'react';
 import { ChatContext } from '@/context/chatContext';
 import { Avatar } from 'react-native-elements';
-
+import { getInitials, getRandomBackgroundColor } from '@/services/utils';
+import { defaultImageURL } from '@/services/utils';
+import { COLORSHADES } from '@/constants/Colors';
 export type ChatRowProps = {
   id: string;
   from: string;
@@ -22,39 +24,18 @@ export type ChatRowProps = {
 }
 
 export type AvatarRenderProps = {
+  id: string;
   channelTitle: Array<string>;
 }
 
-const defaultImageURL = "https://cdn-icons-png.flaticon.com/512/6596/6596121.png"
-
-const AvatarRender: FC<AvatarRenderProps> = ({channelTitle}) => {
-  console.log(channelTitle)
-  const getInitials = (name: string) => {
-    const nameParts = name.split(' ');
-    let initials;
-    if (nameParts.length > 1) {
-      initials = nameParts[0].charAt(0).toUpperCase() + nameParts[1].charAt(0).toUpperCase()
-    } else {
-      initials = nameParts[0].charAt(0).toUpperCase()
-    }
-    console.log(initials)
-    return initials;
-  }
-
-  const getRandomBackgroundColor = () => {
-    const getRandomValue = () => Math.floor(Math.random() * 256);
-    const r = getRandomValue();
-    const g = getRandomValue();
-    const b = getRandomValue();
-    return `rgb(${r}, ${g}, ${b})`;
-  };
+const AvatarRender: FC<AvatarRenderProps> = ({id, channelTitle}) => {
 
   if (channelTitle.length === 1) {
     return <Avatar 
       size={50}
       rounded
       title={getInitials(channelTitle[0])}
-      containerStyle={{ backgroundColor: getRandomBackgroundColor() }}
+      containerStyle={{ backgroundColor: COLORSHADES[parseInt(id) % 100] }}
     />
   } 
   return <View style={{ width: 50, height: 50, position: 'relative' }}>
@@ -75,7 +56,7 @@ const AvatarRender: FC<AvatarRenderProps> = ({channelTitle}) => {
         rounded
         title={getInitials(title)}
         containerStyle={{
-          backgroundColor: getRandomBackgroundColor(),
+          backgroundColor: COLORSHADES[(idx + parseInt(id)) % 100],
           position: "absolute",
           top: top,
           left: left,
@@ -101,6 +82,8 @@ const ChatRow: FC<ChatRowProps> = ({ id, from, date, img, msg, read, unreadCount
     setChats(chatData);
   }, []);
 
+  const isValidAvatarUrl = img && img !== defaultImageURL;
+
   return (
     <SwipeableRow
       screen={Screen.Chats}
@@ -120,11 +103,11 @@ const ChatRow: FC<ChatRowProps> = ({ id, from, date, img, msg, read, unreadCount
             paddingLeft: 10,
             paddingVertical: 10,
           }}>
-            {img === defaultImageURL ? 
-            <AvatarRender channelTitle={channelTitle}/>
+            {isValidAvatarUrl  ? 
+            <Image source={{ uri: img }} style={{ width: 50, height: 50, borderRadius: 50 }} />
             :
-             <Image source={{ uri: img }} style={{ width: 50, height: 50, borderRadius: 50 }} />}
-          <View style={{ flex: 1 }}>
+            <AvatarRender channelTitle={channelTitle} id={id}/>}
+            <View style={{ flex: 1 }}>
             <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{from}</Text>
             <Text style={{ fontSize: 16, color: COLORS.gray }}>
               {msg.length > 40 ? `${msg.substring(0, 40)}...` : msg}

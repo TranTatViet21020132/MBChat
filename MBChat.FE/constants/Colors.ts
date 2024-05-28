@@ -1,7 +1,14 @@
 import signup from "@/app/verify/signup";
-
+import { getRandomBackgroundColor } from "@/services/utils";
 const tintColorLight = '#2f95dc';
 const tintColorDark = '#fff';
+
+let colorshades = []
+
+for(let i = 0; i < 100; i++) {
+  colorshades.push(getRandomBackgroundColor())
+}
+const COLORSHADES = colorshades
 
 const COLORS = {
   gray: '#6E6E73',
@@ -143,4 +150,4 @@ const SHADOWS = {
   },
 };
 
-export { COLORS, SIZES, SHADOWS };
+export { COLORS, SIZES, SHADOWS, COLORSHADES };

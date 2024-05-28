@@ -10,13 +10,19 @@ import { useTranslation } from 'react-i18next'
 import { TFunction } from 'i18next'
 import { useColorScheme } from '@/components/useColorScheme'
 import * as SecureStore from 'expo-secure-store';
-
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/store/store'
+import { getInitials, getRandomBackgroundColor } from '@/services/utils'
+import { defaultImageURL } from '@/services/utils'
+import { Avatar } from 'react-native-elements'
+import { AppDispatch } from '@/store/store'
+import { setAvatarUrl } from '@/store/user/userSlice'
 type Props = {
   t: TFunction<"translation", undefined>;
 }
 
-const Settings = () => {
 
+const Settings = () => {
   const { t } = useTranslation();
   const colorScheme = useColorScheme();
 
@@ -49,9 +55,10 @@ const Settings = () => {
 }
 
 const Header: React.FC<Props> = ({ t }) => {
+  const dispatch = useDispatch<AppDispatch>();
 
   const [file, setFile] = useState('');
-
+  const userInformation = useSelector((state: RootState) => state.user);
   // Stores any error message 
   const [error, setError] = useState(null);
 
@@ -79,7 +86,7 @@ const Header: React.FC<Props> = ({ t }) => {
         // If an image is selected (not cancelled),  
         // update the file state variable 
         setFile(result.assets[0].uri);
-
+        dispatch(setAvatarUrl(result.assets[0].uri));
         // Clear any previous errors 
         setError(null);
       }
@@ -100,19 +107,19 @@ const Header: React.FC<Props> = ({ t }) => {
         darkColor={COLORS.dark.settings.backgroundInput}
       >
         {
-          file ? (
-            <Image
-              source={{ uri: file }}
-              style={{
-                width: 60,
-                height: 60,
-                margin: 20,
-                borderRadius: 9999,
+          userInformation.avatarUrl === defaultImageURL || userInformation.avatarUrl == null ? (
+            <Avatar 
+              size={60}
+              rounded
+              title={getInitials(userInformation.fullname)}
+              containerStyle={{
+                backgroundColor: "grey",
+                margin: 20
               }}
             />
           ) : (
             <Image
-              source={require('@/assets/images/user-image.jpg')}
+              source={{ uri: userInformation.avatarUrl }}
               style={{
                 width: 60,
                 height: 60,
@@ -137,7 +144,7 @@ const Header: React.FC<Props> = ({ t }) => {
             lightColor={COLORS.light.settings.text}
             darkColor={COLORS.dark.settings.text}
           >
-            Cucululu
+            {userInformation.username}
           </Text>
           <Text style={{
             fontSize: 16,
@@ -146,7 +153,7 @@ const Header: React.FC<Props> = ({ t }) => {
             lightColor={COLORS.light.settings.text}
             darkColor={COLORS.dark.settings.text}
           >
-            {t('settings.user.welcome')}
+            {userInformation.bio}
           </Text>
         </View>
       </View>

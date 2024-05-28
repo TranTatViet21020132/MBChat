@@ -14,12 +14,19 @@ import { useTranslation } from 'react-i18next'
 import { COLORS } from '@/constants/Colors'
 import {useChat} from '@/context/chatContext';
 import { useColorScheme } from '@/components/useColorScheme';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store';
+import { defaultImageURL } from '@/services/utils';
+import { getInitials } from '@/services/utils';
+import { Avatar } from 'react-native-elements';
+import { setAvatarUrl, setBio, setFirstName, setLastName } from '@/store/user/userSlice';
 
 const Account = () => {
   const { t } = useTranslation();
-
+  const userInformation = useSelector((state: RootState) => state.user);
   const [file, setFile] = useState('');
-
+  const dispatch = useDispatch<AppDispatch>();
+  const isValidAvatarUrl = userInformation.avatarUrl && userInformation.avatarUrl !== defaultImageURL;
   // Stores any error message 
   const [error, setError] = useState(null);
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
@@ -48,7 +55,7 @@ const Account = () => {
         // If an image is selected (not cancelled),  
         // update the file state variable 
         setFile(result.assets[0].uri);
-
+        dispatch(setAvatarUrl(result.assets[0].uri));
         // Clear any previous errors 
         setError(null);
       }
@@ -70,17 +77,24 @@ const Account = () => {
         >
           <Pressable onPress={pickImage}>
             {
-              file ? (
-                <Image
-                  source={{ uri: file }}
-                  style={styles.imageAvatarLight}
+              
+               isValidAvatarUrl ? (
+                  <Avatar
+                    size={100}
+                    rounded
+                    source={{ uri: userInformation.avatarUrl}}
+                    containerStyle={styles.imageAvatarLight}
+                  />
+                ) : (<Avatar
+                  size={100}
+                  rounded
+                  title={getInitials(userInformation.fullname)}
+                  containerStyle={{
+                    backgroundColor: "grey",
+                    marginBottom: 10
+                  }}
                 />
-              ) : (
-                <Image
-                  source={require('@/assets/images/user-image.jpg')}
-                  style={colorScheme === 'light' ? styles.imageAvatarLight : styles.imageAvatarDark}
-                />
-              )
+              ) 
             }
           </Pressable>
           <Pressable onPress={pickImage}>
@@ -110,6 +124,8 @@ const Account = () => {
               darkColor={COLORS.dark.settings.text}
               placeholder={t('settings.account.bio')}
               placeholderTextColor={'grey'}
+              value={userInformation.bio}
+              onChangeText={(newText: string) => {dispatch(setBio(newText));}}
             />
           </View>
         </View>
@@ -133,9 +149,9 @@ const Account = () => {
 
 const EditName = () => {
   const { t } = useTranslation();
-
+  const dispatch = useDispatch<AppDispatch>();
   const colorScheme = useColorScheme();
-
+  const userInformation = useSelector((state: RootState) => state.user);
   return (
     <View style={styles.editName}
     lightColor={COLORS.light.settings.backgroundInput}
@@ -151,6 +167,8 @@ const EditName = () => {
           darkColor={COLORS.dark.settings.text}
           placeholder={t('settings.account.firstName')}
           placeholderTextColor={'grey'}
+          value={userInformation.firstName}
+          onChangeText={(newText: string) => {dispatch(setFirstName(newText));}}
         />
       </View>
       <View style={colorScheme === 'light' ? styles.itemsEditNameLight : styles.itemsEditNameDark}
@@ -163,6 +181,8 @@ const EditName = () => {
           darkColor={COLORS.dark.settings.text}
           placeholder={t('settings.account.lastName')}
           placeholderTextColor={'grey'}
+          value={userInformation.lastName}
+          onChangeText={(newText: string) => {dispatch(setLastName(newText));}}
         />
       </View>
     </View>

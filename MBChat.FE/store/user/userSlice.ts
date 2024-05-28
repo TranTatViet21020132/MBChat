@@ -7,6 +7,9 @@ interface UserState {
     username: string;
     avatarUrl: string;
     verified: boolean;
+    bio: string;
+    firstName: string;
+    lastName: string;
 };
 
 const initialState: UserState = {
@@ -14,7 +17,10 @@ const initialState: UserState = {
     fullname: "",
     username: "",
     avatarUrl: "",
-    verified: false
+    verified: false,
+    bio: "",
+    firstName: "",
+    lastName: ""
 };
 
 const userSlice = createSlice({
@@ -26,10 +32,23 @@ const userSlice = createSlice({
                 ...state,
                 ...action.payload
             };
+        },
+        setFirstName: (state, action: PayloadAction<string>) => {
+            state.firstName = action.payload
+        },
+        setLastName: (state, action: PayloadAction<string>) => {
+            state.lastName = action.payload
+        },
+        setAvatarUrl: (state, action: PayloadAction<string>) => {
+            state.avatarUrl = action.payload
+        },
+        setBio: (state, action: PayloadAction<string>) => {
+            state.bio = action.payload
         }
     }
 })
 
-export const { setUserProfile } = userSlice.actions;
+export const { setUserProfile, setFirstName, setLastName,
+    setAvatarUrl, setBio} = userSlice.actions;
 
 export default userSlice.reducer;

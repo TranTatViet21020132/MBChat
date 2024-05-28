@@ -64,6 +64,9 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                             avatarUrl: data.avatar_url,
                             fullname: data.user.fullname,
                             verified: true,
+                            bio: data.bio ? data.bio : "",
+                            firstName: data.user.first_name,
+                            lastName: data.user.last_name
                         })
                     );
                     break;
