@@ -8,30 +8,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 const ChatsPage = () => {
     const chatList = useSelector((state: RootState) => state.chat.chatList);
-    const socket = useSelector((state: RootState) => state.websocket.socket);
-    function waitForSocketConnection(websocket: WebSocket) {
-        setTimeout(function () {
-            if (websocket) {
-                if (websocket.readyState === 1) {
-                    const formData = {
-                        action: "get_chat_list",
-                    };
-                    const formSubmit = JSON.stringify(formData);
-                    websocket.send(formSubmit);
-                    console.log("sending successfully")
-                } else {
-                    waitForSocketConnection(websocket);
-                }
-            }
-        }, 5);
-    }
 
-    // const {chatList} = chatListContext;
-    React.useEffect(() => {
-        if (chatList.length == 0 && socket) {
-            waitForSocketConnection(socket);
-        }
-    }, [chatList, socket]);
 
     return (
         <ScrollView

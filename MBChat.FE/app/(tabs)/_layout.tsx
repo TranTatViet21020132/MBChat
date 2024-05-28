@@ -20,6 +20,12 @@ function waitForSocketConnection(websocket: WebSocket) {
               };
               const formSubmit = JSON.stringify(formData);
               websocket.send(formSubmit);
+              websocket.send(JSON.stringify({
+                action: "get_chat_list"
+              }))
+              websocket.send(JSON.stringify({
+                action: "get_community_list"
+              }))
               
           } else {
               waitForSocketConnection(websocket);
