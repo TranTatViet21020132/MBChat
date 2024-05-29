@@ -1,6 +1,6 @@
 import { addChatHistory, addMessage, setChats, setCommunities } from "../chat/chatSlice";
 import { setUserProfile } from "../user/userSlice";
-import { addCandidateToPeerConnection, addIceCandidate, addRemoteToPeerConnection, createCall, processIceCandidates, setCalling, setCurrentChannel, setGettingCall, setIceCompleted, setRemoteOfferDescription } from "../webrtc/webrtcSlice";
+import { addCandidateToPeerConnection, addIceCandidate, addRemoteOfferAnswerToPeerConnection, addRemoteOfferDescriptionToPeerConnection, createCall, processIceCandidates, setCalling, setCurrentChannel, setGettingCall, setIceCompleted, setRemoteOfferDescription } from "../webrtc/webrtcSlice";
 enum Action {
     GET_CHAT_LIST = "get_chat_list",
     GET_COMMUNITY_LIST = "get_community_list",
@@ -23,7 +23,7 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
         const userInformation = getState().user;
         const peerConnection = getState().webrtc.peerConnection;
         let data;
-        console.log(response.action, userInformation);
+        console.log(response.action, userInformation.username);
         if (response.status === 200 || !response.status) {
             switch (response.action) {
                 case Action.GET_CHAT_LIST:
@@ -163,7 +163,7 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                     if (userInformation.id != data.from_user) {
                         await dispatch(setRemoteOfferDescription(data.data));
                         if (peerConnection) {
-                            await dispatch(addRemoteToPeerConnection(data.data));
+                            await dispatch(addRemoteOfferAnswerToPeerConnection(data.data));
                         }
                     }
                     break;
@@ -172,7 +172,7 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                     if (userInformation.id != data.from_user) {
                         await dispatch(setRemoteOfferDescription(data.data));
                         if (peerConnection) {
-                            await dispatch(addRemoteToPeerConnection(data.data));
+                            await dispatch(addRemoteOfferDescriptionToPeerConnection(data.data));
                         }
                     }
                     break;

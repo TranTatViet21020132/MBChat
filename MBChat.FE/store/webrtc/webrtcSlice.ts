@@ -9,13 +9,17 @@ import Utils from "./utils";
 const configuration = {
     iceServers: [
         {
-            urls: [
-                "stun:stun.l.google.com:19302",
-                "stun:stun1.l.google.com:19302",
-                "stun:stun2.l.google.com:19302",
-                'stun:stun3.l.google.com:19302',
-                "stun:stun4.l.google.com:19302"           
-            ],
+            urls: "stun:192.168.2.3:3478"
+        },
+        {
+            urls: "turn:192.168.2.3:3478",
+            username: "demo",
+            credential: "secret"
+        },
+        {
+            urls: "turn:192.168.2.3:3478?transport=tcp",
+            username: "demo",
+            credential: "secret"
         }
     ],
 };
@@ -105,14 +109,23 @@ const webrtcSlice = createSlice({
             }
         });
         builder.addCase(
-            addRemoteToPeerConnection.fulfilled,
+            addRemoteOfferAnswerToPeerConnection.fulfilled,
             (state, action) => {
                 if (action.payload) {
                     state.peerConnection = action.payload;
-                    console.log("add remote description to peer connection");
+                    console.log("add remote offer answer to peer connection");
                 }
             }
         );
+        builder.addCase(
+            addRemoteOfferDescriptionToPeerConnection.fulfilled,
+            (state, action) => {
+                if (action.payload) {
+                    state.peerConnection = action.payload;
+                    console.log("add remote offer description to peer connection")
+                }
+            }
+        )
         builder.addCase(processIceCandidates.fulfilled, (state, action) => {
             if (action.payload) {
                 state.peerConnection = action.payload;
@@ -308,8 +321,8 @@ export const joinCall = createAsyncThunk(
     }
 );
 
-export const addRemoteToPeerConnection = createAsyncThunk(
-    "webrtc/addRemoteToPeerConnection",
+export const addRemoteOfferAnswerToPeerConnection = createAsyncThunk(
+    "webrtc/addRemoteOfferAnswerToPeerConnection",
     async (
         remoteDescription: RTCSessionDescription,
         { getState, dispatch }: any
@@ -329,6 +342,51 @@ export const addRemoteToPeerConnection = createAsyncThunk(
         return null;
     }
 );
+
+export const addRemoteOfferDescriptionToPeerConnection = createAsyncThunk(
+    "webrtc/addRemoteOfferDescriptionToPeerConnection",
+    async (
+        remoteDescription: RTCSessionDescription,
+        { getState, dispatch }: any
+    ) => {
+        const peerConnection = await getState().webrtc.peerConnection;
+        const iceCandidates = await getState().webrtc.iceCandidates;
+        const socket = await getState().websocket.socket;
+        const userId = await getState().user.id;
+        const currentChannel = await getState().webrtc.currentChannel;
+        const userList = await findUserListOfChannel(getState, currentChannel);
+
+        if (peerConnection) {
+            await peerConnection.setRemoteDescription(
+                new RTCSessionDescription(remoteDescription)
+            );
+            const answerDescription = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answerDescription);
+            await iceCandidates.map((candidate: any) => {
+                peerConnection.addIceCandidate(candidate);
+            });
+            dispatch(resetIceCandidates());
+            if (socket) {
+                for (let i = 0; i < userList.length; i++) {
+                    if (userList[i] != userId) {
+                        const formData = {
+                            action: "offer_answer",
+                            target: "user",
+                            targetId: userList[i],
+                            data: {
+                                data: answerDescription,
+                                from_user: userId,
+                            },
+                        };
+                        socket.send(JSON.stringify(formData));
+                    }
+                }
+            }
+            return peerConnection;
+        }
+        return null;
+    }
+)
 
 export const processIceCandidates = createAsyncThunk(
     "webrtc/processIceCandidates",

@@ -1,14 +1,5 @@
 import { mediaDevices } from "react-native-webrtc";
 import { addRemoteStream, setLocalStream } from "./webrtcSlice";
-const configuration = {
-    iceServers: [
-        {
-            urls: [
-                "stun:stun.l.google.com:19302"
-            ],
-        },
-    ],
-};
 
 export default class Utils {
     static async getStream() {

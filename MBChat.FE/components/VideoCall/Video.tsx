@@ -38,6 +38,7 @@ export default function Video(props: Props) {
         return (
             <View style={styles.container}>
                 {props.remoteStreams?.map((remoteStream, idx) => {
+                    console.log("remote Stream:", remoteStream.toURL())
                     return <RTCView 
                         streamURL={remoteStream.toURL()}
                         key={idx}
