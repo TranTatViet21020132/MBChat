@@ -12,7 +12,7 @@ const ChatsLayout = () => {
   const socket = useSelector((state: RootState) => state.websocket.socket);
   const userInformation = useSelector((state: RootState) => state.user);
   const chatContext = React.useContext(ChatContext);
-
+  const calling = useSelector((state: RootState) => state.webrtc.calling);
   if (!chatContext || !chatContext.setChats) {
     return null;
   }
@@ -84,7 +84,8 @@ const ChatsLayout = () => {
             <View style={{ flexDirection: 'row', gap: 30 }}>
               <Pressable>
                 <Ionicons onPress={() => {
-                    if (socket) {
+                    if (socket && !calling) {
+                      
                       const formData = {
                         action: "video_call",
                         target: "channel",

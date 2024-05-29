@@ -1,6 +1,6 @@
 import { addChatHistory, addMessage, setChats, setCommunities } from "../chat/chatSlice";
 import { setUserProfile } from "../user/userSlice";
-import { addIceCandidate, addRemoteToPeerConnection, createCall, processIceCandidates, setCurrentChannel, setGettingCall, setIceCompleted, setRemoteOfferDescription } from "../webrtc/webrtcSlice";
+import { addCandidateToPeerConnection, addIceCandidate, addRemoteToPeerConnection, createCall, processIceCandidates, setCalling, setCurrentChannel, setGettingCall, setIceCompleted, setRemoteOfferDescription } from "../webrtc/webrtcSlice";
 enum Action {
     GET_CHAT_LIST = "get_chat_list",
     GET_COMMUNITY_LIST = "get_community_list",
@@ -11,7 +11,8 @@ enum Action {
     OFFER_ANSWER = "offer_answer",
     ICECANDIDATE = "icecandidate",
     OFFER_DESCRIPTION = "offer_description",
-    ICECANDIDATE_COMPLETED = "icecandidate_completed"
+    ICECANDIDATE_COMPLETED = "icecandidate_completed",
+    JOIN_CALL = "join_call"
 }
 
 
@@ -22,7 +23,7 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
         const userInformation = getState().user;
         const peerConnection = getState().webrtc.peerConnection;
         let data;
-        console.log(response.action);
+        console.log(response.action, userInformation);
         if (response.status === 200 || !response.status) {
             switch (response.action) {
                 case Action.GET_CHAT_LIST:
@@ -36,7 +37,8 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                             read: true,
                             unreadCount: 2,
                             type: "chats",
-                            channelTitle: item.channel_title
+                            channelTitle: item.channel_title,
+                            userList: item.user_list
                         };
                     });
                     dispatch(setChats(data));
@@ -52,7 +54,9 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                             read: true,
                             unreadCount: 2,
                             type: "communities",
-                            channelTitle: item.channel_title
+                            channelTitle: item.channel_title,
+                            userList: item.user_list
+
                         };
                     });
                     dispatch(setCommunities(data));
@@ -144,12 +148,15 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                     break;
                 case Action.VIDEO_CALL:
                     data = response.data;
+                    dispatch(setCalling(true));
                     dispatch(setCurrentChannel(data.from_channel))
                     if (userInformation.id != data.from_user) {
                         dispatch(setGettingCall(true));
                     } else {
                         await dispatch(createCall())
                     }
+                    break;
+                case Action.JOIN_CALL:
                     break;
                 case Action.OFFER_ANSWER:
                     data = response.data
@@ -172,7 +179,7 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                 case Action.ICECANDIDATE:
                     data = response.data;
                     if (userInformation.id != data.from_user) {
-                        dispatch(addIceCandidate(data.data))
+                        await dispatch(addIceCandidate(data.data));
                     }
                     break;
                 case Action.ICECANDIDATE_COMPLETED:

@@ -10,6 +10,7 @@ interface chatObject {
     unreadCount: number;
     type: "chats" | "communities",
     channelTitle: Array<string>;
+    userList: Array<number>;
 }
 
 interface chatMessageObject {
