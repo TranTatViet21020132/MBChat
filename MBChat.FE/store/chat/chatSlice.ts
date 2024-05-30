@@ -27,13 +27,17 @@ interface chatMessageObject {
 interface chatState {
     chatList: Array<chatObject>,
     chatHistory: Record<string, Array<chatMessageObject>>,
-    communityList: Array<chatObject>
+    communityList: Array<chatObject>,
+    communityListSearch: string,
+    chatListSearch: string,
 }
 
 const initialState: chatState = {
     chatList: [],
     chatHistory: {},
-    communityList: []
+    communityList: [],
+    communityListSearch: "",
+    chatListSearch: ""
 }
 
 const chatSlice = createSlice({
@@ -53,12 +57,18 @@ const chatSlice = createSlice({
         setCommunities: (state, action: PayloadAction<Array<chatObject>>) => {
             let data =action.payload;
             state.communityList = data;
+        },
+        setCommunityListSearch: (state, action: PayloadAction<string>) => {
+            state.communityListSearch = action.payload;
+        },
+        setChatListSearch: (state, action: PayloadAction<string>) => {
+            state.chatListSearch = action.payload;
         }
     }
 })
 
 export const { setChats, addChatHistory, addMessage,
-    setCommunities
+    setCommunities, setCommunityListSearch, setChatListSearch
  } = chatSlice.actions;
 
 export default chatSlice.reducer;

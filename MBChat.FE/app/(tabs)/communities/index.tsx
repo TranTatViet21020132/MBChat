@@ -7,6 +7,10 @@ import { RootState } from "@/store/store";
 
 const Communities = () => {
     const communityList = useSelector((state: RootState) => state.chat.communityList);
+    const communityListSearch = useSelector((state: RootState) => state.chat.communityListSearch);
+    const filteredCommunities = communityList.filter(community =>
+        community.from.toLowerCase().includes(communityListSearch.toLowerCase())
+    );
 
     return (
         <ScrollView
@@ -18,7 +22,7 @@ const Communities = () => {
             }}
         >
             <FlatList
-                data={communityList}
+                data={filteredCommunities}
                 renderItem={({ item }) => <ChatRow {...item} />}
                 keyExtractor={(item) => item.id.toString()}
                 ItemSeparatorComponent={() => (

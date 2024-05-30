@@ -1,18 +1,20 @@
 import { COLORS } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-import { Link, Stack, useRouter } from 'expo-router';
+import { Link, Stack, useNavigation, useRouter } from 'expo-router';
 import { Pressable, View, Image, Text } from 'react-native';
 import { ChatContext } from '@/context/chatContext';
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
+import { AppDispatch } from '@/store/store';
+import { setChatListSearch } from '@/store/chat/chatSlice';
 
 const ChatsLayout = () => {
   const router = useRouter();
   const socket = useSelector((state: RootState) => state.websocket.socket);
   const userInformation = useSelector((state: RootState) => state.user);
   const chatContext = React.useContext(ChatContext);
-
+  const dispatch = useDispatch<AppDispatch>();
   if (!chatContext || !chatContext.setChats) {
     return null;
   }
@@ -48,6 +50,11 @@ const ChatsLayout = () => {
           },
           headerSearchBarOptions: {
             placeholder: 'Search',
+            onChangeText: (event) => {
+              const searchText = event.nativeEvent.text;
+              dispatch(setChatListSearch(searchText));
+
+            },
           },
         }}
       />

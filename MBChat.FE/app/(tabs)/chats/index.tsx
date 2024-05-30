@@ -6,10 +6,15 @@ import { ChatListContext } from "@/context/chatListContext";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { useState, useEffect } from "react";
+import { TextInput } from "@/components/Themed";
+import { useRoute } from "@react-navigation/native";
 const ChatsPage = () => {
     const chatList = useSelector((state: RootState) => state.chat.chatList);
-
-
+    const chatListSearch = useSelector((state: RootState) => state.chat.chatListSearch).trim();
+    const filteredChats = chatList.filter(chat => 
+        chat.from.toLowerCase().includes(chatListSearch.toLowerCase())
+      );
     return (
         <ScrollView
             contentInsetAdjustmentBehavior="automatic"
@@ -20,7 +25,7 @@ const ChatsPage = () => {
             }}
         >
             <FlatList
-                data={chatList}
+                data={filteredChats}
                 renderItem={({ item }) => <ChatRow {...item} />}
                 keyExtractor={(item) => item.id.toString()}
                 ItemSeparatorComponent={() => (
