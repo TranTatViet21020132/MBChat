@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { MediaStream, RTCView } from "react-native-webrtc";
 import Button from "./Button";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 interface Props {
     hangup: () => void;
     localStream?: MediaStream | null;
@@ -22,6 +24,7 @@ function ButtonContainer(props: Props) {
 }
 
 export default function Video(props: Props) {
+    const userInformation = useSelector((state: RootState) => state.user);
     if (props.localStream && props.remoteStreams?.length == 0) {
         return (
             <View style={styles.container}>
@@ -38,7 +41,11 @@ export default function Video(props: Props) {
         return (
             <View style={styles.container}>
                 {props.remoteStreams?.map((remoteStream, idx) => {
-                    console.log("remote Stream:", remoteStream.toURL())
+                    console.log("remote Stream:", props.remoteStreams.length, userInformation.username)
+                    
+                    if (idx % 2 == 0)  {
+                        return <React.Fragment key={idx}></React.Fragment>
+                    }
                     return <RTCView 
                         streamURL={remoteStream.toURL()}
                         key={idx}
@@ -47,7 +54,7 @@ export default function Video(props: Props) {
                         width: 100,
                         height: 150,
                         top: 0,
-                        left: 110 * idx,
+                        left: 110 * (Math.ceil(idx / 2) -1),
                         elevation: 10
                         }}
                     />

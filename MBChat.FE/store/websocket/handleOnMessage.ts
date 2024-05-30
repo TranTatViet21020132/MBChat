@@ -1,6 +1,6 @@
 import { addChatHistory, addMessage, setChats, setCommunities } from "../chat/chatSlice";
-import { setUserProfile } from "../user/userSlice";
-import { addCandidateToPeerConnection, addIceCandidate, addRemoteOfferAnswerToPeerConnection, addRemoteOfferDescriptionToPeerConnection, createCall, processIceCandidates, setCalling, setCurrentChannel, setGettingCall, setIceCompleted, setRemoteOfferDescription } from "../webrtc/webrtcSlice";
+import { setFirstName, setUserProfile } from "../user/userSlice";
+import { addCandidateToPeerConnection, addIceCandaiteToARecord, addIceCandidate, addIceCompleted, addRemoteOfferAnswerToPeerConnection, addRemoteOfferDescriptionToPeerConnection, addToHostList, createCall, joinCall, processIceCandidates, setCalling, setCurrentChannel, setFirstUserHost, setGettingCall, setIceCompleted, setRemoteOfferDescription, setRemoteOfferDescriptionToARecord } from "../webrtc/webrtcSlice";
 enum Action {
     GET_CHAT_LIST = "get_chat_list",
     GET_COMMUNITY_LIST = "get_community_list",
@@ -21,7 +21,8 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
     return async (event: MessageEvent) => {
         const response = JSON.parse(event.data);
         const userInformation = getState().user;
-        const peerConnection = getState().webrtc.peerConnection;
+        const peerConnectionRecord = getState().webrtc.peerConnectionRecord;
+        const hostList = getState().webrtc.hostList;
         let data;
         console.log(response.action, userInformation.username);
         if (response.status === 200 || !response.status) {
@@ -114,6 +115,7 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                     );
                     break;
                 case Action.SEND_MESSAGE:
+                    console.log("send send snsidskldjslkdjl", userInformation.username);
                     data = response.data;
                     let chat_history_object = {
                         _id: data.id,
@@ -148,10 +150,19 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                     break;
                 case Action.VIDEO_CALL:
                     data = response.data;
-                    dispatch(setCalling(true));
-                    dispatch(setCurrentChannel(data.from_channel))
+                    await dispatch(setCalling(true));
+                    await dispatch(setCurrentChannel(data.from_channel))
+                    if (hostList.length === 0) {
+                        await dispatch(setFirstUserHost(data.from_user))
+                    }
+                    await dispatch(addToHostList(data.from_user))
                     if (userInformation.id != data.from_user) {
-                        dispatch(setGettingCall(true));
+                        if (hostList.length === 0) {
+                            await dispatch(setGettingCall(true));
+                        } else {
+                            await dispatch(joinCall(data.from_user))
+                        }
+
                     } else {
                         await dispatch(createCall())
                     }
@@ -161,25 +172,42 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                 case Action.OFFER_ANSWER:
                     data = response.data
                     if (userInformation.id != data.from_user) {
-                        await dispatch(setRemoteOfferDescription(data.data));
-                        if (peerConnection) {
-                            await dispatch(addRemoteOfferAnswerToPeerConnection(data.data));
+                        await dispatch(setRemoteOfferDescriptionToARecord({
+                            target: data.from_user,
+                            value: data.data
+                        }));
+                        if (peerConnectionRecord[data.from_user]) {
+                            console.log("yeah yeah offer answer")
+                            await dispatch(addRemoteOfferAnswerToPeerConnection({
+                                remoteDescription: data.data,
+                                hostId: data.from_user
+                            }));
                         }
                     }
                     break;
                 case Action.OFFER_DESCRIPTION:
                     data = response.data
                     if (userInformation.id != data.from_user) {
-                        await dispatch(setRemoteOfferDescription(data.data));
-                        if (peerConnection) {
-                            await dispatch(addRemoteOfferDescriptionToPeerConnection(data.data));
+                        await dispatch(setRemoteOfferDescriptionToARecord({
+                            target: data.from_user,
+                            value: data.data
+                        }));
+                        if (peerConnectionRecord[data.from_user]) {
+                            console.log("yeah yeah offer description")
+                            await dispatch(addRemoteOfferDescriptionToPeerConnection({
+                                remoteDescription: data.data,
+                                hostId: data.from_user
+                            }));
                         }
                     }
                     break;
                 case Action.ICECANDIDATE:
                     data = response.data;
                     if (userInformation.id != data.from_user) {
-                        await dispatch(addIceCandidate(data.data));
+                        await dispatch(addIceCandaiteToARecord({
+                            target: data.from_user,
+                            value: data.data
+                        }));
                     }
                     break;
                 case Action.ICECANDIDATE_COMPLETED:
@@ -187,7 +215,10 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                     console.log("ice completed", userInformation.id, data.from_user);
                     if (userInformation.id != data.from_user) {
                         // dispatch(processIceCandidates())
-                        dispatch(setIceCompleted(true))
+                        dispatch(addIceCompleted({
+                            target: data.from_user,
+                            value: true
+                        }))
                     }
                     
                     break;

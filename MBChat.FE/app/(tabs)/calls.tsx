@@ -35,24 +35,28 @@ const Calls = () => {
     const webrtc = useSelector((state: RootState) => state.webrtc);
     const dispatch = useDispatch<AppDispatch>();
     
-    const handleProcessIceCandidates = async () => {
-        await dispatch(processIceCandidates())
+    const handleProcessIceCandidates = async (hostId: string) => {
+        await dispatch(processIceCandidates(hostId))
     }
 
     useEffect(() => {
-        if (webrtc.peerConnection && webrtc.iceCompleted && webrtc.peerConnection.remoteDescription && webrtc.iceCandidates.length > 0) {
-            console.log("icecandidate completed", webrtc.iceCandidates.length,  !webrtc.peerConnection ? "peer_false" : "peer_true", !webrtc.peerConnection?.remoteDescription ? "remote_false" : "remote_true")
-            handleProcessIceCandidates();
+        if (Object.keys(webrtc.peerConnectionRecord).length > 0) {
+            for (const key in webrtc.peerConnectionRecord) {
+                if (webrtc.peerConnectionRecord[key] && webrtc.iceCompletedRecord[key] && webrtc.peerConnectionRecord[key].remoteDescription && webrtc.iceCandidatesRecord[key].length > 0) {
+                    handleProcessIceCandidates(key);
+                } 
+            }
         }
-    }, [webrtc])
+
+    }, [webrtc, webrtc.remoteStreams])
     if (webrtc.gettingCall) {
-        return <GettingCall hangup={ async () => {
-            await dispatch(hangup());
+        return <GettingCall hangup={ () => {
+            dispatch(hangup());
         }} join={async () => {
-            await dispatch(joinCall());
+            await dispatch(joinCall(webrtc.firstUserHost));
         }} />;
     }
-
+    
     if (webrtc.localStream) {
             return (
                 <Video

@@ -9,18 +9,18 @@ import Utils from "./utils";
 const configuration = {
     iceServers: [
         {
-            urls: "stun:192.168.2.3:3478"
+            urls: "stun:192.168.2.3:3478",
         },
         {
             urls: "turn:192.168.2.3:3478",
             username: "demo",
-            credential: "secret"
+            credential: "secret",
         },
         {
             urls: "turn:192.168.2.3:3478?transport=tcp",
             username: "demo",
-            credential: "secret"
-        }
+            credential: "secret",
+        },
     ],
 };
 let count = 0;
@@ -34,11 +34,13 @@ interface webrtcState {
     currentChannel: number;
     gettingCall: boolean;
     iceCompleted: boolean;
-    peerConnectionRecord: Record<string, Array<RTCPeerConnection>>;
-    remoteOfferDescriptionRecord: Record<string, Array<RTCPeerConnection>>;
+    peerConnectionRecord: Record<string, RTCPeerConnection>;
+    remoteOfferDescriptionRecord: Record<string, RTCSessionDescription>;
     iceCandidatesRecord: Record<string, Array<RTCIceCandidate>>;
     iceCompletedRecord: Record<string, boolean>;
     calling: boolean;
+    firstUserHost: string;
+    hostList: Array<string>;
 }
 
 const initialState: webrtcState = {
@@ -54,7 +56,9 @@ const initialState: webrtcState = {
     remoteOfferDescriptionRecord: {},
     iceCandidatesRecord: {},
     iceCompletedRecord: {},
-    calling: false
+    calling: false,
+    firstUserHost: "",
+    hostList: [],
 };
 
 const webrtcSlice = createSlice({
@@ -79,6 +83,20 @@ const webrtcSlice = createSlice({
         ) => {
             state.remoteOfferDescription = action.payload;
         },
+        setRemoteOfferDescriptionToARecord: (
+            state,
+            action: PayloadAction<{
+                target: string;
+                value: RTCSessionDescription;
+            }>
+        ) => {
+            const obj: Record<string, RTCSessionDescription> = {};
+            obj[action.payload.target] = action.payload.value;
+            state.remoteOfferDescriptionRecord = {
+                ...state.remoteOfferDescriptionRecord,
+                ...obj,
+            };
+        },
         resetIceCandidates: (state) => {
             state.iceCandidates = [];
         },
@@ -92,19 +110,56 @@ const webrtcSlice = createSlice({
             state.iceCompleted = action.payload;
         },
         setCalling: (state, action: PayloadAction<boolean>) => {
-            state.calling = action.payload
-        }
+            state.calling = action.payload;
+        },
+        setFirstUserHost: (state, action: PayloadAction<string>) => {
+            state.firstUserHost = action.payload;
+        },
+        addToHostList: (state, action: PayloadAction<string>) => {
+            state.hostList = [...state.hostList, action.payload];
+        },
+        resetIceCandidatesInARecord: (state, action: PayloadAction<string>) => {
+            state.iceCandidatesRecord[action.payload] = [];
+        },
+        addIceCompleted: (
+            state,
+            action: PayloadAction<{ target: string; value: boolean }>
+        ) => {
+            state.iceCompletedRecord[action.payload.target] =
+                action.payload.value;
+        },
+        addIceCandaiteToARecord: (
+            state,
+            action: PayloadAction<{ target: string; value: RTCIceCandidate }>
+        ) => {
+            let arr = [];
+            if (!state.iceCandidatesRecord[action.payload.target]) {
+                state.iceCandidatesRecord[action.payload.target] = [
+                    action.payload.value,
+                ];
+            } else {
+                state.iceCandidatesRecord[action.payload.target].push(
+                    action.payload.value
+                );
+            }
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(createCall.fulfilled, (state, action) => {
             if (action.payload) {
-                state.peerConnection = action.payload;
+                state.peerConnectionRecord = {
+                    ...state.peerConnectionRecord,
+                    ...action.payload,
+                };
                 console.log("Create peer connection");
             }
         });
         builder.addCase(joinCall.fulfilled, (state, action) => {
             if (action.payload) {
-                state.peerConnection = action.payload;
+                state.peerConnectionRecord = {
+                    ...state.peerConnectionRecord,
+                    ...action.payload,
+                };
                 console.log("Join peer connection");
             }
         });
@@ -112,8 +167,13 @@ const webrtcSlice = createSlice({
             addRemoteOfferAnswerToPeerConnection.fulfilled,
             (state, action) => {
                 if (action.payload) {
-                    state.peerConnection = action.payload;
+                    state.peerConnectionRecord = {
+                        ...state.peerConnectionRecord,
+                        ...action.payload,
+                    };
                     console.log("add remote offer answer to peer connection");
+                } else {
+                    console.log("no offer answer", action.payload);
                 }
             }
         );
@@ -121,18 +181,27 @@ const webrtcSlice = createSlice({
             addRemoteOfferDescriptionToPeerConnection.fulfilled,
             (state, action) => {
                 if (action.payload) {
-                    state.peerConnection = action.payload;
-                    console.log("add remote offer description to peer connection")
+                    state.peerConnectionRecord = {
+                        ...state.peerConnectionRecord,
+                        ...action.payload,
+                    };
+                    console.log(
+                        "add remote offer description to peer connection"
+                    );
                 }
             }
-        )
+        );
         builder.addCase(processIceCandidates.fulfilled, (state, action) => {
             if (action.payload) {
-                state.peerConnection = action.payload;
+                state.peerConnectionRecord = {
+                    ...state.peerConnectionRecord,
+                    ...action.payload,
+                };
                 console.log("add ice candidates to peer connection");
             }
         });
         builder.addCase(hangup.fulfilled, (state, action) => {
+            console.log("hang up successfully");
             return initialState;
         });
         builder.addCase(
@@ -212,12 +281,15 @@ async function setupWebrtc(getState: any, dispatch: any) {
     peerConnection.addEventListener("icecandidateerror", (event) => {});
 
     peerConnection.addEventListener("iceconnectionstatechange", (event) => {
-        console.log('ICE Connection State: ', peerConnection.iceConnectionState);
+        console.log(
+            "ICE Connection State: ",
+            peerConnection.iceConnectionState
+        );
     });
 
     peerConnection.addEventListener("icegatheringstatechange", (event) => {
-        console.log('ICE Gathering State: ', peerConnection.iceGatheringState);
-    })
+        console.log("ICE Gathering State: ", peerConnection.iceGatheringState);
+    });
     peerConnection.addEventListener("negotiationneeded", (event) => {});
 
     peerConnection.addEventListener("signalingstatechange", (event) => {});
@@ -238,106 +310,309 @@ async function setupWebrtc(getState: any, dispatch: any) {
 export const createCall = createAsyncThunk(
     "webrtc/createCall",
     async (_, { getState, dispatch }: any) => {
-        const socket = await getState().websocket.socket;
-        const peerConnection = await setupWebrtc(getState, dispatch);
         const userId = await getState().user.id;
         const currentChannel = await getState().webrtc.currentChannel;
         const userList = await findUserListOfChannel(getState, currentChannel);
-        if (peerConnection) {
-            let sessionConstraints = {
-                mandatory: {
-                    OfferToReceiveAudio: true,
-                    OfferToReceiveVideo: true,
-                    VoiceActivityDetection: true,
-                },
-            };
-            const offerDescription = await peerConnection.createOffer(
-                sessionConstraints
+        const hostList = await getState().webrtc.hostList;
+        const firstUserHost = await getState().webrtc.firstUserHost;
+        let peerConnectionRecord: Record<string, any> = {};
+        const stream: MediaStream = await getState().webrtc.localStream || await Utils.getStream();
+        for (let i = 0; i < userList.length; i++) {
+            if (hostList.includes(userList[i]) || userList[i] === userId || userList[i] === firstUserHost) {
+                continue;
+            }
+            console.log("Host list", hostList, userList[i])
+            const peerConnection = await new RTCPeerConnection(configuration);
+            peerConnection.addEventListener(
+                "connectionstatechange",
+                (event) => {}
             );
-            await peerConnection.setLocalDescription(offerDescription);
-            if (socket) {
-                for (let i = 0; i < userList.length; i++) {
-                    if (userList[i] != userId) {
-                        const formData = {
-                            action: "offer_description",
+            peerConnection.addEventListener("icecandidate", (event: any) => {
+                if (!event.candidate) {
+                    if (socket) {
+                        const form_data = {
+                            action: "icecandidate_completed",
                             target: "user",
                             targetId: userList[i],
                             data: {
                                 from_user: userId,
-                                data: offerDescription,
+                                data: event.candidate,
                             },
                         };
-                        socket.send(JSON.stringify(formData));
+                        socket.send(JSON.stringify(form_data));
                     }
+                    return;
                 }
+                if (socket) {
+                    const form_data = {
+                        action: "icecandidate",
+                        target: "user",
+                        targetId: userList[i],
+                        data: {
+                            from_user: userId,
+                            data: event.candidate,
+                        },
+                    };
+                    console.log("candidate", ++count);
+                    socket.send(JSON.stringify(form_data));
+                }
+            });
+            peerConnection.addEventListener("icecandidateerror", (event) => {});
+
+            peerConnection.addEventListener(
+                "iceconnectionstatechange",
+                (event) => {
+                    console.log(
+                        "ICE Connection State: ",
+                        peerConnection.iceConnectionState
+                    );
+                }
+            );
+
+            peerConnection.addEventListener(
+                "icegatheringstatechange",
+                (event) => {
+                    console.log(
+                        "ICE Gathering State: ",
+                        peerConnection.iceGatheringState
+                    );
+                }
+            );
+            peerConnection.addEventListener("negotiationneeded", (event) => {});
+
+            peerConnection.addEventListener(
+                "signalingstatechange",
+                (event) => {}
+            );
+            peerConnection.addEventListener("track", (event: any) => {
+                const media = new MediaStream();
+                media.addTrack(event.track);
+                dispatch(addRemoteStream(media));
+            });
+
+            if (stream) {
+                await stream
+                    .getTracks()
+                    .forEach((track: any) =>
+                        peerConnection.addTrack(track, stream)
+                    );
+                
+            }
+
+            const socket = await getState().websocket.socket;
+            if (peerConnection) {
+                let sessionConstraints = {
+                    mandatory: {
+                        OfferToReceiveAudio: true,
+                        OfferToReceiveVideo: true,
+                        VoiceActivityDetection: true,
+                    },
+                };
+                const offerDescription = await peerConnection.createOffer(
+                    sessionConstraints
+                );
+                await peerConnection.setLocalDescription(offerDescription);
+                if (socket) {
+                    const formData = {
+                        action: "offer_description",
+                        target: "user",
+                        targetId: userList[i],
+                        data: {
+                            from_user: userId,
+                            data: offerDescription,
+                        },
+                    };
+                    socket.send(JSON.stringify(formData));
+                }
+                peerConnectionRecord[userList[i]] = peerConnection;
             }
         }
-        return peerConnection;
+        await dispatch(setLocalStream(stream));
+        return peerConnectionRecord;
     }
 );
 
 export const joinCall = createAsyncThunk(
     "webrtc/joinCall",
-    async (_, { getState, dispatch }: any) => {
+    async (hostId: string, { getState, dispatch }: any) => {
+        if (hostId === "") return null;
+
+        dispatch(setGettingCall(false));
         const socket = await getState().websocket.socket;
         const userId = await getState().user.id;
+        const remoteOfferDescriptionRecord = await getState().webrtc
+            .remoteOfferDescriptionRecord;
+        const iceCandidatesRecord = await getState().webrtc.iceCandidatesRecord;
+        let peerConnectionRecord: Record<string, any> = {};
+        const hostList = await getState().webrtc.hostList;
         const currentChannel = await getState().webrtc.currentChannel;
-        const peerConnection = await setupWebrtc(getState, dispatch);
-        const remoteOfferDescription = await getState().webrtc
-            .remoteOfferDescription;
-        const iceCandidates = await getState().webrtc.iceCandidates;
         const userList = await findUserListOfChannel(getState, currentChannel);
-        
-        dispatch(setGettingCall(false));
-        if (peerConnection && remoteOfferDescription) {
+        // await userList.sort((a: any, b: any) => {
+        //     return Number(a) - Number(b);
+        // })
+        const peerConnection = await new RTCPeerConnection(configuration);
+        const localStream: MediaStream = await getState().webrtc.localStream;
+        peerConnection.addEventListener("connectionstatechange", (event) => {});
+        peerConnection.addEventListener("icecandidate", (event: any) => {
+            if (!event.candidate) {
+                if (socket) {
+                    const form_data = {
+                        action: "icecandidate_completed",
+                        target: "user",
+                        targetId: hostId,
+                        data: {
+                            from_user: userId,
+                            data: event.candidate,
+                        },
+                    };
+                    socket.send(JSON.stringify(form_data));
+                }
+                return;
+            }
+            if (socket) {
+                const form_data = {
+                    action: "icecandidate",
+                    target: "user",
+                    targetId: hostId,
+                    data: {
+                        from_user: userId,
+                        data: event.candidate,
+                    },
+                };
+                console.log("candidate", ++count);
+                socket.send(JSON.stringify(form_data));
+            }
+        });
+        peerConnection.addEventListener("icecandidateerror", (event) => {});
+
+        peerConnection.addEventListener("iceconnectionstatechange", (event) => {
+            console.log(
+                "ICE Connection State: ",
+                peerConnection.iceConnectionState
+            );
+        });
+
+        peerConnection.addEventListener("icegatheringstatechange", (event) => {
+            console.log(
+                "ICE Gathering State: ",
+                peerConnection.iceGatheringState
+            );
+        });
+        peerConnection.addEventListener("negotiationneeded", (event) => {});
+
+        peerConnection.addEventListener("signalingstatechange", (event) => {});
+        peerConnection.addEventListener("track", (event: any) => {
+            const media = new MediaStream();
+                media.addTrack(event.track);
+                dispatch(addRemoteStream(media));
+        });
+        if (!localStream) {
+            const stream = await Utils.getStream();
+            if (stream) {
+                await stream
+                    .getTracks()
+                    .forEach((track: any) =>
+                        peerConnection.addTrack(track, stream)
+                    );
+                await dispatch(setLocalStream(stream));
+            }
+        } else {
+            await localStream.getTracks().forEach((track: any) => peerConnection.addTrack(track, localStream));
+        }
+        if (peerConnection && remoteOfferDescriptionRecord[hostId]) {
+
             await peerConnection.setRemoteDescription(
-                new RTCSessionDescription(remoteOfferDescription)
+                new RTCSessionDescription(remoteOfferDescriptionRecord[hostId])
             );
             const answerDescription = await peerConnection.createAnswer();
             await peerConnection.setLocalDescription(answerDescription);
-            await iceCandidates.map((candidate: any) => {
-                peerConnection.addIceCandidate(candidate);
+            await iceCandidatesRecord[hostId].map(async (candidate: any) => {
+                await peerConnection.addIceCandidate(candidate);
             });
-            dispatch(resetIceCandidates());
+            dispatch(resetIceCandidatesInARecord(hostId));
             if (socket) {
-                for (let i = 0; i < userList.length; i++) {
-                    if (userList[i] != userId) {
-                        const formData = {
-                            action: "offer_answer",
-                            target: "user",
-                            targetId: userList[i],
-                            data: {
-                                data: answerDescription,
-                                from_user: userId,
-                            },
-                        };
-                        socket.send(JSON.stringify(formData));
-                    }
-                }
-                
+                const formData = {
+                    action: "offer_answer",
+                    target: "user",
+                    targetId: hostId,
+                    data: {
+                        data: answerDescription,
+                        from_user: userId,
+                    },
+                };
+                socket.send(JSON.stringify(formData));
             }
+        } 
+        if (userId === 12 && Number(hostId) != 12) {
+            // for (let i = 0; i < userList.length; i++) {
+            //     if (hostList.includes(userList[i])) {
+            //         continue;
+            //     }
+            //     console.log(userList[i], hostList)
+            //     const formData = {
+            //         action: "video_call",
+            //         target: "user",
+            //         targetId: userList[i],
+            //         data: {
+            //             from_user: userId,
+            //             from_channel: currentChannel
+            //         }
+            //     }
+            //     socket.send(JSON.stringify(formData));
+
+            // }
+            socket.send(JSON.stringify({
+                action: "video_call",
+                target: "user",
+                targetId: 12,
+                data: {
+                    from_user: userId,
+                    from_channel: currentChannel
+                }
+            }));
+            setTimeout(() => {
+                socket.send(JSON.stringify({
+                    action: "video_call",
+                    target: "user",
+                    targetId: 13,
+                    data: {
+                        from_user: userId,
+                        from_channel: currentChannel
+                    }
+                }));
+            }, 5000)
         }
-        return peerConnection;
-    }
+        peerConnectionRecord[hostId] = peerConnection;
+        return peerConnectionRecord;
+    } 
 );
 
 export const addRemoteOfferAnswerToPeerConnection = createAsyncThunk(
     "webrtc/addRemoteOfferAnswerToPeerConnection",
     async (
-        remoteDescription: RTCSessionDescription,
+        data: {
+            remoteDescription: RTCSessionDescription;
+            hostId: string;
+        },
         { getState, dispatch }: any
     ) => {
-        const peerConnection = await getState().webrtc.peerConnection;
-        const iceCandidates = await getState().webrtc.iceCandidates;
-        if (peerConnection) {
-            await peerConnection.setRemoteDescription(remoteDescription);
-            if (iceCandidates.length > 0) {
-                for (let i = 0; i < iceCandidates.length; i++) {
-                    await peerConnection.addIceCandidate(iceCandidates[i])
-                }
-                await dispatch(resetIceCandidates());
-            }
-            return peerConnection;
+        const peerConnectionRecord = await getState().webrtc
+            .peerConnectionRecord;
+        const iceCandidatesRecord = await getState().webrtc.iceCandidatesRecord;
+        let newPeerConnectionRecord: Record<string, any> = {};
+        console.log(
+            "check in remote offer answer",
+            !peerConnectionRecord[data.hostId]
+        );
+        if (peerConnectionRecord[data.hostId]) {
+            const peerConnection = peerConnectionRecord[data.hostId];
+            await peerConnection.setRemoteDescription(data.remoteDescription);
+            await iceCandidatesRecord[data.hostId].map((candidate: any) => {
+                peerConnection.addIceCandidate(candidate);
+            });
+            dispatch(resetIceCandidates());
+            newPeerConnectionRecord[data.hostId] = peerConnection;
+            return newPeerConnectionRecord;
         }
         return null;
     }
@@ -346,63 +621,76 @@ export const addRemoteOfferAnswerToPeerConnection = createAsyncThunk(
 export const addRemoteOfferDescriptionToPeerConnection = createAsyncThunk(
     "webrtc/addRemoteOfferDescriptionToPeerConnection",
     async (
-        remoteDescription: RTCSessionDescription,
+        data: {
+            remoteDescription: RTCSessionDescription;
+            hostId: string;
+        },
         { getState, dispatch }: any
     ) => {
-        const peerConnection = await getState().webrtc.peerConnection;
-        const iceCandidates = await getState().webrtc.iceCandidates;
+        const peerConnectionRecord = await getState().webrtc.peerConnection;
+        const iceCandidatesRecord = await getState().webrtc.iceCandidates;
         const socket = await getState().websocket.socket;
         const userId = await getState().user.id;
-        const currentChannel = await getState().webrtc.currentChannel;
-        const userList = await findUserListOfChannel(getState, currentChannel);
+        let newPeerConnectionRecord: Record<string, any> = {};
 
-        if (peerConnection) {
+        if (peerConnectionRecord[data.hostId]) {
+            const peerConnection = peerConnectionRecord[data.hostId];
             await peerConnection.setRemoteDescription(
-                new RTCSessionDescription(remoteDescription)
+                new RTCSessionDescription(data.remoteDescription)
             );
             const answerDescription = await peerConnection.createAnswer();
             await peerConnection.setLocalDescription(answerDescription);
-            await iceCandidates.map((candidate: any) => {
-                peerConnection.addIceCandidate(candidate);
-            });
-            dispatch(resetIceCandidates());
-            if (socket) {
-                for (let i = 0; i < userList.length; i++) {
-                    if (userList[i] != userId) {
-                        const formData = {
-                            action: "offer_answer",
-                            target: "user",
-                            targetId: userList[i],
-                            data: {
-                                data: answerDescription,
-                                from_user: userId,
-                            },
-                        };
-                        socket.send(JSON.stringify(formData));
-                    }
+            await iceCandidatesRecord[data.hostId].map(
+                async (candidate: any) => {
+                    await peerConnection.addIceCandidate(candidate);
                 }
+            );
+            dispatch(resetIceCandidatesInARecord(data.hostId));
+            if (socket) {
+                const formData = {
+                    action: "offer_answer",
+                    target: "user",
+                    targetId: data.hostId,
+                    data: {
+                        data: answerDescription,
+                        from_user: userId,
+                    },
+                };
+                socket.send(JSON.stringify(formData));
             }
-            return peerConnection;
+            newPeerConnectionRecord[data.hostId] = peerConnection;
+            return newPeerConnectionRecord;
         }
         return null;
     }
-)
+);
 
 export const processIceCandidates = createAsyncThunk(
     "webrtc/processIceCandidates",
-    async (_, { getState, dispatch }: any) => {
-        const peerConnection = await getState().webrtc.peerConnection;
-        const iceCompleted = await getState().webrtc.iceCompleted;
-        if (peerConnection && peerConnection.remoteDescription) {
-            const iceCandidates = await getState().webrtc.iceCandidates;
+    async (hostId: string, { getState, dispatch }: any) => {
+        const peerConnectionRecord = await getState().webrtc
+            .peerConnectionRecord;
+        let newPeerConnectionRecord: Record<string, any> = {};
+        if (
+            peerConnectionRecord[hostId] &&
+            peerConnectionRecord[hostId].remoteDescription
+        ) {
+            const peerConnection = peerConnectionRecord[hostId];
+            const iceCandidatesRecord = await getState().webrtc
+                .iceCandidatesRecord;
+            const iceCandidates = iceCandidatesRecord[hostId];
             await iceCandidates.map((candidate: any) => {
                 peerConnection.addIceCandidate(candidate);
             });
-            dispatch(resetIceCandidates());
-            // if (iceCompleted) {
-            //     dispatch(setIceCompleted(false));
-            // }
-            return peerConnection;
+            dispatch(resetIceCandidatesInARecord(hostId));
+            dispatch(
+                addIceCompleted({
+                    target: hostId,
+                    value: false,
+                })
+            );
+            newPeerConnectionRecord[hostId] = peerConnection;
+            return newPeerConnectionRecord;
         }
         return null;
     }
@@ -411,17 +699,22 @@ export const processIceCandidates = createAsyncThunk(
 export const hangup = createAsyncThunk(
     "webrtc/hangup",
     async (_, { getState, dispatch }: any) => {
-        const webrtc = await getState().webrtc;
-        if (webrtc.localStream) {
-            await webrtc.localStream
-                .getTracks()
-                .forEach((track: any) => track.stop());
-            await webrtc.localStream.release();
-        }
+        const peerConnectionRecord: Record<string, RTCPeerConnection> =
+            await getState().webrtc.peerConnectionRecord;
+        const localStream: MediaStream = await getState().webrtc.localStream;
+
+        await localStream
+            .getTracks()
+            .forEach(async (track: any) => await track.stop());
+
+        await localStream.release();
+
         count = 0;
-        if (webrtc.peerConnection) {
-            await webrtc.peerConnection.close();
-        }
+        Object.values(peerConnectionRecord).forEach(
+            (peerConnection: RTCPeerConnection) => {
+                peerConnection.close();
+            }
+        );
     }
 );
 
@@ -448,7 +741,13 @@ export const {
     setCurrentChannel,
     setIceCompleted,
     resetIceCandidates,
-    setCalling
+    setCalling,
+    setFirstUserHost,
+    addToHostList,
+    resetIceCandidatesInARecord,
+    addIceCompleted,
+    addIceCandaiteToARecord,
+    setRemoteOfferDescriptionToARecord,
 } = webrtcSlice.actions;
 
 export default webrtcSlice.reducer;
