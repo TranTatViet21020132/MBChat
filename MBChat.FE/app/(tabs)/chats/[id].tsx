@@ -8,9 +8,11 @@ import React, {
 } from "react";
 import {
     Alert,
+    findNodeHandle,
     ImageBackground,
     Platform,
     StyleSheet,
+    Text,
     View,
 } from "react-native";
 import {
@@ -39,6 +41,9 @@ import MessageApi from "@/api/MessageApi";
 import mime from "mime";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import PortalView from "@/components/chats/PortalView";
+import { ChatFooter } from "@/components/chats/ChatFooter";
+import { UIManager } from "react-native";
 const user = {
     _id: 1,
     name: "Developer",
@@ -133,7 +138,21 @@ function isOpenWebsocket(WebSocket: { readyState: any; OPEN: any }) {
 }
 
 const SingleChatPage = () => {
+    // const [messageCordiantes, setMessageCordinates] = useState({
+    //     x: 0,
+    //     y: 0
+    // })
     const chatContext = React.useContext(ChatContext);
+    // const onLongPress = (e: any) => {
+    //     const {pageY, locationY} = e.nativeEvent;
+    //     console.log(e.nativeEvent)
+    //     setMessageCordinates({
+    //         x: 0,
+    //         y: pageY - 2 * locationY
+    //     })
+    // }
+
+    // console.log("messageCordinates", messageCordiantes)
 
     if (!chatContext || !chatContext.setChats) {
         return null;
@@ -154,8 +173,10 @@ const SingleChatPage = () => {
     const insets = useSafeAreaInsets();
 
     const [replyMessage, setReplyMessage] = useState<IMessage | null>(null);
+    const [openMenu, setOpenMenu] = useState<boolean>(false);
+    const [openReplyMessage, setOpenReplyMessage] = useState<boolean>(false);
     const swipeableRowRef = useRef<Swipeable | null>(null);
-
+    const messageRef = useRef(null);
     const [state, dispatch] = useReducer(reducer, {
         messages:
             String(id["id"]) in chatHistory
@@ -190,10 +211,11 @@ const SingleChatPage = () => {
                         "location"
                     ] = `${messages[0]["location"]["latitude"]} ${messages[0]["location"]["longitude"]}`;
                 }
-                if (replyMessage) {
+                if (replyMessage && openReplyMessage) {
                     //@ts-ignore
                     data["reply"] = replyMessage["_id"];
                     setReplyMessage(null);
+                    setOpenReplyMessage(false);
                 }
                 console.log(data);
                 const formData = {
@@ -291,15 +313,19 @@ const SingleChatPage = () => {
         [replyMessage]
     );
 
-    const renderMessage = useCallback((props: any) => {
+    const renderMessage = useCallback((props: any, replyMessage: IMessage | null, openMenu: boolean) => {
         return (
             <ChatMessageBox
                 {...props}
                 setReplyOnSwipeOpen={setReplyMessage}
                 updateRowRef={updateRowRef}
+                replyMessage={replyMessage}
+                openMenu={openMenu}
+                setOpenMenu={setOpenMenu}
             />
         );
-    }, []);
+    }, [replyMessage]);
+
 
     useEffect(() => {
         if (replyMessage && swipeableRowRef.current) {
@@ -325,7 +351,7 @@ const SingleChatPage = () => {
                 id: String(id["id"]),
             });
         }
-    }, [replyMessage, socket, chatHistory]);
+    }, [replyMessage, socket, chatHistory, state.messages]);
 
     return (
         <ImageBackground
@@ -409,15 +435,38 @@ const SingleChatPage = () => {
                 renderActions={renderCustomActions}
                 renderCustomView={renderCustomView}
                 renderChatFooter={() => (
-                    <ReplyMessageBar
-                        clearReply={() => setReplyMessage(null)}
+                    // <ReplyMessageBar
+                    //     clearReply={() => {setReplyMessage(null)}}
+                    //     message={replyMessage}
+                    // />
+
+                    openReplyMessage ? (<ReplyMessageBar
+                        clearReply={() => {
+                            setReplyMessage(null)
+                            setOpenReplyMessage(false)
+                        }}
                         message={replyMessage}
-                    />
+                    />) 
+                    : (openMenu ? 
+                        <ChatFooter 
+                        setOpenMenu={setOpenMenu} 
+                        setOpenReplyMessage={setOpenReplyMessage}
+                        currentMessage={replyMessage}
+                        
+                        />
+                        : null)
                 )}
                 onLongPress={(context, message) => {
+                    if (!openMenu) {
+                        setOpenMenu(true);
+                    }
+                    // getElementPosition(messageRef.current, (position: any) => {
+                    //     console.log('Position:', position);
+                    //     // Ở đây bạn có thể xử lý vị trí nhận được
+                    // });
                     setReplyMessage(message);
                 }}
-                renderMessage={renderMessage}
+                renderMessage={(props) => renderMessage(props, replyMessage, openMenu)}
                 isTyping={state.isTyping}
                 inverted={Platform.OS !== "web"}
                 infiniteScroll
@@ -426,6 +475,7 @@ const SingleChatPage = () => {
                     right: { color: "#6E6E73" },
                 }}
             />
+            {/* <PortalView messageCordiantes={messageCordiantes}/> */}
         </ImageBackground>
     );
 };

@@ -1,4 +1,4 @@
-import { addChatHistory, addMessage, setChats, setCommunities } from "../chat/chatSlice";
+import { addChatHistory, addMessage, setChats, setCommunities, updateReactionsInAMessage } from "../chat/chatSlice";
 import { setFirstName, setUserProfile } from "../user/userSlice";
 import { addCandidateToPeerConnection, addIceCandaiteToARecord, addIceCandidate, addIceCompleted, addRemoteOfferAnswerToPeerConnection, addRemoteOfferDescriptionToPeerConnection, addToHostList, createCall, joinCall, processIceCandidates, setCalling, setCurrentChannel, setFirstUserHost, setGettingCall, setIceCompleted, setRemoteOfferDescription, setRemoteOfferDescriptionToARecord } from "../webrtc/webrtcSlice";
 enum Action {
@@ -12,7 +12,8 @@ enum Action {
     ICECANDIDATE = "icecandidate",
     OFFER_DESCRIPTION = "offer_description",
     ICECANDIDATE_COMPLETED = "icecandidate_completed",
-    JOIN_CALL = "join_call"
+    JOIN_CALL = "join_call",
+    SEND_REACTION = "send_reaction"
 }
 
 
@@ -78,9 +79,9 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                     break;
                 case Action.GET_MESSAGE_LIST:
                     data = response.data;
-                    let chat_history_object_array = response.data.map(
+                    let chat_history_object_array = data.map(
                         (message: any, idx: number) => {
-                            let data = {
+                            let data: any = {
                                 _id: message.id,
                                 text: message.content,
                                 createdAt: message.create_at,
@@ -88,21 +89,26 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                                     _id: message.member.user.id === userInformation.id ? 1 : message.member.user.id + 1,
                                     name: message.member.user.fullname,
                                 },
+                                reactions: {
+                                    value: [],
+                                    total: 0
+                                }
                             };
                             if (message.reply) {
-                                // @ts-ignore
                                 data["repliedMessage"] = message.reply;
                             }
                             if (message.location) {
                                 const locationArr = message.location.split(" ");
-                                // @ts-ignore
                                 data["location"] = {
                                     latitude: parseFloat(locationArr[0]),
                                     longitude: parseFloat(locationArr[1]),
                                 };
                             } else if (message.image) {
-                                // @ts-ignore
                                 data["image"] = message.image;
+                            } 
+                            if (message.reactions != "") {
+                                data["reactions"] = message.reactions;
+
                             }
                             return data;
                         }
@@ -114,8 +120,15 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                         })
                     );
                     break;
+                case Action.SEND_REACTION:
+                    data = response.data
+                    dispatch(updateReactionsInAMessage({
+                        targetId: response.targetId,
+                        messageId: data.message_id,
+                        reactions: data.reactions
+                    }))
+                    break;
                 case Action.SEND_MESSAGE:
-                    console.log("send send snsidskldjslkdjl", userInformation.username);
                     data = response.data;
                     let chat_history_object = {
                         _id: data.id,
@@ -125,6 +138,10 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                             _id: data.member.user.id === userInformation.id ? 1 : data.member.user.id + 1,
                             name: data.member.user.fullname,
                         },
+                        reactions: {
+                            value: [],
+                            total: 0
+                        }
                     };
                     if (data.reply) {
                         // @ts-ignore
