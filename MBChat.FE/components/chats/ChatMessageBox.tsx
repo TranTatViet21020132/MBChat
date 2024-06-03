@@ -5,6 +5,7 @@ import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler'
 import { IMessage, Message, MessageProps } from 'react-native-gifted-chat';
 import { isSameDay, isSameUser } from 'react-native-gifted-chat/lib/utils';
 import { COLORS } from '@/constants/Colors';
+import { FontAwesome } from '@expo/vector-icons';
 
 type ChatMessageBoxProps = {
   setReplyOnSwipeOpen: (message: IMessage) => void;
@@ -71,6 +72,18 @@ const ChatMessageBox = ({ setReplyOnSwipeOpen, updateRowRef, ...props }: ChatMes
           renderLeftActions={renderRightAction}
           onSwipeableWillOpen={onSwipeOpenAction}>
           <Message {...props} />
+          {/* <View
+            style={{
+              marginTop: -20,
+              marginLeft: 50
+            }}
+          >
+            <FontAwesome 
+              name='heart'
+              color={'red'}
+              size={24}
+            />
+          </View> */}
         </Swipeable>)
       }
     </GestureHandlerRootView>

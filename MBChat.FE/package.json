@@ -13,7 +13,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@config-plugins/react-native-callkeep": "^8.0.0",
+    "@config-plugins/react-native-callkeep": "^7.0.0",
     "@config-plugins/react-native-webrtc": "^8.0.0",
     "@expo/vector-icons": "^14.0.0",
     "@react-native-firebase/app": "^19.2.2",
@@ -24,7 +24,7 @@
     "date-fns": "^3.5.0",
     "expo": "~50.0.8",
     "expo-constants": "~15.4.6",
-    "expo-dev-client": "~3.3.11",
+    "expo-dev-client": "~3.3.12",
     "expo-device": "~5.9.4",
     "expo-font": "~11.10.3",
     "expo-haptics": "~12.8.1",

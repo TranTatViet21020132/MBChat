@@ -2,15 +2,14 @@ import { COLORS } from '@/constants/Colors';
 import { Stack } from 'expo-router';
 import {
   View,
-  Text,
-  ScrollView,
   FlatList,
   Image,
   StyleSheet,
   Pressable,
+  Modal,
 } from 'react-native';
 import NoDataPage from '@/components/NoData';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ChatContext } from '@/context/chatContext';
 import { SegmentedControl } from '@/components/SegmentedControl';
 import { defaultStyles } from '@/constants/Styles';
@@ -26,6 +25,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import React from 'react';
 import * as Haptics from 'expo-haptics';
+import MessageApi from '@/api/MessageApi';
 
 const transition = CurvedTransition.delay(100);
 
@@ -37,9 +37,11 @@ type NoDataProps = {
   noDataGuild: string,
 }
 
+type ImageProps = { imageUrl: string };
+
 const Page = () => {
   const chatContext = React.useContext(ChatContext);
-  
+
   if (!chatContext || !chatContext.setChats) {
     return null;
   }
@@ -47,13 +49,12 @@ const Page = () => {
   const { chats } = chatContext;
 
   const [selectedOption, setSelectedOption] = useState('Medias');
-  const [items, setItems] = useState();
-  
+
   const [noData, setNoData] = useState<NoDataProps>({
-      iconName: 'image',
-      noDataTitle: 'Không có tệp phương tiện',
-      noDataGuild: `Nhấn vào dấu + để chia sẻ tệp phương tiện với ${chats.from}`
-    });
+    iconName: 'image',
+    noDataTitle: 'Không có tệp phương tiện',
+    noDataGuild: `Nhấn vào dấu + để chia sẻ tệp phương tiện với ${chats.from}`
+  });
 
   const [isEditing, setIsEditing] = useState(false);
   const editing = useSharedValue(-30);
@@ -89,7 +90,7 @@ const Page = () => {
       }));
     }
   }, [setSelectedOption, setNoData]);
-  
+
   const removeCall = (toDelete: any) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     // setItems(items.filter((item) => item.id !== toDelete.id));
@@ -109,10 +110,41 @@ const Page = () => {
     transform: [{ translateX: withTiming(editing.value) }],
   }));
 
+  const [dataImage, setDataImage] = React.useState([]);
+
+  useEffect(() => {
+    const getDataImage = async () => {
+      const response = (await MessageApi.getImage()).data;
+      setDataImage(response.data)
+      // setItems(response.data)
+    }
+    getDataImage();
+  }, [])
+
+  const [selectedImage, setSelectedImage] = React.useState('');
+
+  const handlePress = (image: any) => {
+    setSelectedImage(image);
+  };
+
+  const ImageMedia = ({ imageUrl }: ImageProps) => {
+    return (
+      <Pressable style={styles.wapperImage} onPress={() => handlePress (imageUrl)}>
+        <Image
+          style={styles.imageMedia}
+          source={{
+            uri: imageUrl
+          }}
+        />
+      </Pressable>
+    )
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.light.background }}>
       <Stack.Screen
         options={{
+          headerBackVisible: false,
           headerTitle: () => (
             <SegmentedControl
               options={['Medias', 'Links', 'Files']}
@@ -122,75 +154,32 @@ const Page = () => {
           ),
         }}
       />
-      {items ? 
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          contentContainerStyle={{ paddingBottom: 40 }}>
-          <Animated.View style={[defaultStyles.block]} layout={transition}>
-            <Animated.FlatList
-              skipEnteringExitingAnimations
-              data={items}
-              scrollEnabled={false}
-              itemLayoutAnimation={transition}
-              keyExtractor={(item) => item.id.toString()}
-              ItemSeparatorComponent={() => <View style={defaultStyles.separator} />}
-              renderItem={({ item, index }) => (
-                <Animated.View
-                  entering={FadeInUp.delay(index * 20)}
-                  exiting={FadeOutUp}
-                  style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <AnimatedPressable
-                    style={[animatedPosition, { paddingLeft: 8 }]}
-                    // onPress={() => removeCall(item)}
-                  >
-                    <Ionicons name="remove-circle" size={24} color={COLORS.red} />
-                  </AnimatedPressable>
-
-                  <Animated.View
-                    style={[defaultStyles.item, { paddingLeft: 20 }, animatedRowStyles]}>
-                    <Image source={{ uri: item.img }} style={styles.avatar} />
-
-                    <View style={{ flex: 1, gap: 2 }}>
-                      <Text style={{ fontSize: 18, color: item.missed ? COLORS.red : '#000' }}>
-                        {item.name}
-                      </Text>
-
-                      <View style={{ flexDirection: 'row', gap: 4 }}>
-                        <Ionicons
-                          name={item.video ? 'videocam' : 'call'}
-                          size={16}
-                          color={COLORS.gray}
-                        />
-                        <Text style={{ color: COLORS.gray, flex: 1 }}>
-                          {item.incoming ? 'Incoming' : 'Outgoing'}
-                        </Text>
-                      </View>
-                    </View>
-
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        gap: 6,
-                        alignItems: 'center',
-                      }}>
-                      <Text style={{ color: COLORS.gray }}>{format(item.date, 'MM.dd.yy')}</Text>
-                      <Ionicons
-                        name="information-circle-outline"
-                        size={24}
-                        color={COLORS.light.primary}
-                      />
-                    </View>
-                  </Animated.View>
-                </Animated.View>
-              )}
+      <FlatList
+        numColumns={3}
+        data={dataImage}
+        renderItem={({ item }) => <ImageMedia imageUrl={item} />}
+      />
+      <Modal
+        visible={selectedImage !== ''}
+        style={{ display: 'flex' }}
+      >
+        <Pressable
+            style={styles.closeButton}
+            onPress={() => setSelectedImage('')}
+          >
+            <Ionicons
+              name='close'
+              size={30}
+              color={'#fff'}
             />
-          </Animated.View>
-        </ScrollView>
-      :
-        <NoDataPage 
-        noData={noData}
-        />
-      }
+          </Pressable>
+        <View style={styles.modalContainer}>
+          <Image
+            style={styles.fullImage}
+            source={{ uri: selectedImage }}
+          />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -200,6 +189,35 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+  },
+  wapperImage: {
+    width: '33%',
+    height: 160,
+    borderWidth: 2,
+    borderColor: 'black'
+  },
+  imageMedia: {
+    flex: 1,
+    width: null,
+    height: null,
+    resizeMode: 'contain'
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000',
+  },
+  fullImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain'
+  },
+  closeButton: {
+    paddingTop: 20,
+    paddingLeft: 20,
+    backgroundColor: '#000',
+    alignItems: 'flex-start',
   },
 });
 export default Page;
