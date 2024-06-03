@@ -114,9 +114,8 @@ const Page = () => {
 
   useEffect(() => {
     const getDataImage = async () => {
-      const response = (await MessageApi.getImage()).data;
+      const response = (await MessageApi.getImage(1)).data;
       setDataImage(response.data)
-      // setItems(response.data)
     }
     getDataImage();
   }, [])

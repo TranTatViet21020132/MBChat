@@ -11,8 +11,8 @@ class MessageApi{
         })
     }
 
-    getImage = async () => {
-        const url = '/api/channel/1/media/'
+    getImage = async (id: any) => {
+        const url = `/api/channel/${id}/media/`
         return await axiosClient.get(url);
     }
 
