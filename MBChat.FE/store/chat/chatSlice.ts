@@ -21,7 +21,16 @@ interface chatMessageObject {
         _id: number,
         name: string
     },
-    location?: string
+    location?: string,
+    reactions: {
+        value: Array<string>,
+        total: number
+    }
+}
+
+interface ReactionsProps {
+    value: Array<string>;
+    total: number;
 }
 
 interface chatState {
@@ -63,12 +72,23 @@ const chatSlice = createSlice({
         },
         setChatListSearch: (state, action: PayloadAction<string>) => {
             state.chatListSearch = action.payload;
+        },
+        updateReactionsInAMessage: (state, action: PayloadAction<{
+            targetId: string,
+            messageId: number,
+            reactions: ReactionsProps
+        }>) => {
+            state.chatHistory[action.payload.targetId].forEach((message) => {
+                if (message._id === action.payload.messageId) {
+                    message.reactions = action.payload.reactions;
+                }
+            })
         }
     }
 })
 
 export const { setChats, addChatHistory, addMessage,
-    setCommunities, setCommunityListSearch, setChatListSearch
+    setCommunities, setCommunityListSearch, setChatListSearch, updateReactionsInAMessage
  } = chatSlice.actions;
 
 export default chatSlice.reducer;
