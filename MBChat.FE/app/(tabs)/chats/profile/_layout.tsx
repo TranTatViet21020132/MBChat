@@ -33,13 +33,13 @@ const Layout = () => {
         name="(tabs)/documents"
         options={{
           title: '',
-          headerBackTitleVisible: false, 
           headerLeft: () => (
             <Pressable onPress={() => router.back()}>
               <Ionicons
                 name="chevron-back-outline"
                 color={COLORS.light.primary}
                 size={30}
+                style={{paddingRight: 60}}
               />
             </Pressable>
           ),

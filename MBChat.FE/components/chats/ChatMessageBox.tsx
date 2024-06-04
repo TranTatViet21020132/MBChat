@@ -338,7 +338,6 @@ const ChatMessageBox = ({
                                             display: "flex",
                                             flexDirection: "row",
                                             position: "absolute",
-
                                             bottom: -10,
                                             backgroundColor: "white",
                                             borderRadius: 50,
