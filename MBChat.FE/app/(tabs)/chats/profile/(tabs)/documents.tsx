@@ -114,7 +114,7 @@ const Page = () => {
 
   useEffect(() => {
     const getDataImage = async () => {
-      const response = (await MessageApi.getImage(1)).data;
+      const response = (await MessageApi.getImage(chatContext.chats.id)).data;
       setDataImage(response.data)
     }
     getDataImage();
