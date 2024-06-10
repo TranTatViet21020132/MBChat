@@ -28,8 +28,8 @@ const NotiRow: React.FC<NotiRowProps> = (
         <View style={styles.leftItem}>
           <Image source={{ uri: sender.avatar_url }} style={styles.listItemImage} />
           <View style={styles.labelTimestamps}>
-            <Text style={{ color: '#000', fontSize: 14, fontWeight: 'bold' }}>{sender.fullname}</Text>
-            <Text style={{ color: '#aaaaaa', fontSize: 10 }}>
+            <Text style={{ color: '#000', fontSize: 16, fontWeight: 'bold' }}>{sender.fullname}</Text>
+            <Text style={{ color: '#aaaaaa', fontSize: 12 }}>
               {calculateTimeDifference(create_at)}
             </Text>
           </View>
@@ -51,7 +51,7 @@ const NotiRow: React.FC<NotiRowProps> = (
         </View>
       </View>
 
-      <View style={[defaultStyles.separator, { marginLeft: 50 }]} />
+      <View style={[defaultStyles.separator, { marginLeft: 60 }]} />
     </>
   );
 };
@@ -63,6 +63,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     height: 50,
+    paddingLeft: 14,
+    paddingRight: 64,
     backgroundColor: '#fff',
   },
 
@@ -89,8 +91,8 @@ const styles = StyleSheet.create({
   },
 
   listItemImage: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
     borderRadius: 15,
   },
 });

@@ -34,6 +34,7 @@ const Updates = () => {
     const getUserNotis = async () => {
       try {
         const userNotiRes = (await FriendApi.getUserNotis()).data.data;
+        console.log((await FriendApi.getUserNotis()).data.data);
         const filteredUserNoti = userNotiRes?.filter((noti: Noti) => noti.status === "PENDING");
         setUserNoti(filteredUserNoti);
       } catch (error) {
@@ -90,7 +91,7 @@ const Updates = () => {
       const friendAcp = {
         action: "friend_accept",
         target: "user",
-        targetId: sender.id,
+        targetId: sender.id
       };
 
       socket.send(JSON.stringify(friendAcp));
@@ -113,11 +114,10 @@ const Updates = () => {
       const friendDeny = {
         action: "friend_deny",
         target: "user",
-        targetId: sender.id,
+        targetId: sender.id
       };
 
       socket.send(JSON.stringify(friendDeny));
-
 
       setUserNoti((prevNoti) => prevNoti.filter((noti) => noti.sender.id !== sender.id));
 
@@ -141,7 +141,7 @@ const Updates = () => {
     const day = 86400;
   
     if (timeDifferenceInSeconds < minute) {
-      return '1 minute ago';
+      return 'Right now';
     } else if (timeDifferenceInSeconds < hour) {
       const minutes = Math.floor(timeDifferenceInSeconds / minute);
       return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;

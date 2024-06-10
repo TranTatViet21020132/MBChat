@@ -46,11 +46,11 @@ const Page = () => {
       }
 
       try {
-        const action = user.friend_request_pending ? 'cancel_friend_request' : 'friend_request';
-        const friendRq = {
+        const action = user.friend_request_pending ? "cancel_friend_request" : "friend_request";
+        let friendRq = {
           action,
-          target: 'user',
-          targetId: user.id,
+          target: "user",
+          targetId: user.id
         };
 
         socket.send(JSON.stringify(friendRq));
@@ -101,7 +101,7 @@ const Page = () => {
                   <Text style={{ color: '#000', fontSize: 14, fontWeight: 'bold' }}>{item.fullname}</Text>
                 </View>
               </View>
-              {!item.isFriend ? (
+              {!item.is_friend ? (
                 <AntDesign
                   name={item.friend_request_pending ? 'deleteuser' : 'adduser'}
                   size={22}
