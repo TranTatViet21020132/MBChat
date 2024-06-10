@@ -119,13 +119,20 @@ function RootLayoutNav() {
                                 headerStyle: {
                                   backgroundColor: COLORS.light.background,
                                 },
-                                headerRight: () => (
+                                headerLeft: () => (
                                   <Pressable
-                                    style={{ backgroundColor: COLORS.lightGray, borderRadius: 20, padding: 4 }}
+                                    style={{ backgroundColor: COLORS.lightGray, borderRadius: 20, padding: 2, marginRight: 10 }}
                                     onPress={() => router.back()}>
                                     <Ionicons name="close" color={COLORS.gray} size={30} />
                                   </Pressable>
                                 ),
+                                // headerRight: () => (
+                                //   <Link href={"/(modals)/new-chat"} asChild>
+                                //     <Pressable>
+                                //       <Ionicons name="add-circle" color={COLORS.light.primary} size={30} />
+                                //     </Pressable>
+                                //   </Link>
+                                // ),
                                 headerSearchBarOptions: {
                                   placeholder: 'Search name or number',
                                   hideWhenScrolling: false,

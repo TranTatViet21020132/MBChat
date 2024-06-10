@@ -80,6 +80,7 @@ const TabsLayout = () => {
             tabBarIcon: ({ size, color }) => (
               <MaterialIcons name="update" size={size} color={color} />
             ),
+            headerShown: false
           }}
         />
         <Tabs.Screen
