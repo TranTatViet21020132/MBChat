@@ -13,7 +13,8 @@ enum Action {
     OFFER_DESCRIPTION = "offer_description",
     ICECANDIDATE_COMPLETED = "icecandidate_completed",
     JOIN_CALL = "join_call",
-    SEND_REACTION = "send_reaction"
+    SEND_REACTION = "send_reaction",
+    FRIEND_ACCEPT = "friend_accept"
 }
 
 
@@ -23,9 +24,10 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
         const response = JSON.parse(event.data);
         const userInformation = getState().user;
         const peerConnectionRecord = getState().webrtc.peerConnectionRecord;
+        const socket = getState().websocket.socket;
         const hostList = getState().webrtc.hostList;
         let data;
-        console.log(response.action, userInformation.username);
+        console.log(response.action, userInformation.username, response.status);
         if (response.status === 200 || !response.status) {
             switch (response.action) {
                 case Action.GET_CHAT_LIST:
@@ -184,7 +186,11 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                         await dispatch(createCall())
                     }
                     break;
-                case Action.JOIN_CALL:
+                case Action.FRIEND_ACCEPT:
+                    console.log("in handling friend accept")
+                    socket.send(JSON.stringify({
+                        "action": "get_chat_list"
+                    }))
                     break;
                 case Action.OFFER_ANSWER:
                     data = response.data

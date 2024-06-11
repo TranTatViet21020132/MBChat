@@ -90,7 +90,7 @@ const Updates = () => {
 
       const friendAcp = {
         action: "friend_accept",
-        target: "user",
+        target: "both",
         targetId: sender.id
       };
 
@@ -168,8 +168,16 @@ const Updates = () => {
         renderItem={({ item }) => 
           <NotiRow
             {...item}
-            onAccept={handleAcceptRequest}
-            onDeny={handleDenyRequest}
+            onAccept={()=> {
+              if (item.sender) {
+                handleAcceptRequest(item.sender)
+              }
+            }}
+            onDeny={() => {
+              if(item.sender) {
+                handleDenyRequest(item.sender)
+              }
+            }}
             calculateTimeDifference={calculateTimeDifference}
           />
         }

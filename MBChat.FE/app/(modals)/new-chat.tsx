@@ -40,13 +40,14 @@ const Page = () => {
   }));
 
   const handleSendingRequest = async (user: User) => {
-      if (!socket) {
-        console.error('WebSocket connection is not available');
-        return;
+    if (!socket) {
+      console.error('WebSocket connection is not available');
+      return;
       }
-
+      
       try {
         const action = user.friend_request_pending ? "cancel_friend_request" : "friend_request";
+        console.log("Sending request", action)
         let friendRq = {
           action,
           target: "user",
