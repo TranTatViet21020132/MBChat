@@ -3,85 +3,100 @@
     "first_name": "Ward",
     "last_name": "Sims",
     "img": "https://i.pravatar.cc/150?u=wardsims@genmy.com",
-    "desc": "Deserunt ipsum commodo magna minim nostrud voluptate qui pariatur ad excepteur."
+    "desc": "Deserunt ipsum commodo magna minim nostrud voluptate qui pariatur ad excepteur.",
+    "is_friend": false
   },
   {
     "first_name": "Saundra",
     "last_name": "Lott",
     "img": "https://i.pravatar.cc/150?u=saundralott@genmy.com",
-    "desc": "Aliqua deserunt in laborum veniam enim non culpa duis mollit elit consectetur."
+    "desc": "Aliqua deserunt in laborum veniam enim non culpa duis mollit elit consectetur.",
+    "is_friend": false
   },
   {
     "first_name": "Annmarie",
     "last_name": "Simpson",
     "img": "https://i.pravatar.cc/150?u=annmariesimpson@genmy.com",
-    "desc": "Dolore incididunt nisi id ex cillum officia aliquip dolore."
+    "desc": "Dolore incididunt nisi id ex cillum officia aliquip dolore.",
+    "is_friend": false
   },
   {
     "first_name": "Shelby",
     "last_name": "Raymond",
     "img": "https://i.pravatar.cc/150?u=shelbyraymond@genmy.com",
-    "desc": "Nisi labore culpa eu ex mollit minim veniam sint."
+    "desc": "Nisi labore culpa eu ex mollit minim veniam sint.",
+    "is_friend": true
   },
   {
     "first_name": "Warren",
     "last_name": "Mendez",
     "img": "https://i.pravatar.cc/150?u=warrenmendez@genmy.com",
-    "desc": "Nulla enim dolor consequat ut pariatur enim pariatur excepteur."
+    "desc": "Nulla enim dolor consequat ut pariatur enim pariatur excepteur.",
+    "is_friend": false
   },
   {
     "first_name": "Hampton",
     "last_name": "Buckley",
     "img": "https://i.pravatar.cc/150?u=hamptonbuckley@genmy.com",
-    "desc": "Incididunt ullamco ut do ea minim."
+    "desc": "Incididunt ullamco ut do ea minim.",
+    "is_friend": true
   },
   {
     "first_name": "Connie",
     "last_name": "Vinson",
     "img": "https://i.pravatar.cc/150?u=connievinson@genmy.com",
-    "desc": "Mollit adipisicing laboris ea aliquip in dolor officia dolor excepteur."
+    "desc": "Mollit adipisicing laboris ea aliquip in dolor officia dolor excepteur.",
+    "is_friend": false
   },
   {
     "first_name": "Key",
     "last_name": "Fletcher",
     "img": "https://i.pravatar.cc/150?u=keyfletcher@genmy.com",
-    "desc": "Irure consequat laborum aliquip enim ex ullamco et voluptate anim."
+    "desc": "Irure consequat laborum aliquip enim ex ullamco et voluptate anim.",
+    "is_friend": true
+    
   },
   {
     "first_name": "Wendy",
     "last_name": "Woodward",
     "img": "https://i.pravatar.cc/150?u=wendywoodward@genmy.com",
-    "desc": "Proident id culpa amet laboris ad sit tempor officia."
+    "desc": "Proident id culpa amet laboris ad sit tempor officia.",
+    "is_friend": true
   },
   {
     "first_name": "Burt",
     "last_name": "Velazquez",
     "img": "https://i.pravatar.cc/150?u=burtvelazquez@genmy.com",
-    "desc": "Non pariatur tempor elit exercitation officia proident amet ut aute proident minim officia."
+    "desc": "Non pariatur tempor elit exercitation officia proident amet ut aute proident minim officia.",
+    "is_friend": true
   },
   {
     "first_name": "Marjorie",
     "last_name": "Bonner",
     "img": "https://i.pravatar.cc/150?u=marjoriebonner@genmy.com",
-    "desc": "Aute exercitation cupidatat elit mollit minim nisi ullamco et consequat sit qui pariatur."
+    "desc": "Aute exercitation cupidatat elit mollit minim nisi ullamco et consequat sit qui pariatur.",
+    "is_friend": true
   },
   {
     "first_name": "Harrison",
     "last_name": "Bass",
     "img": "https://i.pravatar.cc/150?u=harrisonbass@genmy.com",
-    "desc": "Cillum mollit adipisicing eu sit."
+    "desc": "Cillum mollit adipisicing eu sit.",
+    "is_friend": true
   },
   {
     "first_name": "Darcy",
     "last_name": "Copeland",
     "img": "https://i.pravatar.cc/150?u=darcycopeland@genmy.com",
-    "desc": "Minim pariatur labore exercitation culpa qui culpa est voluptate ad."
+    "desc": "Minim pariatur labore exercitation culpa qui culpa est voluptate ad.",
+    "is_friend": true
   },
   {
     "first_name": "Justine",
     "last_name": "Malone",
     "img": "https://i.pravatar.cc/150?u=justinemalone@genmy.com",
-    "desc": "Consequat occaecat non adipisicing dolore aliquip voluptate incididunt incididunt irure aliquip tempor officia occaecat proident."
+    "desc": "Consequat occaecat non adipisicing dolore aliquip voluptate incididunt incididunt irure aliquip tempor officia occaecat proident.",
+    "is_friend": true
   },
   {
     "first_name": "Dorsey",

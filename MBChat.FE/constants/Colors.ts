@@ -1,4 +1,3 @@
-import signup from "@/app/verify/signup";
 import { getRandomBackgroundColor } from "@/services/utils";
 const tintColorLight = '#2f95dc';
 const tintColorDark = '#fff';
