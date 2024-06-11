@@ -1,7 +1,9 @@
+import { SafeAreaView } from '@/components/Themed';
 import { COLORS } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Pressable, TextInput } from 'react-native';
+
 
 const Layout = () => {
   const router = useRouter();
@@ -14,7 +16,7 @@ const Layout = () => {
           title: '',
           headerBackTitleVisible: false,
           headerShadowVisible: false,
-          headerTitle: "Contact Information", 
+          headerTitle: "Contact Information",
           headerLeft: () => (
             <Pressable onPress={() => router.back()}>
               <Ionicons
@@ -39,7 +41,7 @@ const Layout = () => {
                 name="chevron-back-outline"
                 color={COLORS.light.primary}
                 size={30}
-                style={{paddingRight: 60}}
+                style={{ paddingRight: 60 }}
               />
             </Pressable>
           ),
@@ -51,6 +53,9 @@ const Layout = () => {
       <Stack.Screen
         name="(tabs)/backgrounds"
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="(tabs)/search"
       />
     </Stack>
   );

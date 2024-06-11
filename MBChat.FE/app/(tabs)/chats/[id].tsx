@@ -166,9 +166,6 @@ const SingleChatPage = () => {
     const socket = useSelector((state: RootState) => state.websocket.socket);
     const chatHistory = useSelector((state: RootState) => state.chat.chatHistory);
 
-
-
-
     const [text, setText] = useState("");
     const insets = useSafeAreaInsets();
 
