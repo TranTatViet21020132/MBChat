@@ -83,12 +83,16 @@ const chatSlice = createSlice({
                     message.reactions = action.payload.reactions;
                 }
             })
+        },
+        resetChat: () => {
+            return initialState
         }
     }
 })
 
 export const { setChats, addChatHistory, addMessage,
-    setCommunities, setCommunityListSearch, setChatListSearch, updateReactionsInAMessage
+    setCommunities, setCommunityListSearch, setChatListSearch, updateReactionsInAMessage,
+    resetChat
  } = chatSlice.actions;
 
 export default chatSlice.reducer;

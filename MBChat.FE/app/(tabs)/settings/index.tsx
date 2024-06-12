@@ -16,7 +16,10 @@ import { getInitials, getRandomBackgroundColor } from '@/services/utils'
 import { defaultImageURL } from '@/services/utils'
 import { Avatar } from 'react-native-elements'
 import { AppDispatch } from '@/store/store'
-import { setAvatarUrl } from '@/store/user/userSlice'
+import { resetUser, setAvatarUrl } from '@/store/user/userSlice'
+import { resetChat } from '@/store/chat/chatSlice'
+import { resetWebrtc } from '@/store/webrtc/webrtcSlice'
+import { resetWebsocket } from '@/store/websocket/websocketSlice'
 type Props = {
   t: TFunction<"translation", undefined>;
 }
@@ -25,9 +28,13 @@ type Props = {
 const Settings = () => {
   const { t } = useTranslation();
   const colorScheme = useColorScheme();
-
+  const dispatch = useDispatch<AppDispatch>();
   const handleLogout = async () => {
     await SecureStore.deleteItemAsync('accessToken');
+    dispatch(resetChat());
+    dispatch(resetUser());
+    dispatch(resetWebrtc());
+    dispatch(resetWebsocket());
     router.push('/verify/login')
   }
 

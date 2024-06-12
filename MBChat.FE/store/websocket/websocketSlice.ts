@@ -25,6 +25,9 @@ const websocketSlice = createSlice({
         },
         sendAction: (state, action: PayloadAction<Object>) => {
             state.socket?.send(JSON.stringify(action.payload));
+        },
+        resetWebsocket: () => {
+            return initialState
         }
     },
     extraReducers: (builder) => {
@@ -53,6 +56,6 @@ export const connectWebsocket = createAsyncThunk(
     }
 )
 
-export const {disconnectWebsocket} = websocketSlice.actions;
+export const {disconnectWebsocket, resetWebsocket} = websocketSlice.actions;
 
 export default websocketSlice.reducer;

@@ -5,9 +5,11 @@ import { COLORS } from '@/constants/Colors'
 import { ChatContext } from '@/context/chatContext';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
-import { Href } from 'expo-router';
+import { Href, useNavigation } from 'expo-router';
 import { router } from 'expo-router';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
  
 type DataProps = {
   id: string;
@@ -31,6 +33,7 @@ type MenuItem = {
   iconColor: string;
   titleKey: string;
   path: string;
+  onClick?: any;
 }
 
 const menuItems: MenuItem[] = [
@@ -77,22 +80,31 @@ const supportItems: MenuItem[] = [
     iconName: 'remove-circle-outline', 
     iconColor: '#f23d37', 
     titleKey: 'profile.menu.block', 
-    path: '/(tabs)/chats/profile/(tabs)/block' 
+    path: '/(tabs)/chats/profile/(tabs)/block',
+    onClick: (socket: any, id: any, router: any) => {
+      console.log(id)
+      socket.send(JSON.stringify({
+        "action": "delete_friend_through_channel",
+        "target": "both",
+        "targetId": id,
+      }))
+      router.navigate("/(tabs)/chats")
+    }
   },
   { 
     id: '2', 
     iconName: 'warning-outline', 
     iconColor: '#f0c910', 
     titleKey: 'profile.menu.report', 
-    path: '/(tabs)/chats/profile/(tabs)/report' 
+    path: '/(tabs)/chats/profile/(tabs)/report',
+    onClick: () => {}
   },
 ]
 
 const ChatProfile = () => {
   const { t } = useTranslation();
-
   const chatContext = React.useContext(ChatContext);
-  
+  const socket = useSelector((state: RootState) => state.websocket.socket)
   if (!chatContext || !chatContext.setChats) {
     return null;
   }
@@ -137,7 +149,11 @@ const ChatProfile = () => {
       >
       {supportItems.map((supportItem) => (
         <Pressable key={supportItem.id} style={styles.item}
-        onPress={ () => handleChatPath(supportItem.path as Href<string>) }
+        onPress={ (e) => {
+          if (supportItem.onClick) {
+            supportItem.onClick(socket, chatContext.chats.id, router)
+          }
+        } }
         >
           <View style={{ ...styles.itemIcon, backgroundColor: supportItem.iconColor }}>
             <Ionicons name={supportItem.iconName} size={24} color={'#fff'} />

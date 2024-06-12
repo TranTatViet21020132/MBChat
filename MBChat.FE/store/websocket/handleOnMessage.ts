@@ -14,7 +14,9 @@ enum Action {
     ICECANDIDATE_COMPLETED = "icecandidate_completed",
     JOIN_CALL = "join_call",
     SEND_REACTION = "send_reaction",
-    FRIEND_ACCEPT = "friend_accept"
+    FRIEND_ACCEPT = "friend_accept",
+    DELETE_FRIEND = "delete_friend",
+    DELETE_FRIEND_THROUGH_CHANNEL = "delete_friend_through_channel"
 }
 
 
@@ -187,6 +189,8 @@ const onmessageFunction = async (getState: any, dispatch: any) => {
                     }
                     break;
                 case Action.FRIEND_ACCEPT:
+                case Action.DELETE_FRIEND:
+                case Action.DELETE_FRIEND_THROUGH_CHANNEL:
                     console.log("in handling friend accept")
                     socket.send(JSON.stringify({
                         "action": "get_chat_list"

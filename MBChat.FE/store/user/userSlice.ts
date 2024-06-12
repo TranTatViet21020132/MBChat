@@ -44,11 +44,14 @@ const userSlice = createSlice({
         },
         setBio: (state, action: PayloadAction<string>) => {
             state.bio = action.payload
+        },
+        resetUser: () => {
+            return initialState
         }
     }
 })
 
 export const { setUserProfile, setFirstName, setLastName,
-    setAvatarUrl, setBio} = userSlice.actions;
+    setAvatarUrl, setBio, resetUser} = userSlice.actions;
 
 export default userSlice.reducer;

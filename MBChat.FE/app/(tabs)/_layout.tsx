@@ -10,6 +10,7 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
+import { usePushNotifications } from '@/services/notifications/usePushNotifications';
 
 function waitForSocketConnection(websocket: WebSocket) {
   setTimeout(function () {
@@ -37,7 +38,8 @@ function waitForSocketConnection(websocket: WebSocket) {
 const TabsLayout = () => {
   const socket = useSelector((state: RootState) => state.websocket.socket);
   const userInfomation = useSelector((state: RootState) => state.user);
-
+  const {expoPushToken, notification} = usePushNotifications();
+  const expoData = JSON.stringify(notification, undefined, 2);
 
   React.useEffect(() => {
     if (!userInfomation.verified && socket) {

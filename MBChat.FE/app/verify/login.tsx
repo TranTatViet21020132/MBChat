@@ -15,7 +15,7 @@ import { RootState } from '@/store/store';
 import { connectWebsocket } from '@/store/websocket/websocketSlice'
 const login = () => {
   const {expoPushToken, notification} = usePushNotifications();
-  const data = JSON.stringify(notification, undefined, 2);
+  const expoData = JSON.stringify(notification, undefined, 2);
   const [showPassword, setShowPassword] = React.useState(false);
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');

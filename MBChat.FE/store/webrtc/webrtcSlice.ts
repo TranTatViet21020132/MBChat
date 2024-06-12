@@ -128,6 +128,10 @@ const webrtcSlice = createSlice({
             state.iceCompletedRecord[action.payload.target] =
                 action.payload.value;
         },
+        resetWebrtc: () => {
+            return initialState
+        },
+
         addIceCandaiteToARecord: (
             state,
             action: PayloadAction<{ target: string; value: RTCIceCandidate }>
@@ -748,6 +752,7 @@ export const {
     addIceCompleted,
     addIceCandaiteToARecord,
     setRemoteOfferDescriptionToARecord,
+    resetWebrtc
 } = webrtcSlice.actions;
 
 export default webrtcSlice.reducer;

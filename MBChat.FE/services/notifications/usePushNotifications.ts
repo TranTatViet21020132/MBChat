@@ -37,15 +37,18 @@ export interface PushNotificationState {
 }
 
 messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-    // const { title, body } = remoteMessage.notification;
-    Notifications.scheduleNotificationAsync({
-        content: {
-          title: 'Incoming Call',
-          body: 'You have an incoming call.',
-          categoryIdentifier: 'call',
-        },
-        trigger: null,
-      });
+    const { title, body }: any = remoteMessage.notification;
+    if (title === "Cuộc gọi") {
+        Notifications.scheduleNotificationAsync({
+            content: {
+            title: 'Incoming Call',
+            body: 'You have an incoming call.',
+            categoryIdentifier: 'call',
+            },
+            trigger: null,
+        });
+        
+    }
 });
 
 export const usePushNotifications = (): PushNotificationState => {
